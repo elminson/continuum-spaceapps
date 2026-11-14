@@ -33,7 +33,32 @@ function pickWeek(start: string) {
 const PER_PAGE = 15;
 const page = ref(1);
 const pages = computed(() => Math.max(1, Math.ceil(props.alerts.length / PER_PAGE)));
-const shown = computed(() => props.alerts.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE));
+
+type SortKey = 'week_start' | 'observed' | 'typical' | 'times';
+const sortKey = ref<SortKey>('times');
+const sortDesc = ref(true);
+const columns: { key: SortKey; label: string; align: string }[] = [
+    { key: 'week_start', label: 'Week of', align: 'text-left' },
+    { key: 'observed', label: 'Observed', align: 'text-left' },
+    { key: 'typical', label: 'Typical', align: 'text-left' },
+    { key: 'times', label: 'Compared with the same week in other years', align: 'text-right' },
+];
+
+function sortBy(key: SortKey) {
+    sortDesc.value = sortKey.value === key ? !sortDesc.value : key !== 'typical';
+    sortKey.value = key;
+    page.value = 1;
+}
+
+const sorted = computed(() => {
+    const dir = sortDesc.value ? -1 : 1;
+    return [...props.alerts].sort((a, b) => {
+        const x = a[sortKey.value] ?? 0;
+        const y = b[sortKey.value] ?? 0;
+        return (x < y ? -1 : x > y ? 1 : 0) * dir;
+    });
+});
+const shown = computed(() => sorted.value.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE));
 </script>
 
 <template>
@@ -122,10 +147,24 @@ const shown = computed(() => props.alerts.slice((page.value - 1) * PER_PAGE, pag
             <table v-if="alerts.length" class="mt-3 w-full text-sm">
                 <thead class="text-left text-muted-foreground">
                     <tr>
-                        <th class="py-2 font-normal">{{ t('Week of') }}</th>
-                        <th class="font-normal">{{ t('Observed') }}</th>
-                        <th class="font-normal">{{ t('Typical') }}</th>
-                        <th class="text-right font-normal">{{ t('Compared with the same week in other years') }}</th>
+                        <th
+                            v-for="c in columns"
+                            :key="c.key"
+                            class="py-2 font-normal"
+                            :class="c.align"
+                            :aria-sort="sortKey === c.key ? (sortDesc ? 'descending' : 'ascending') : 'none'"
+                        >
+                            <button
+                                class="inline-flex items-center gap-1 hover:text-foreground"
+                                :class="sortKey === c.key ? 'font-medium text-foreground' : ''"
+                                @click="sortBy(c.key)"
+                            >
+                                {{ t(c.label) }}
+                                <span class="text-xs" :class="sortKey === c.key ? 'opacity-100' : 'opacity-30'">{{
+                                    sortKey === c.key && !sortDesc ? '▲' : '▼'
+                                }}</span>
+                            </button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
