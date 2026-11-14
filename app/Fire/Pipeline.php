@@ -4,7 +4,6 @@ namespace App\Fire;
 
 use App\Models\Area;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Cache;
 
 /** Raw pixels → grid → area days → calibration → alerts, for a date range. */
 class Pipeline
@@ -35,6 +34,5 @@ class Pipeline
             $log("  {$count} unusual weeks");
         }
 
-        Cache::flush();
     }
 }
