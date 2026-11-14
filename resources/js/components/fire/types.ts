@@ -36,3 +36,15 @@ export type Fit = {
     } | null;
     months: { month: number; ratio: number; low: number; high: number; days: number }[];
 };
+
+export type Place = { slug: string; name: string; bbox: number[]; id?: number };
+
+export type Status = {
+    detections: number;
+    cell_days: number;
+    record_days: number;
+    first_day: string;
+    last_day: string;
+    instruments: { instrument: string; detections: number; cell_days: number; pixels_per_cell: number | null; first: string; last: string }[];
+    satellites: { instrument: string; satellite: string; detections: number; last: string }[];
+};

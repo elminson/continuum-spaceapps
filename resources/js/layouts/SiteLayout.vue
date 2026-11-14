@@ -1,35 +1,99 @@
 <script setup lang="ts">
 import { locale, t } from '@/lib/i18n';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { BellRing, BookOpen, Code, Compass, Cpu, Database, ExternalLink, LayoutGrid, LogIn, LogOut, MapPin, Rocket } from 'lucide-vue-next';
+import { computed } from 'vue';
+
+const page = usePage();
+const user = computed(() => (page.props.auth as { user: { name: string } | null } | undefined)?.user ?? null);
+
+const nav = [
+    { href: '/', label: 'Overview', icon: LayoutGrid },
+    { href: '/areas', label: 'Areas of interest', icon: MapPin },
+    { href: '/explore', label: 'Explore', icon: Compass },
+    { href: '/alerts', label: 'Unusual periods', icon: BellRing },
+    { href: '/data', label: 'Ingestion', icon: Database },
+    { href: '/method', label: 'Method', icon: BookOpen },
+    { href: '/how-it-works', label: 'How it works', icon: Cpu },
+    { href: '/api-docs', label: 'API', icon: Code },
+];
+
+const active = (href: string) => (href === '/' ? page.url === '/' : page.url.startsWith(href));
 </script>
 
 <template>
-    <div class="min-h-screen bg-background text-foreground">
-        <header class="border-b">
-            <div class="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
-                <Link href="/" class="flex items-center gap-2 font-semibold tracking-tight">
-                    <span class="inline-block size-3 rounded-full bg-orange-500" />
-                    Continuum
+    <div class="min-h-screen bg-background text-foreground lg:flex">
+        <aside class="border-b lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-60 lg:shrink-0 lg:flex-col lg:border-b-0 lg:border-r">
+            <Link href="/" class="flex items-center gap-2 px-4 py-4">
+                <span class="grid size-8 place-items-center rounded-lg bg-foreground text-sm font-bold text-background">C</span>
+                <span class="leading-tight">
+                    <span class="block font-semibold">Continuum</span>
+                    <span class="block text-xs text-muted-foreground">{{ t('MODIS + VIIRS harmonized') }}</span>
+                </span>
+            </Link>
+
+            <nav class="flex gap-1 overflow-x-auto px-2 pb-2 text-sm lg:flex-col lg:overflow-visible">
+                <Link
+                    v-for="item in nav"
+                    :key="item.href"
+                    :href="item.href"
+                    class="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 hover:bg-muted"
+                    :class="active(item.href) ? 'bg-muted font-medium' : 'text-muted-foreground'"
+                >
+                    <component :is="item.icon" class="size-4" />
+                    {{ t(item.label) }}
                 </Link>
-                <nav class="flex gap-4 text-sm text-muted-foreground">
-                    <Link href="/" class="hover:text-foreground">{{ t('Areas') }}</Link>
-                    <Link href="/explore" class="hover:text-foreground">{{ t('Explore') }}</Link>
-                    <Link href="/method" class="hover:text-foreground">{{ t('Method') }}</Link>
-                </nav>
-                <div class="ml-auto flex gap-1 text-sm">
-                    <a href="/locale/en" :class="locale() === 'en' ? 'font-semibold' : 'text-muted-foreground'">EN</a>
-                    <span class="text-muted-foreground">·</span>
-                    <a href="/locale/es" :class="locale() === 'es' ? 'font-semibold' : 'text-muted-foreground'">ES</a>
+            </nav>
+
+            <div class="hidden flex-col gap-1 px-2 pb-4 text-sm text-muted-foreground lg:mt-auto lg:flex">
+                <a
+                    href="https://firms.modaps.eosdis.nasa.gov"
+                    target="_blank"
+                    rel="noopener"
+                    class="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-muted"
+                >
+                    <ExternalLink class="size-4" /> NASA FIRMS
+                </a>
+                <a
+                    href="https://www.spaceappschallenge.org/2026/find-a-team/continuum1/"
+                    target="_blank"
+                    rel="noopener"
+                    class="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-muted"
+                >
+                    <Rocket class="size-4" /> {{ t('Space Apps challenge') }}
+                </a>
+                <Link v-if="!user" href="/login" class="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-muted">
+                    <LogIn class="size-4" /> {{ t('Sign in to save areas') }}
+                </Link>
+                <Link v-else href="/logout" method="post" as="button" class="flex items-center gap-2 rounded-md px-3 py-2 text-left hover:bg-muted">
+                    <LogOut class="size-4" /> {{ t('Sign out (:name)', { name: user.name }) }}
+                </Link>
+                <div class="flex gap-1 px-3 pt-2">
+                    <a href="/locale/en" :class="locale() === 'en' ? 'font-semibold text-foreground' : ''">EN</a>
+                    <span>·</span>
+                    <a href="/locale/es" :class="locale() === 'es' ? 'font-semibold text-foreground' : ''">ES</a>
                 </div>
             </div>
-        </header>
-        <main class="mx-auto max-w-6xl px-4 py-8">
-            <slot />
-        </main>
-        <footer class="border-t">
-            <div class="mx-auto max-w-6xl px-4 py-6 text-xs text-muted-foreground">
-                {{ t('Data: NASA FIRMS (MODIS and VIIRS active fires). Team Continuum · Elminson & Miguel · Santo Domingo · NASA Space Apps 2026.') }}
+        </aside>
+
+        <div class="min-w-0 flex-1">
+            <div class="flex justify-end gap-1 px-4 pt-3 text-sm text-muted-foreground lg:hidden">
+                <a href="/locale/en" :class="locale() === 'en' ? 'font-semibold text-foreground' : ''">EN</a>
+                <span>·</span>
+                <a href="/locale/es" :class="locale() === 'es' ? 'font-semibold text-foreground' : ''">ES</a>
             </div>
-        </footer>
+            <main class="mx-auto max-w-6xl px-4 py-6 lg:px-8 lg:py-8">
+                <slot />
+            </main>
+            <footer class="border-t">
+                <div class="mx-auto max-w-6xl px-4 py-6 text-xs text-muted-foreground lg:px-8">
+                    {{
+                        t(
+                            'Data: NASA FIRMS (MODIS and VIIRS active fires). Team Continuum · Elminson & Miguel · Santo Domingo · NASA Space Apps 2026.',
+                        )
+                    }}
+                </div>
+            </footer>
+        </div>
     </div>
 </template>

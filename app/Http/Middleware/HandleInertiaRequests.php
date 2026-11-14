@@ -40,6 +40,7 @@ class HandleInertiaRequests extends Middleware
 
         return [
             ...parent::share($request),
+            'auth' => ['user' => $request->user()?->only('id', 'name')],
             'locale' => $locale,
             'translations' => $locale !== 'en' && is_file($file) ? json_decode((string) file_get_contents($file), true) : [],
         ];

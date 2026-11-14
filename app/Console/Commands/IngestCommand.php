@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Fire\DataStatus;
 use App\Fire\FirmsFeed;
 use App\Fire\Pipeline;
 use Illuminate\Console\Command;
@@ -15,16 +16,21 @@ class IngestCommand extends Command
     public function handle(FirmsFeed $feed, Pipeline $pipeline): int
     {
         $from = null;
+        $feeds = [];
 
         foreach (FirmsFeed::FEEDS as $name => $url) {
             try {
                 $result = $feed->pull($url);
                 $this->line("{$name}: {$result['read']} read, {$result['kept']} in areas, {$result['inserted']} new");
+                $feeds[] = ['feed' => $name, 'ok' => true] + $result;
                 $from = $result['from'] && (! $from || $result['from'] < $from) ? $result['from'] : $from;
             } catch (\Throwable $e) {
                 $this->error("{$name}: {$e->getMessage()}");
+                $feeds[] = ['feed' => $name, 'ok' => false, 'error' => str($e->getMessage())->limit(160)->toString()];
             }
         }
+
+        cache()->forever(DataStatus::LAST_INGEST, ['at' => now()->toIso8601String(), 'feeds' => $feeds]);
 
         if ($from) {
             $pipeline->run($from, now()->toDateString());

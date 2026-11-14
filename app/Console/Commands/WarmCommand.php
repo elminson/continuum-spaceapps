@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Fire\DataStatus;
 use App\Fire\Explorer;
 use App\Fire\Insights;
 use App\Fire\Sensors;
 use App\Models\Area;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class WarmCommand extends Command
 {
@@ -15,9 +15,9 @@ class WarmCommand extends Command
 
     protected $description = 'Precompute the series, retirement tests and totals so no visitor waits for them';
 
-    public function handle(Insights $insights, Explorer $explorer): int
+    public function handle(Insights $insights, Explorer $explorer, DataStatus $status): int
     {
-        cache()->put('detections:count', (int) DB::table('detections')->count(), now()->addHour());
+        $this->components->task('Data status', fn () => $status->summary(refresh: true));
 
         foreach (Area::all() as $area) {
             $this->components->task($area->slug, function () use ($insights, $area) {

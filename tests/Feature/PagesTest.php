@@ -6,6 +6,7 @@ use App\Fire\Explorer;
 use App\Models\Alert;
 use App\Models\Area;
 use App\Models\AreaFit;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -52,6 +53,33 @@ class PagesTest extends TestCase
         $this->withUnencryptedCookie('locale', 'es')->get('/')->assertInertia(fn (Assert $page) => $page
             ->where('locale', 'es')
             ->where('translations.Areas', 'Áreas'));
+    }
+
+    public function test_menu_pages_render_without_login(): void
+    {
+        foreach (['/areas' => 'Areas', '/alerts' => 'Alerts', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/login' => 'auth/Login'] as $url => $component) {
+            $this->get($url)->assertOk()->assertInertia(fn (Assert $page) => $page->component($component));
+        }
+
+        $this->get('/')->assertInertia(fn (Assert $page) => $page->where('places.0.slug', 'dominican-republic')->has('status.detections'));
+    }
+
+    public function test_signed_in_users_save_and_delete_their_boxes(): void
+    {
+        $this->seed();
+        $user = User::factory()->create();
+
+        $this->post('/boxes', ['name' => 'Valle Nuevo', 'bbox' => [-70.8, 18.7, -70.5, 18.9]])->assertRedirect('/login');
+
+        $this->actingAs($user)->post('/boxes', ['name' => 'Valle Nuevo', 'bbox' => [-70.8, 18.7, -70.5, 18.9]])->assertRedirect();
+        $this->actingAs($user)->post('/boxes', ['name' => 'Madrid', 'bbox' => [-4, 40, -3, 41]])->assertSessionHasErrors('bbox');
+
+        $box = $user->savedBoxes()->sole();
+        $this->actingAs($user)->get('/explore')->assertInertia(fn (Assert $page) => $page->where('boxes.0.name', 'Valle Nuevo')->where('boxes.0.bbox', [-70.8, 18.7, -70.5, 18.9]));
+
+        $this->actingAs(User::factory()->create())->delete("/boxes/{$box->id}")->assertForbidden();
+        $this->actingAs($user)->delete("/boxes/{$box->id}")->assertRedirect();
+        $this->assertSame(0, $user->savedBoxes()->count());
     }
 
     public function test_every_ready_made_place_fits_inside_an_area(): void

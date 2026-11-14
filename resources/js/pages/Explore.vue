@@ -7,12 +7,28 @@ import WeekMap from '@/components/fire/WeekMap.vue';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { COLORS, date, number, percent, r, t } from '@/lib/i18n';
 import { maplibregl, nasaMap } from '@/lib/map';
-import { Head } from '@inertiajs/vue3';
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
-type Place = { slug: string; name: string; bbox: number[] };
+type Place = { slug: string; name: string; bbox: number[]; id?: number };
 
-const props = defineProps<{ areas: Place[]; places: Place[] }>();
+const props = defineProps<{ areas: Place[]; places: Place[]; boxes: Place[] }>();
+const page = usePage();
+const user = computed(() => (page.props.auth as { user: unknown } | undefined)?.user ?? null);
+const saveName = ref('');
+
+function save() {
+    if (!box.value || !saveName.value.trim()) return;
+    router.post(
+        '/boxes',
+        { name: saveName.value.trim(), bbox: box.value.map((v) => Number(v.toFixed(2))) },
+        { preserveScroll: true, preserveState: true, onSuccess: () => (saveName.value = '') },
+    );
+}
+
+function forget(b: Place) {
+    router.delete(`/boxes/${b.id}`, { preserveScroll: true, preserveState: true });
+}
 
 type Result = { available: boolean; bbox: number[]; fit?: Fit; monthly?: Month[]; alerts?: AlertRow[] };
 
@@ -131,6 +147,14 @@ onBeforeUnmount(() => map?.remove());
             <button v-for="p in places" :key="p.slug" class="rounded-md border px-2 py-1 hover:bg-muted" @click="go(p)">{{ p.name }}</button>
         </div>
 
+        <div v-if="boxes.length" class="mt-2 flex flex-wrap items-center gap-2 text-sm">
+            <span class="text-muted-foreground">{{ t('My boxes') }}</span>
+            <span v-for="b in boxes" :key="b.slug" class="inline-flex items-center rounded-md border">
+                <button class="px-2 py-1 hover:bg-muted" @click="go(b)">{{ b.name }}</button>
+                <button class="border-l px-1.5 py-1 text-muted-foreground hover:text-red-600" :aria-label="t('Delete')" @click="forget(b)">×</button>
+            </span>
+        </div>
+
         <div class="mt-2 flex flex-wrap items-center gap-2 text-sm">
             <span class="text-muted-foreground">{{ t('Or start a box in') }}</span>
             <button v-for="a in areas" :key="a.slug" class="rounded-md border px-2 py-1 hover:bg-muted" @click="pick(a)">{{ a.name }}</button>
@@ -146,6 +170,11 @@ onBeforeUnmount(() => map?.remove());
                 {{ loading ? t('Analyzing…') : t('Analyze this box') }}
             </button>
             <span v-if="error" class="text-red-600">{{ error }}</span>
+            <form v-if="user && box" class="ml-auto flex gap-2" @submit.prevent="save">
+                <input v-model="saveName" maxlength="80" :placeholder="t('Name this box')" class="rounded-md border bg-background px-2 py-1.5" />
+                <button class="rounded-md border px-3 py-1.5 hover:bg-muted" :disabled="!saveName.trim()">{{ t('Save') }}</button>
+            </form>
+            <Link v-else-if="!user" href="/login" class="ml-auto text-muted-foreground hover:text-foreground">{{ t('Sign in to save boxes') }}</Link>
         </div>
 
         <p v-if="result && !result.available" class="mt-6 text-sm text-muted-foreground">
