@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FormulaInfo from '@/components/fire/FormulaInfo.vue';
 import type { Fit, Status } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { locale, number, percent, r, t } from '@/lib/i18n';
@@ -6,7 +7,11 @@ import { Head, Link } from '@inertiajs/vue3';
 import { Code, FileText, Github, PlayCircle } from 'lucide-vue-next';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
-const props = defineProps<{ status: Status; evidence: { slug: string; name: string; fit: Fit | null }[] }>();
+const props = defineProps<{
+    status: Status;
+    evidence: { slug: string; name: string; fit: Fit | null }[];
+    example: { area: string; modis: number; viirs: number; days: number } | null;
+}>();
 
 const viirs = computed(() => props.status.instruments.find((i) => i.instrument === 'viirs'));
 const modis = computed(() => props.status.instruments.find((i) => i.instrument === 'modis'));
@@ -214,7 +219,10 @@ const resources = computed(() => [
 
                 <section id="ratio" class="scroll-mt-6">
                     <h2 class="text-xl font-semibold tracking-tight">3 · {{ t('One ratio, fitted where both sensors flew') }}</h2>
-                    <div class="mt-4 rounded-md bg-muted px-4 py-3 font-mono text-sm">r = Σ MODIS cell-days ÷ Σ VIIRS cell-days</div>
+                    <div class="mt-4 flex flex-wrap items-center justify-between gap-2 rounded-md bg-muted px-4 py-3 font-mono text-sm">
+                        <span>r = Σ MODIS cell-days ÷ Σ VIIRS cell-days</span>
+                        <FormulaInfo :example="example" />
+                    </div>
                     <p class="mt-3 text-muted-foreground">
                         {{
                             t(

@@ -13,6 +13,7 @@ use App\Models\Area;
 use App\Models\SavedBox;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -149,7 +150,32 @@ class PageController extends Controller
         return Inertia::render('Method', [
             'status' => $status->summary(),
             'evidence' => Area::query()->ordered()->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'fit' => $insights->fit($a)])->all(),
+            'example' => $this->ratioExample(),
         ]);
+    }
+
+    /** Σ MODIS and Σ VIIRS cell-days on the overlap days of the focus area, for the worked example. */
+    private function ratioExample(): ?array
+    {
+        $area = Area::query()->where('slug', Area::FOCUS)->first();
+
+        if (! $area) {
+            return null;
+        }
+
+        return cache()->remember("ratio-example:{$area->id}:".($area->processed_at?->timestamp ?? 0), now()->addDay(), function () use ($area) {
+            $row = DB::selectOne(<<<'SQL'
+                select sum(case when instrument = 'modis' then cell_days else 0 end) as modis,
+                       sum(case when instrument = 'viirs' then cell_days else 0 end) as viirs,
+                       count(distinct acq_date) as days
+                from area_days d
+                where area_id = ? and acq_date >= ?
+                  and exists (select 1 from coverage_days c where c.acq_date = d.acq_date and c.instrument = 'modis')
+                  and exists (select 1 from coverage_days c where c.acq_date = d.acq_date and c.instrument = 'viirs')
+                SQL, [$area->id, Sensors::VIIRS_START]);
+
+            return ['area' => $area->label(), 'modis' => (int) $row->modis, 'viirs' => (int) $row->viirs, 'days' => (int) $row->days];
+        });
     }
 
     public function locale(string $locale): RedirectResponse

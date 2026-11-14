@@ -298,5 +298,18 @@
     "Auto": "Auto",
     "Try it on the Dominican Republic →": "Pruébalo en la República Dominicana →",
     "VIIRS cell-days per MODIS cell-day in the Dominican Republic": "celdas-día VIIRS por cada celda-día MODIS en la República Dominicana",
-    "Also available: :label": "También disponible: :label"
+    "Also available: :label": "También disponible: :label",
+    "What does this formula mean?": "¿Qué significa esta fórmula?",
+    "What does this mean?": "¿Qué significa?",
+    "Reading the ratio": "Cómo leer la razón",
+    "It measures how much more fire VIIRS reports than MODIS on days both sensors were flying, so one record can be put on the other one’s scale.": "Mide cuánto más fuego reporta VIIRS que MODIS en los días en que volaron ambos sensores, para poner un registro en la escala del otro.",
+    "The ratio: how many MODIS fire cells correspond to one VIIRS fire cell. Below 1 because VIIRS sees more.": "La razón: cuántas celdas con fuego de MODIS corresponden a una de VIIRS. Es menor que 1 porque VIIRS ve más.",
+    "Sum: add up the values of every day being compared.": "Suma: se suman los valores de todos los días comparados.",
+    "For one day, the number of 1 km grid cells where MODIS (Terra or Aqua) saw fire. A cell counts once a day, however many pixels hit it.": "En un día, el número de celdas de 1 km donde MODIS (Terra o Aqua) vio fuego. Una celda cuenta una vez al día, sin importar cuántos píxeles caigan en ella.",
+    "The same count for VIIRS (Suomi NPP, NOAA-20 or NOAA-21), on the same 1 km grid.": "El mismo conteo para VIIRS (Suomi NPP, NOAA-20 o NOAA-21), en la misma cuadrícula de 1 km.",
+    "Divide the MODIS total by the VIIRS total.": "Se divide el total de MODIS entre el total de VIIRS.",
+    "Example: :area": "Ejemplo: :area",
+    "On the :days days both sensors flew since 2012:": "En los :days días en que volaron ambos sensores desde 2012:",
+    "So VIIRS sees about :x times more fire cells here. On days without MODIS, VIIRS × r gives a MODIS-scale value; before 2012, MODIS ÷ r gives a VIIRS-scale value.": "Así que VIIRS ve unas :x veces más celdas con fuego aquí. En días sin MODIS, VIIRS × r da un valor en escala MODIS; antes de 2012, MODIS ÷ r da un valor en escala VIIRS.",
+    "Each calendar month gets its own r when it has at least 20 shared days; otherwise the all-year r is used.": "Cada mes tiene su propia r cuando cuenta con al menos 20 días comunes; si no, se usa la r de todo el año."
 }
