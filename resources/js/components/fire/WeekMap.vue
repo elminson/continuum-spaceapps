@@ -57,7 +57,7 @@ onBeforeUnmount(() => map?.remove());
 
 <template>
     <div class="relative overflow-hidden rounded-md bg-neutral-950" :class="height">
-        <div ref="el" class="absolute inset-0" />
+        <div ref="el" class="h-full w-full" />
 
         <div class="absolute right-3 top-3 flex flex-col items-end gap-2">
             <slot name="controls" />
