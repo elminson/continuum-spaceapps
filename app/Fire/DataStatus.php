@@ -12,13 +12,28 @@ class DataStatus
     public const LAST_INGEST = 'ingest:last';
 
     /** @return array<string, mixed> */
-    public function summary(bool $refresh = false): array
+    public function summary(): array
     {
-        if ($refresh) {
-            Cache::forget('data:status');
-        }
+        // Counting 21 million rows takes seconds: pages only read what fire:warm stored.
+        return Cache::get('data:status') ?? [
+            'detections' => 0, 'cell_days' => 0, 'instruments' => [], 'satellites' => [],
+            'record_days' => 0, 'first_day' => Sensors::MODIS_START, 'last_day' => now()->toDateString(),
+        ];
+    }
 
-        return Cache::remember('data:status', now()->addHours(3), function () {
+    /** @return array<string, mixed> */
+    public function refresh(): array
+    {
+        $summary = $this->compute();
+        Cache::forever('data:status', $summary);
+
+        return $summary;
+    }
+
+    /** @return array<string, mixed> */
+    private function compute(): array
+    {
+        return (function () {
             $instruments = collect(DB::select('select instrument, count(*) as detections, min(acq_date)::text as first, max(acq_date)::text as last from detections group by instrument order by instrument'))
                 ->keyBy('instrument');
             $cells = collect(DB::select('select instrument, count(*) as cell_days, sum(detections) as pixels from cell_days group by instrument'))->keyBy('instrument');
@@ -40,7 +55,7 @@ class DataStatus
                 'first_day' => DB::scalar('select min(acq_date)::text from coverage_days'),
                 'last_day' => DB::scalar('select max(acq_date)::text from coverage_days'),
             ];
-        });
+        })();
     }
 
     /** @return array<string, mixed> */

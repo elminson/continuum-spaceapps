@@ -17,7 +17,7 @@ class WarmCommand extends Command
 
     public function handle(Insights $insights, Explorer $explorer, DataStatus $status): int
     {
-        $this->components->task('Data status', fn () => $status->summary(refresh: true));
+        $this->components->task('Data status', fn () => $status->refresh());
 
         foreach (Area::all() as $area) {
             $this->components->task($area->slug, function () use ($insights, $area) {
