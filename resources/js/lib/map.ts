@@ -62,4 +62,25 @@ export async function loadFireCells(map: maplibregl.Map, bbox: number[], period:
     return data.features.length;
 }
 
+/**
+ * Shows NASA GIBS true-colour imagery of one day (MODIS Terra) under the fire cells,
+ * or goes back to Blue Marble when the date is null.
+ */
+export function setDailyImagery(map: maplibregl.Map, day: string | null): void {
+    if (map.getLayer('daily')) map.removeLayer('daily');
+    if (map.getSource('daily')) map.removeSource('daily');
+    if (!day) return;
+
+    map.addSource('daily', {
+        type: 'raster',
+        tiles: [
+            `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${day}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`,
+        ],
+        tileSize: 256,
+        maxzoom: 9,
+        attribution: `NASA GIBS · MODIS Terra ${day}`,
+    });
+    map.addLayer({ id: 'daily', type: 'raster', source: 'daily' }, map.getLayer('cells') ? 'cells' : undefined);
+}
+
 export { maplibregl };

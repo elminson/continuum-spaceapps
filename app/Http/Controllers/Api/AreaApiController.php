@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Fire\CompareDates;
 use App\Fire\Explorer;
 use App\Fire\Insights;
 use App\Fire\Sensors;
@@ -45,6 +46,26 @@ class AreaApiController extends Controller
 
             fclose($out);
         }, "continuum-{$area->slug}-{$scale}-monthly.csv", ['Content-Type' => 'text/csv']);
+    }
+
+    public function season(Area $area, Insights $insights): JsonResponse
+    {
+        return response()->json(['area' => $area->slug, 'data' => $insights->season($area)]);
+    }
+
+    /** ?from=YYYY-MM-DD&to=YYYY-MM-DD against the same dates in every other year. */
+    public function compare(Request $request, Area $area, Insights $insights): JsonResponse
+    {
+        $data = $request->validate([
+            'from' => ['required', 'date_format:Y-m-d', 'after_or_equal:'.Sensors::MODIS_START],
+            'to' => ['required', 'date_format:Y-m-d', 'after_or_equal:from', 'before_or_equal:today'],
+        ]);
+
+        if (CarbonImmutable::parse($data['from'])->diffInDays($data['to']) >= CompareDates::MAX_DAYS) {
+            return response()->json(['message' => 'Keep the range under a year.'], 422);
+        }
+
+        return response()->json(['area' => $area->slug, 'data' => $insights->compare($area, $data['from'], $data['to'])]);
     }
 
     public function alerts(Area $area, Insights $insights): JsonResponse

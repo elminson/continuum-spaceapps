@@ -24,6 +24,7 @@ class WarmCommand extends Command
                 $insights->monthly($area, Sensors::MODIS);
                 $insights->monthly($area, Sensors::VIIRS);
                 $insights->retirement($area, null);
+                $insights->season($area);
             });
         }
 

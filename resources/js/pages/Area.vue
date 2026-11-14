@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import CalendarHeatmap from '@/components/fire/CalendarHeatmap.vue';
+import ComparePanel from '@/components/fire/ComparePanel.vue';
 import Kpi from '@/components/fire/Kpi.vue';
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
 import Pager from '@/components/fire/Pager.vue';
 import RetirementPanel from '@/components/fire/RetirementPanel.vue';
+import SeasonStrip, { type Season } from '@/components/fire/SeasonStrip.vue';
 import TimesNormal from '@/components/fire/TimesNormal.vue';
 import WeekMap from '@/components/fire/WeekMap.vue';
 import type { AlertRow, Fit, Month } from '@/components/fire/types';
@@ -19,6 +21,7 @@ const props = defineProps<{
     fit: Fit | null;
     alerts: AlertRow[];
     week?: string | null;
+    season: Season | null;
 }>();
 
 const week = ref<string | null>(props.week ?? props.alerts[0]?.week_start ?? null);
@@ -83,6 +86,17 @@ const shown = computed(() => props.alerts.slice((page.value - 1) * PER_PAGE, pag
                 :hint="t('overlap :from → :to', { from: fit.validation.overlap_from, to: fit.validation.overlap_to })"
             />
         </div>
+
+        <section v-if="season" class="mt-8">
+            <h2 class="text-lg font-semibold">{{ t('Fire season') }}</h2>
+            <SeasonStrip class="mt-2" :season="season" />
+        </section>
+
+        <section class="mt-8">
+            <h2 class="text-lg font-semibold">{{ t('Compare any dates') }}</h2>
+            <p class="text-sm text-muted-foreground">{{ t('Pick a period: it is set against the same dates in every other year since 2000.') }}</p>
+            <ComparePanel class="mt-3" :slug="area.slug" />
+        </section>
 
         <section class="mt-8">
             <h2 class="text-lg font-semibold">{{ t('Fire calendar') }}</h2>

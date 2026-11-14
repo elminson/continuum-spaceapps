@@ -117,6 +117,9 @@ class PagesTest extends TestCase
         $this->getJson('/api/explore?bbox=10,10,11,11')->assertStatus(422)->assertJsonPath('message', 'Draw the box inside one of the four areas.');
         $this->get('/explore')->assertOk()->assertInertia(fn (Assert $page) => $page->component('Explore')->where('areas.0.slug', 'cuba')->where('places.0.slug', 'dominican-republic'));
         $this->getJson('/api/areas/cuba/week?week=2026-08-19')->assertOk()->assertJsonPath('week', '2026-08-17')->assertJsonPath('type', 'FeatureCollection');
+        $this->getJson('/api/areas/cuba/season')->assertOk()->assertJsonPath('data', null);
+        $this->getJson('/api/areas/cuba/compare?from=2026-08-01&to=2026-08-31')->assertOk()->assertJsonPath('data.days', 31);
+        $this->getJson('/api/areas/cuba/compare?from=2024-01-01&to=2026-01-01')->assertStatus(422);
         $this->getJson('/api/areas/cuba/retirement')->assertOk()->assertJsonPath('data.available', false);
         $this->get('/api/areas/cuba/monthly.csv')->assertOk()->assertHeader('content-type', 'text/csv; charset=UTF-8');
     }

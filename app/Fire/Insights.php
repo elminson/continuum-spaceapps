@@ -64,6 +64,18 @@ class Insights
         return Cache::remember($this->key($area, 'retirement:'.($year ?? 'default')), now()->addDay(), fn () => $this->retirement->run($area, $year));
     }
 
+    /** @return array<string, mixed>|null */
+    public function season(Area $area): ?array
+    {
+        return Cache::remember($this->key($area, 'season:'.now()->format('Y-m')), now()->addDay(), fn () => FireSeason::from($this->monthly($area, Sensors::MODIS)));
+    }
+
+    /** @return array<string, mixed> */
+    public function compare(Area $area, string $from, string $to): array
+    {
+        return Cache::remember($this->key($area, "compare:{$from}:{$to}"), now()->addDay(), fn () => CompareDates::run($this->harmonizer->daily($area, Sensors::MODIS), $from, $to));
+    }
+
     /** Small summary for the area cards. */
     public function card(Area $area): array
     {
