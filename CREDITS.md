@@ -35,7 +35,7 @@ The raw FIRMS detections for the four areas (21.2 million rows) were downloaded 
 
 ## AI ("Super Intelligence") use
 
-- **Code:** written with Claude Code (Anthropic) as a coding assistant. Commits it helped write end with `Co-Authored-By: Claude`.
+- **Code:** written with Claude Code (Anthropic, https://www.anthropic.com/claude-code) as a coding assistant. Commits it helped write end with `Co-Authored-By: Claude`.
 - **Text:** README, method text, translations and submission text drafted with Claude and edited by the team.
 - **Video narration (when added):** AI text-to-speech voice, stated on screen, in the video description and in the file metadata.
 - No NASA logos or branding are used or modified in anything generated.

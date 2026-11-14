@@ -28,7 +28,7 @@ Areas: Hispaniola (Dominican Republic and Haiti), Cuba, Gran Chaco, Cerrado & Am
 - **Data:** the raw NASA FIRMS detections for the four areas (21.2 million) were downloaded before the event, when we chose the challenge. All processing of that data is done by the code in this repo; new data arrives every hour from the FIRMS feeds.
 - **AI use:** written with Claude Code (Anthropic) as a coding assistant; commits carry a `Co-Authored-By: Claude` line.
 
-See [CREDITS.md](CREDITS.md) for every dataset, library and AI tool used, and [BACKLOG.md](BACKLOG.md) for what was left out.
+Submission text: [docs/SUBMISSION.md](docs/SUBMISSION.md). See [CREDITS.md](CREDITS.md) for every dataset, library and AI tool used, and [BACKLOG.md](BACKLOG.md) for what was left out.
 
 ## Run it
 
