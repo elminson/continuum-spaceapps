@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -36,15 +35,13 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
+        $locale = app()->getLocale();
+        $file = lang_path("{$locale}.json");
 
-        return array_merge(parent::share($request), [
+        return [
             ...parent::share($request),
-            'name' => config('app.name'),
-            'quote' => ['message' => trim($message), 'author' => trim($author)],
-            'auth' => [
-                'user' => $request->user(),
-            ],
-        ]);
+            'locale' => $locale,
+            'translations' => $locale !== 'en' && is_file($file) ? json_decode((string) file_get_contents($file), true) : [],
+        ];
     }
 }

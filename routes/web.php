@@ -1,15 +1,9 @@
 <?php
 
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome');
-})->name('home');
-
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('areas/{area}', [PageController::class, 'area'])->name('areas.show');
+Route::get('method', [PageController::class, 'method'])->name('method');
+Route::get('locale/{locale}', [PageController::class, 'locale'])->name('locale');
