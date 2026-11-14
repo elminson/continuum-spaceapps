@@ -29,6 +29,10 @@ The raw FIRMS detections for the four areas (21.2 million rows) were downloaded 
 | PostgreSQL | PostgreSQL License | https://www.postgresql.org |
 | PHPUnit | BSD-3-Clause | https://phpunit.de |
 
+## Our earlier work
+
+- **Logo** (`public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png`): our Continuum brand mark, drawn for our earlier prototype (github.com/elminson/continuum, September 2026) and reused here. No code was copied from that prototype.
+
 ## AI ("Super Intelligence") use
 
 - **Code:** written with Claude Code (Anthropic) as a coding assistant. Commits it helped write end with `Co-Authored-By: Claude`.

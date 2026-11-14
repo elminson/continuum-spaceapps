@@ -25,7 +25,7 @@ const active = (href: string) => (href === '/' ? page.url === '/' : page.url.sta
     <div class="min-h-screen bg-background text-foreground lg:flex">
         <aside class="border-b lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-60 lg:shrink-0 lg:flex-col lg:border-b-0 lg:border-r">
             <Link href="/" class="flex items-center gap-2 px-4 py-4">
-                <span class="grid size-8 place-items-center rounded-lg bg-foreground text-sm font-bold text-background">C</span>
+                <span class="grid size-9 place-items-center rounded-lg bg-neutral-900"><img src="/favicon.svg" alt="" class="size-7" /></span>
                 <span class="leading-tight">
                     <span class="block font-semibold">Continuum</span>
                     <span class="block text-xs text-muted-foreground">{{ t('MODIS + VIIRS harmonized') }}</span>
