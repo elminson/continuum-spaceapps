@@ -25,16 +25,25 @@ class Bulletin
     {
         $key = "bulletin:{$area->id}:".($week ?? 'latest').":{$locale}:".($area->processed_at?->timestamp ?? 0);
 
-        return Cache::remember($key, now()->addDay(), function () use ($area, $week, $locale) {
-            $facts = $this->facts($area, $week, $locale);
-            $written = $this->write($facts, $locale);
+        if ($cached = Cache::get($key)) {
+            return $cached;
+        }
 
-            if ($written !== null && self::onlyKnownNumbers($written, $facts)) {
-                return ['text' => $written, 'source' => 'ai', 'model' => config('services.bulletin.model'), 'facts' => $facts];
-            }
+        $facts = $this->facts($area, $week, $locale);
+        $written = $this->write($facts, $locale);
 
-            return ['text' => self::template($facts, $locale), 'source' => 'template', 'model' => null, 'facts' => $facts];
-        });
+        if ($written !== null && self::onlyKnownNumbers($written, $facts)) {
+            $result = ['text' => $written, 'source' => 'ai', 'model' => config('services.bulletin.model'), 'facts' => $facts];
+            Cache::put($key, $result, now()->addDay());
+
+            return $result;
+        }
+
+        // Keep the template only briefly, so the written version can replace it soon.
+        $result = ['text' => self::template($facts, $locale), 'source' => 'template', 'model' => null, 'facts' => $facts];
+        Cache::put($key, $result, now()->addMinutes(10));
+
+        return $result;
     }
 
     /** @return array<string, mixed> */
@@ -196,9 +205,10 @@ class Bulletin
 
     public static function template(array $facts, string $locale): string
     {
-        $w = $facts['week'] ?? null;
-        $l = $facts['last_30_days'] ?? null;
         $es = $locale === 'es';
+        $fmt = fn ($n) => is_numeric($n) ? number_format((float) $n, floor((float) $n) == (float) $n ? 0 : 1, $es ? ',' : '.', $es ? '.' : ',') : $n;
+        $w = isset($facts['week']) ? array_map($fmt, $facts['week']) : null;
+        $l = isset($facts['last_30_days']) ? array_map($fmt, $facts['last_30_days']) : null;
         $season = $facts['season'] ?? null;
 
         if ($w) {
