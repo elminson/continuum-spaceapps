@@ -28,7 +28,7 @@ Areas: Hispaniola (Dominican Republic and Haiti), Cuba, Gran Chaco, Cerrado & Am
 - **Data:** the raw NASA FIRMS detections for the four areas (21.2 million) were downloaded before the event, when we chose the challenge. All processing of that data is done by the code in this repo; new data arrives every hour from the FIRMS feeds.
 - **AI use:** written with Claude Code (Anthropic) as a coding assistant; commits carry a `Co-Authored-By: Claude` line.
 
-See [BACKLOG.md](BACKLOG.md) for what was left out.
+See [CREDITS.md](CREDITS.md) for every dataset, library and AI tool used, and [BACKLOG.md](BACKLOG.md) for what was left out.
 
 ## Run it
 
@@ -61,7 +61,7 @@ GitHub `main` → Spinnr (spinnr.dev) → the server pulls `main`; then `compose
 
 - NASA FIRMS active fire data: MODIS Collection 6.1 (Terra, Aqua) and VIIRS 375 m (Suomi NPP, NOAA-20, NOAA-21). https://firms.modaps.eosdis.nasa.gov
 - NASA MODIS → VIIRS transition: https://www.earthdata.nasa.gov/data/alerts-outages/transition-from-modis-viirs
-- Laravel, Inertia.js, Vue, Tailwind CSS, Apache ECharts (open source).
+- Full list with licenses: [CREDITS.md](CREDITS.md).
 
 ## License
 
