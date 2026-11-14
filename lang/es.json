@@ -275,5 +275,21 @@
     "A day counts as observed for a sensor when it delivered any fire detection in the processed areas that day; there is no per-cell observation mask yet.": "Un día cuenta como observado para un sensor cuando entregó alguna detección en las áreas procesadas ese día; aún no hay máscara de observación por celda.",
     "Near-real-time detections from the hourly feeds are kept as they arrive.": "Las detecciones casi en tiempo real de las fuentes horarias se guardan tal como llegan.",
     "Terra passes at 10:30, the others near 13:30: Terra samples a different time of day.": "Terra pasa a las 10:30 y los demás cerca de las 13:30: Terra observa otra hora del día.",
-    "Data: NASA FIRMS active fire products, MODIS Collection 6.1 (Giglio et al., 2016) and VIIRS 375 m (Schroeder et al., 2014); NASA GIBS imagery. Open JSON and CSV for everything on this site:": "Datos: productos de fuego activo de NASA FIRMS, MODIS Colección 6.1 (Giglio et al., 2016) y VIIRS 375 m (Schroeder et al., 2014); imágenes de NASA GIBS. JSON y CSV abiertos para todo este sitio:"
+    "Data: NASA FIRMS active fire products, MODIS Collection 6.1 (Giglio et al., 2016) and VIIRS 375 m (Schroeder et al., 2014); NASA GIBS imagery. Open JSON and CSV for everything on this site:": "Datos: productos de fuego activo de NASA FIRMS, MODIS Colección 6.1 (Giglio et al., 2016) y VIIRS 375 m (Schroeder et al., 2014); imágenes de NASA GIBS. JSON y CSV abiertos para todo este sitio:",
+    "Resources": "Recursos",
+    "Presentation & videos": "Presentación y videos",
+    "7-slide deck (PDF)": "Presentación de 7 diapositivas (PDF)",
+    "30-second demo (English)": "Demo de 30 segundos (inglés)",
+    "2:48 explanation (Spanish, English subtitles)": "Explicación de 2:48 (español, subtítulos en inglés)",
+    "Code on GitHub": "Código en GitHub",
+    "Open API": "API abierta",
+    "for the NASA global judges": "para los jueces globales de la NASA",
+    "for the Santiago judges": "para los jueces de Santiago",
+    "Narration is an AI-generated voice; every image is a real screen of this app.": "La narración es una voz generada por IA; cada imagen es una pantalla real de esta app.",
+    "Open the 7-slide deck": "Abrir la presentación de 7 diapositivas",
+    "VIIRS pixels per cell": "Píxeles VIIRS por celda",
+    "MODIS pixels per cell": "Píxeles MODIS por celda",
+    "error vs naive merge, on held-out days": "de error frente a la mezcla ingenua, en días reservados",
+    "Try it on Hispaniola →": "Pruébalo en La Española →",
+    "VIIRS cell-days per MODIS cell-day on Hispaniola": "celdas-día VIIRS por cada celda-día MODIS en La Española"
 }

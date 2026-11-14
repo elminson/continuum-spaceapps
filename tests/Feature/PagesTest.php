@@ -97,6 +97,13 @@ class PagesTest extends TestCase
         $this->get('/alerts?area=dominican-republic')->assertOk()->assertInertia(fn (Assert $page) => $page->where('filters.area', 'dominican-republic'));
     }
 
+    public function test_presentation_and_videos_are_in_the_public_folder(): void
+    {
+        foreach (['slides/continuum-slides.pdf', 'videos/continuum-demo-en.mp4', 'videos/continuum-local-es.mp4', 'videos/continuum-demo-en.jpg'] as $file) {
+            $this->assertFileExists(public_path($file));
+        }
+    }
+
     public function test_every_ready_made_place_fits_inside_an_area(): void
     {
         $this->seed();
