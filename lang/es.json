@@ -220,5 +220,6 @@
     "Area": "Área",
     "Correlation": "Correlación",
     "The machine": "La máquina",
-    "Code lives in github.com/elminson/continuum-spaceapps. A push to main triggers Spinnr, which updates one Linux server running Nginx, PHP and PostgreSQL. Every hour the scheduler pulls NASA FIRMS, re-processes the recent days and pre-computes the pages.": "El código está en github.com/elminson/continuum-spaceapps. Un push a main activa Spinnr, que actualiza un servidor Linux con Nginx, PHP y PostgreSQL. Cada hora el programador descarga NASA FIRMS, reprocesa los días recientes y precalcula las páginas."
+    "Code lives in github.com/elminson/continuum-spaceapps. A push to main triggers Spinnr, which updates one Linux server running Nginx, PHP and PostgreSQL. Every hour the scheduler pulls NASA FIRMS, re-processes the recent days and pre-computes the pages.": "El código está en github.com/elminson/continuum-spaceapps. Un push a main activa Spinnr, que actualiza un servidor Linux con Nginx, PHP y PostgreSQL. Cada hora el programador descarga NASA FIRMS, reprocesa los días recientes y precalcula las páginas.",
+    "Click a week under Unusual weeks to map it here.": "Haz clic en una semana en Semanas inusuales para verla aquí."
 }

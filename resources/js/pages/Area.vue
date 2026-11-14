@@ -22,6 +22,11 @@ const props = defineProps<{
 }>();
 
 const week = ref<string | null>(props.week ?? props.alerts[0]?.week_start ?? null);
+
+function pickWeek(start: string) {
+    week.value = start;
+    document.getElementById('map')?.scrollIntoView({ behavior: 'smooth' });
+}
 const PER_PAGE = 15;
 const page = ref(1);
 const pages = computed(() => Math.max(1, Math.ceil(props.alerts.length / PER_PAGE)));
@@ -50,6 +55,11 @@ const shown = computed(() => props.alerts.slice((page.value - 1) * PER_PAGE, pag
                 <a :href="`/api/areas/${area.slug}/monthly.csv?scale=${scale}`" class="rounded-md border px-2 py-1 hover:bg-muted">CSV</a>
             </div>
         </header>
+
+        <section id="map" class="mt-6 scroll-mt-4">
+            <WeekMap :week="week" :days="30" :bbox="area.bbox" :times="alerts.find((a) => a.week_start === week)?.times ?? null" />
+            <p class="mt-2 text-xs text-muted-foreground">{{ t('Click a week under Unusual weeks to map it here.') }}</p>
+        </section>
 
         <div v-if="fit?.validation" class="mt-6 grid gap-3 sm:grid-cols-4">
             <Kpi
@@ -93,7 +103,7 @@ const shown = computed(() => props.alerts.slice((page.value - 1) * PER_PAGE, pag
         <section class="mt-8">
             <h2 class="text-lg font-semibold">{{ t('Unusual weeks') }}</h2>
             <p class="text-sm text-muted-foreground">
-                {{ t('Weeks far above the same week in every other year (median and MAD, MODIS scale). Click a week to map its fires.') }}
+                {{ t('Weeks far above the same week in every other year (median and MAD, MODIS scale).') }}
             </p>
             <table v-if="alerts.length" class="mt-3 w-full text-sm">
                 <thead class="text-left text-muted-foreground">
@@ -110,7 +120,7 @@ const shown = computed(() => props.alerts.slice((page.value - 1) * PER_PAGE, pag
                         :key="a.week_start"
                         class="cursor-pointer tabular-nums hover:bg-muted/50"
                         :class="{ 'bg-muted': a.week_start === week }"
-                        @click="week = a.week_start"
+                        @click="pickWeek(a.week_start)"
                     >
                         <td class="py-2">{{ date(a.week_start) }}</td>
                         <td>{{ number(a.observed) }}</td>
@@ -121,7 +131,6 @@ const shown = computed(() => props.alerts.slice((page.value - 1) * PER_PAGE, pag
             </table>
             <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks.') }}</p>
             <Pager :page="page" :pages="pages" :total="alerts.length" :per-page="PER_PAGE" @go="(p) => (page = p)" />
-            <WeekMap v-if="week" class="mt-4" :week="week" :bbox="area.bbox" />
         </section>
 
         <section class="mt-8">
