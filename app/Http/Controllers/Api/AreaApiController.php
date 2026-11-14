@@ -6,6 +6,8 @@ use App\Fire\Insights;
 use App\Fire\Sensors;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -52,6 +54,31 @@ class AreaApiController extends Controller
     public function retirement(Request $request, Area $area, Insights $insights): JsonResponse
     {
         return response()->json(['area' => $area->slug, 'data' => $insights->retirement($area, $request->integer('year') ?: null)]);
+    }
+
+    /** GeoJSON of the ~1 km cells with fire in the area during one week (both sensors). */
+    public function week(Request $request, Area $area): JsonResponse
+    {
+        $from = CarbonImmutable::parse((string) $request->query('week', now()->startOfWeek()->toDateString()))->startOfWeek();
+        [$south, $north, $west, $east] = $area->cellBounds();
+
+        $cells = DB::select(<<<'SQL'
+            select cell_lat, cell_lon, string_agg(distinct instrument, ',') as instruments, sum(detections) as detections, round(sum(frp_sum)::numeric, 1) as frp
+            from cell_days
+            where acq_date between ? and ? and cell_lat >= ? and cell_lat < ? and cell_lon >= ? and cell_lon < ?
+            group by cell_lat, cell_lon
+            limit 20000
+            SQL, [$from->toDateString(), $from->addDays(6)->toDateString(), $south, $north, $west, $east]);
+
+        return response()->json([
+            'type' => 'FeatureCollection',
+            'week' => $from->toDateString(),
+            'features' => array_map(fn (object $c) => [
+                'type' => 'Feature',
+                'geometry' => ['type' => 'Point', 'coordinates' => [($c->cell_lon + 0.5) / 100, ($c->cell_lat + 0.5) / 100]],
+                'properties' => ['sensors' => $c->instruments, 'detections' => (int) $c->detections, 'frp' => (float) $c->frp],
+            ], $cells),
+        ]);
     }
 
     private function scale(Request $request): string

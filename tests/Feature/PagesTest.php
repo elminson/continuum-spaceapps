@@ -58,6 +58,7 @@ class PagesTest extends TestCase
         $this->getJson('/api/areas')->assertOk()->assertJsonPath('data.0.slug', 'cuba');
         $this->getJson('/api/areas/cuba/monthly')->assertOk()->assertJsonPath('scale', 'modis')->assertJsonPath('fit.ratio', 0.24);
         $this->getJson('/api/areas/cuba/alerts')->assertOk()->assertJsonPath('data.0.severity', 'extreme');
+        $this->getJson('/api/areas/cuba/week?week=2026-08-19')->assertOk()->assertJsonPath('week', '2026-08-17')->assertJsonPath('type', 'FeatureCollection');
         $this->getJson('/api/areas/cuba/retirement')->assertOk()->assertJsonPath('data.available', false);
         $this->get('/api/areas/cuba/monthly.csv')->assertOk()->assertHeader('content-type', 'text/csv; charset=UTF-8');
     }

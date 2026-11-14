@@ -34,7 +34,6 @@
     "The two sensors, and the harmonized record": "Los dos sensores y el registro armonizado",
     "Dashed: each sensor as it is. Green: one continuous record; shaded where a value was converted from the other sensor.": "Discontinuas: cada sensor tal cual. Verde: un solo registro continuo; sombreado donde un valor se convirtió desde el otro sensor.",
     "Unusual weeks": "Semanas inusuales",
-    "Weeks far above the same week in every other year (median and MAD, MODIS scale).": "Semanas muy por encima de la misma semana en todos los demás años (mediana y MAD, escala MODIS).",
     "Week of": "Semana del",
     "Observed": "Observado",
     "Typical": "Típico",
@@ -73,5 +72,11 @@
     "Rectangular areas only.": "Solo áreas rectangulares.",
     "elevated": "elevada",
     "high": "alta",
-    "extreme": "extrema"
+    "extreme": "extrema",
+    "Weeks far above the same week in every other year (median and MAD, MODIS scale). Click a week to map its fires.": "Semanas muy por encima de la misma semana en todos los demás años (mediana y MAD, escala MODIS). Haz clic en una semana para ver sus fuegos en el mapa.",
+    "Week of :date": "Semana del :date",
+    ":n cells with fire": ":n celdas con fuego",
+    "both sensors": "ambos sensores",
+    "VIIRS only": "solo VIIRS",
+    "MODIS only": "solo MODIS"
 }

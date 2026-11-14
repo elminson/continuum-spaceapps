@@ -3,18 +3,22 @@ import CalendarHeatmap from '@/components/fire/CalendarHeatmap.vue';
 import Kpi from '@/components/fire/Kpi.vue';
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
 import RetirementPanel from '@/components/fire/RetirementPanel.vue';
+import WeekMap from '@/components/fire/WeekMap.vue';
 import type { AlertRow, Fit, Month } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { date, number, percent, t } from '@/lib/i18n';
 import { Head, Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     area: { slug: string; name: string; bbox: number[]; processed_at: string | null };
     scale: 'modis' | 'viirs';
     monthly: Month[];
     fit: Fit | null;
     alerts: AlertRow[];
 }>();
+
+const week = ref<string | null>(props.alerts[0]?.week_start ?? null);
 </script>
 
 <template>
@@ -81,7 +85,9 @@ defineProps<{
 
         <section class="mt-8">
             <h2 class="text-lg font-semibold">{{ t('Unusual weeks') }}</h2>
-            <p class="text-sm text-muted-foreground">{{ t('Weeks far above the same week in every other year (median and MAD, MODIS scale).') }}</p>
+            <p class="text-sm text-muted-foreground">
+                {{ t('Weeks far above the same week in every other year (median and MAD, MODIS scale). Click a week to map its fires.') }}
+            </p>
             <table v-if="alerts.length" class="mt-3 w-full text-sm">
                 <thead class="text-left text-muted-foreground">
                     <tr>
@@ -93,7 +99,13 @@ defineProps<{
                     </tr>
                 </thead>
                 <tbody class="divide-y">
-                    <tr v-for="a in alerts" :key="a.week_start" class="tabular-nums">
+                    <tr
+                        v-for="a in alerts"
+                        :key="a.week_start"
+                        class="cursor-pointer tabular-nums hover:bg-muted/50"
+                        :class="{ 'bg-muted': a.week_start === week }"
+                        @click="week = a.week_start"
+                    >
                         <td class="py-2">{{ date(a.week_start) }}</td>
                         <td>{{ number(a.observed) }}</td>
                         <td>{{ number(a.typical) }}</td>
@@ -103,6 +115,7 @@ defineProps<{
                 </tbody>
             </table>
             <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks.') }}</p>
+            <WeekMap v-if="week" class="mt-4" :slug="area.slug" :week="week" :bbox="area.bbox" />
         </section>
 
         <section class="mt-8">
