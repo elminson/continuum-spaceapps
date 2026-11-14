@@ -44,10 +44,10 @@ const week = ref<string | null>(null);
 const cells = ref<number | null>(null);
 const loadingCells = ref(false);
 const PER_PAGE = 15;
-const page = ref(1);
+const alertPage = ref(1);
 const allAlerts = computed(() => result.value?.alerts ?? []);
 const pages = computed(() => Math.max(1, Math.ceil(allAlerts.value.length / PER_PAGE)));
-const shown = computed(() => allAlerts.value.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE));
+const shown = computed(() => allAlerts.value.slice((alertPage.value - 1) * PER_PAGE, alertPage.value * PER_PAGE));
 
 async function showWeek(start: string | null) {
     week.value = start;
@@ -100,7 +100,7 @@ async function analyze(openWeek?: string | null) {
     }
 
     result.value = body.data;
-    page.value = 1;
+    alertPage.value = 1;
     await showWeek(openWeek ?? body.data.alerts?.[0]?.week_start ?? null);
 }
 
@@ -261,7 +261,7 @@ onBeforeUnmount(() => map?.remove());
                     </li>
                 </ul>
                 <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks.') }}</p>
-                <Pager :page="page" :pages="pages" :total="allAlerts.length" :per-page="PER_PAGE" @go="(p) => (page = p)" />
+                <Pager :page="alertPage" :pages="pages" :total="allAlerts.length" :per-page="PER_PAGE" @go="(p) => (alertPage = p)" />
                 <button class="mt-2 text-sm text-muted-foreground hover:text-foreground" @click="showWeek(null)">
                     {{ t('Show the last 30 days on the map') }}
                 </button>
