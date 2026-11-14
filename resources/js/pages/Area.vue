@@ -16,9 +16,10 @@ const props = defineProps<{
     monthly: Month[];
     fit: Fit | null;
     alerts: AlertRow[];
+    week?: string | null;
 }>();
 
-const week = ref<string | null>(props.alerts[0]?.week_start ?? null);
+const week = ref<string | null>(props.week ?? props.alerts[0]?.week_start ?? null);
 </script>
 
 <template>

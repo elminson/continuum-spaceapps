@@ -35,12 +35,50 @@ class PageController extends Controller
         ]);
     }
 
-    public function alerts(): Response
+    public function alerts(Request $request): Response
     {
+        $severities = ['extreme', 'high', 'elevated'];
+        $severity = in_array($request->query('severity'), $severities, true) ? $request->query('severity') : null;
+        $sort = $request->query('sort') === 'strongest' ? 'strongest' : 'recent';
+        $areas = Area::query()->orderBy('id')->get();
+        $places = Explorer::places();
+        $selected = (string) $request->query('area', '');
+
+        // Every area and ready-made place, with its flagged weeks.
+        $sources = [];
+
+        foreach ($areas as $area) {
+            $sources[$area->slug] = [
+                'slug' => $area->slug, 'name' => $area->label(), 'bbox' => [$area->west, $area->south, $area->east, $area->north], 'kind' => 'area',
+                'alerts' => $area->alerts()->get()->map(fn (Alert $a) => Insights::alert($a))->all(),
+            ];
+        }
+
+        foreach ($places as $place) {
+            $sources[$place['slug']] = [
+                'slug' => $place['slug'], 'name' => $place['name'], 'bbox' => $place['bbox'], 'kind' => 'place',
+                'alerts' => Explorer::cachedAlerts($place['slug']) ?? [],
+            ];
+        }
+
+        $selected = isset($sources[$selected]) ? $selected : '';
+        $list = collect($selected ? [$sources[$selected]] : array_filter($sources, fn ($s) => $s['kind'] === 'area'))
+            ->flatMap(fn ($s) => array_map(fn ($a) => [
+                ...$a, 'area' => $s['name'], 'slug' => $s['slug'],
+                'href' => $s['kind'] === 'area' ? "/areas/{$s['slug']}?week={$a['week_start']}" : "/explore?place={$s['slug']}&week={$a['week_start']}",
+            ], $s['alerts']))
+            ->when($severity, fn ($c) => $c->where('severity', $severity))
+            ->sortByDesc($sort === 'strongest' ? 'score' : 'week_start')
+            ->values();
+
         return Inertia::render('Alerts', [
-            'strongest' => $this->topAlerts(25),
-            'recent' => Alert::query()->with('area')->orderByDesc('week_start')->limit(25)->get()
-                ->map(fn (Alert $a) => [...Insights::alert($a), 'area' => $a->area->label(), 'slug' => $a->area->slug])->all(),
+            'filters' => ['area' => $selected, 'severity' => $severity, 'sort' => $sort],
+            'sources' => array_values(array_map(fn ($s) => [
+                'slug' => $s['slug'], 'name' => $s['name'], 'bbox' => $s['bbox'], 'kind' => $s['kind'],
+                'counts' => array_combine($severities, array_map(fn ($sev) => count(array_filter($s['alerts'], fn ($a) => $a['severity'] === $sev)), $severities)),
+            ], $sources)),
+            'total' => $list->count(),
+            'alerts' => $list->take(100)->all(),
         ]);
     }
 
@@ -67,7 +105,7 @@ class PageController extends Controller
     private function topAlerts(int $limit): array
     {
         return Alert::query()->with('area')->orderByDesc('score')->limit($limit)->get()
-            ->map(fn (Alert $a) => [...Insights::alert($a), 'area' => $a->area->label(), 'slug' => $a->area->slug])->all();
+            ->map(fn (Alert $a) => [...Insights::alert($a), 'area' => $a->area->label(), 'slug' => $a->area->slug, 'href' => "/areas/{$a->area->slug}?week={$a->week_start->toDateString()}"])->all();
     }
 
     public function area(Request $request, Area $area, Insights $insights): Response
@@ -80,6 +118,7 @@ class PageController extends Controller
             'monthly' => $insights->monthly($area, $scale),
             'fit' => $insights->fit($area),
             'alerts' => $insights->alerts($area),
+            'week' => preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->query('week')) ? $request->query('week') : null,
         ]);
     }
 
@@ -88,6 +127,7 @@ class PageController extends Controller
         return Inertia::render('Explore', [
             'areas' => Area::query()->orderBy('id')->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'bbox' => [$a->west, $a->south, $a->east, $a->north]])->all(),
             'places' => Explorer::places(),
+            'open' => ['place' => $request->query('place'), 'week' => $request->query('week')],
             'boxes' => $request->user()?->savedBoxes()->latest()->get()->map(fn (SavedBox $b) => $b->toPlace())->all() ?? [],
         ]);
     }

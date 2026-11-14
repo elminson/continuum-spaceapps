@@ -53,7 +53,7 @@ class Explorer
                 'bbox' => [$west, $south, $east, $north],
                 'fit' => ['ratio' => round($fits[0]['ratio'], 4), 'low' => round($fits[0]['low'], 4), 'high' => round($fits[0]['high'], 4), 'days' => $fits[0]['days'], 'validation' => Calibrate::validate($pairs), 'months' => []],
                 'monthly' => Harmonizer::toMonths($daily),
-                'alerts' => array_map(fn ($a) => [...$a, 'times' => $a['typical'] > 0 ? round($a['observed'] / $a['typical'], 1) : null], array_slice($alerts, 0, 10)),
+                'alerts' => array_map(fn ($a) => [...$a, 'times' => $a['typical'] > 0 ? round($a['observed'] / $a['typical'], 1) : null], array_slice($alerts, 0, 300)),
             ];
         });
     }
@@ -75,13 +75,26 @@ class Explorer
         ], array_keys(self::PLACES), self::PLACES);
     }
 
+    /**
+     * Alerts of a ready-made place, only if already computed (never blocks a page).
+     *
+     * @return list<array<string, mixed>>|null
+     */
+    public static function cachedAlerts(string $slug): ?array
+    {
+        $place = self::PLACES[$slug] ?? null;
+        $result = $place ? Cache::get(self::key($place[2])) : null;
+
+        return $result['alerts'] ?? null;
+    }
+
     /** @param  array{0: float, 1: float, 2: float, 3: float}  $bbox */
     private static function key(array $bbox): string
     {
         [$west, $south, $east, $north] = array_map(fn ($v) => round((float) $v, 2), $bbox);
         $cells = [(int) floor($south * 100), (int) ceil($north * 100), (int) floor($west * 100), (int) ceil($east * 100)];
 
-        return 'explore:'.implode(':', $cells).':'.(Area::query()->max('processed_at') ?? '');
+        return 'explore:v2:'.implode(':', $cells).':'.(Area::query()->max('processed_at') ?? '');
     }
 
     /** @return string|null why a box cannot be analysed */

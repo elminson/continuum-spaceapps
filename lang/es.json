@@ -180,5 +180,15 @@
     "Loading…": "Cargando…",
     "Loading fires…": "Cargando fuegos…",
     "Fitting on the years before :year…": "Ajustando con los años antes de :year…",
-    "Fitting MODIS and VIIRS for this box over 26 years…": "Ajustando MODIS y VIIRS para este recuadro en 26 años…"
+    "Fitting MODIS and VIIRS for this box over 26 years…": "Ajustando MODIS y VIIRS para este recuadro en 26 años…",
+    "All severities": "Todas las severidades",
+    "All areas": "Todas las áreas",
+    "Places": "Lugares",
+    "Strongest": "Más fuertes",
+    "Where": "Dónde",
+    "Each area is coloured by its worst flagged week and shows how many weeks were flagged; click one to filter the list.": "Cada área se colorea según su peor semana marcada y muestra cuántas semanas se marcaron; haz clic en una para filtrar la lista.",
+    "colour = worst week · number = flagged weeks": "color = peor semana · número = semanas marcadas",
+    ":n flagged weeks": ":n semanas marcadas",
+    "No unusual weeks match these filters.": "Ninguna semana inusual coincide con estos filtros.",
+    "Showing the first :n.": "Se muestran las primeras :n."
 }

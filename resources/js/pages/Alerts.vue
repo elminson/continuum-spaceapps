@@ -2,10 +2,100 @@
 import AlertList from '@/components/fire/AlertList.vue';
 import type { AlertRow } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
-import { t } from '@/lib/i18n';
-import { Head } from '@inertiajs/vue3';
+import { number, t } from '@/lib/i18n';
+import { maplibregl, nasaMap } from '@/lib/map';
+import { Head, router } from '@inertiajs/vue3';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
-defineProps<{ strongest: AlertRow[]; recent: AlertRow[] }>();
+type Source = { slug: string; name: string; bbox: number[]; kind: 'area' | 'place'; counts: Record<'extreme' | 'high' | 'elevated', number> };
+
+const props = defineProps<{
+    filters: { area: string; severity: string | null; sort: 'recent' | 'strongest' };
+    sources: Source[];
+    total: number;
+    alerts: AlertRow[];
+}>();
+
+const SEVERITY_COLORS = { extreme: '#dc2626', high: '#f97316', elevated: '#eab308', none: '#64748b' };
+const el = ref<HTMLDivElement | null>(null);
+let map: maplibregl.Map | null = null;
+let markers: maplibregl.Marker[] = [];
+
+const worst = (s: Source) => (s.counts.extreme ? 'extreme' : s.counts.high ? 'high' : s.counts.elevated ? 'elevated' : 'none');
+const flagged = (s: Source) => s.counts.extreme + s.counts.high + s.counts.elevated;
+const totals = (sev: 'extreme' | 'high' | 'elevated') => props.sources.filter((s) => s.kind === 'area').reduce((n, s) => n + s.counts[sev], 0);
+
+function filter(changes: Partial<typeof props.filters>) {
+    const next = { ...props.filters, ...changes };
+    router.get('/alerts', Object.fromEntries(Object.entries(next).filter(([, v]) => v)), { preserveScroll: true, preserveState: true });
+}
+
+function drawMarkers() {
+    markers.forEach((m) => m.remove());
+    markers = props.sources.map((s) => {
+        const dot = document.createElement('button');
+        const size = s.kind === 'area' ? 46 : 32;
+        const selected = props.filters.area === s.slug;
+        dot.title = `${s.name}: ${flagged(s)}`;
+        dot.textContent = String(flagged(s));
+        dot.style.cssText = `width:${size}px;height:${size}px;border-radius:9999px;background:${SEVERITY_COLORS[worst(s)]}cc;color:#fff;font:600 ${s.kind === 'area' ? 13 : 11}px system-ui;border:${selected ? 3 : 2}px solid ${selected ? '#fff' : '#ffffff99'};cursor:pointer;box-shadow:0 1px 4px #0006`;
+        dot.onclick = () => filter({ area: s.slug });
+        const [w, so, e, n] = s.bbox;
+
+        return new maplibregl.Marker({ element: dot }).setLngLat([(w + e) / 2, (so + n) / 2]).addTo(map!);
+    });
+}
+
+function focus() {
+    const s = props.sources.find((x) => x.slug === props.filters.area);
+    const b = s?.bbox ?? [-85, -36, -40, 26];
+    map?.fitBounds([b[0], b[1], b[2], b[3]], { padding: 40, duration: 400 });
+}
+
+onMounted(() => {
+    map = nasaMap(el.value!, [-85, -36, -40, 26]);
+    map.on('load', () => {
+        map!.addSource('boxes', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: props.sources
+                    .filter((s) => s.kind === 'area')
+                    .map((s) => {
+                        const [w, so, e, n] = s.bbox;
+                        return {
+                            type: 'Feature',
+                            properties: {},
+                            geometry: {
+                                type: 'Polygon',
+                                coordinates: [
+                                    [
+                                        [w, so],
+                                        [e, so],
+                                        [e, n],
+                                        [w, n],
+                                        [w, so],
+                                    ],
+                                ],
+                            },
+                        };
+                    }),
+            },
+        });
+        map!.addLayer({ id: 'boxes', type: 'line', source: 'boxes', paint: { 'line-color': '#ffffff', 'line-width': 1, 'line-dasharray': [2, 2] } });
+        drawMarkers();
+        focus();
+    });
+});
+
+watch(
+    () => props.filters.area,
+    () => {
+        drawMarkers();
+        focus();
+    },
+);
+onBeforeUnmount(() => map?.remove());
 </script>
 
 <template>
@@ -19,15 +109,78 @@ defineProps<{ strongest: AlertRow[]; recent: AlertRow[] }>();
                 )
             }}
         </p>
-        <div class="mt-6 grid gap-6 lg:grid-cols-2">
-            <section>
-                <h2 class="text-lg font-semibold">{{ t('Most recent') }}</h2>
-                <AlertList class="mt-3" :alerts="recent" />
-            </section>
-            <section>
-                <h2 class="text-lg font-semibold">{{ t('Strongest on record') }}</h2>
-                <AlertList class="mt-3" :alerts="strongest" />
-            </section>
+
+        <div class="mt-4 flex flex-wrap gap-2 text-sm">
+            <select
+                :value="filters.severity ?? ''"
+                class="rounded-md border bg-background px-2 py-1.5"
+                @change="filter({ severity: ($event.target as HTMLSelectElement).value || null })"
+            >
+                <option value="">{{ t('All severities') }}</option>
+                <option value="extreme">{{ t('extreme') }}</option>
+                <option value="high">{{ t('high') }}</option>
+                <option value="elevated">{{ t('elevated') }}</option>
+            </select>
+            <select
+                :value="filters.area"
+                class="rounded-md border bg-background px-2 py-1.5"
+                @change="filter({ area: ($event.target as HTMLSelectElement).value })"
+            >
+                <option value="">{{ t('All areas') }}</option>
+                <optgroup :label="t('Areas of interest')">
+                    <option v-for="s in sources.filter((x) => x.kind === 'area')" :key="s.slug" :value="s.slug">{{ s.name }}</option>
+                </optgroup>
+                <optgroup :label="t('Places')">
+                    <option v-for="s in sources.filter((x) => x.kind === 'place')" :key="s.slug" :value="s.slug">{{ s.name }}</option>
+                </optgroup>
+            </select>
+            <div class="inline-flex rounded-md border p-0.5">
+                <button
+                    class="rounded px-3 py-1"
+                    :class="filters.sort === 'recent' ? 'bg-foreground text-background' : 'text-muted-foreground'"
+                    @click="filter({ sort: 'recent' })"
+                >
+                    {{ t('Most recent') }}
+                </button>
+                <button
+                    class="rounded px-3 py-1"
+                    :class="filters.sort === 'strongest' ? 'bg-foreground text-background' : 'text-muted-foreground'"
+                    @click="filter({ sort: 'strongest' })"
+                >
+                    {{ t('Strongest') }}
+                </button>
+            </div>
         </div>
+
+        <section class="mt-4 rounded-lg border p-4">
+            <h2 class="font-semibold">{{ t('Where') }}</h2>
+            <p class="text-sm text-muted-foreground">
+                {{ t('Each area is coloured by its worst flagged week and shows how many weeks were flagged; click one to filter the list.') }}
+            </p>
+            <div class="relative mt-3">
+                <div ref="el" class="h-[26rem] w-full overflow-hidden rounded-lg" />
+                <button
+                    v-if="filters.area"
+                    class="absolute left-3 top-3 rounded-md bg-background/90 px-2 py-1 text-sm shadow"
+                    @click="filter({ area: '' })"
+                >
+                    ← {{ t('All areas') }}
+                </button>
+                <div class="absolute bottom-3 left-3 rounded-md bg-background/90 px-3 py-2 text-xs shadow">
+                    <div v-for="sev in ['extreme', 'high', 'elevated'] as const" :key="sev" class="flex items-center gap-2">
+                        <span class="inline-block size-2.5 rounded-full" :style="{ background: SEVERITY_COLORS[sev] }" />
+                        {{ t(sev) }} · {{ number(totals(sev)) }}
+                    </div>
+                    <div class="mt-1 text-muted-foreground">{{ t('colour = worst week · number = flagged weeks') }}</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-6">
+            <h2 class="text-lg font-semibold">{{ t(':n flagged weeks', { n: number(total) }) }}</h2>
+            <AlertList v-if="alerts.length" class="mt-3" :alerts="alerts" />
+            <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks match these filters.') }}</p>
+            <p v-if="total > alerts.length" class="mt-2 text-xs text-muted-foreground">{{ t('Showing the first :n.', { n: alerts.length }) }}</p>
+        </section>
     </SiteLayout>
 </template>

@@ -57,7 +57,7 @@ class PagesTest extends TestCase
 
     public function test_menu_pages_render_without_login(): void
     {
-        foreach (['/areas' => 'Areas', '/alerts' => 'Alerts', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/login' => 'auth/Login'] as $url => $component) {
+        foreach (['/areas' => 'Areas', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/login' => 'auth/Login'] as $url => $component) {
             $this->get($url)->assertOk()->assertInertia(fn (Assert $page) => $page->component($component));
         }
 
@@ -80,6 +80,20 @@ class PagesTest extends TestCase
         $this->actingAs(User::factory()->create())->delete("/boxes/{$box->id}")->assertForbidden();
         $this->actingAs($user)->delete("/boxes/{$box->id}")->assertRedirect();
         $this->assertSame(0, $user->savedBoxes()->count());
+    }
+
+    public function test_unusual_periods_filter_by_area_and_severity(): void
+    {
+        $this->get('/alerts?area=cuba&severity=extreme&sort=strongest')->assertOk()->assertInertia(fn (Assert $page) => $page
+            ->component('Alerts')
+            ->where('filters', ['area' => 'cuba', 'severity' => 'extreme', 'sort' => 'strongest'])
+            ->where('total', 1)
+            ->where('alerts.0.href', '/areas/cuba?week=2026-08-17')
+            ->where('sources.0.counts.extreme', 1));
+
+        $this->get('/alerts?area=cuba&severity=high')->assertInertia(fn (Assert $page) => $page->where('total', 0));
+        $this->get('/alerts?area=nowhere')->assertInertia(fn (Assert $page) => $page->where('filters.area', ''));
+        $this->get('/alerts?area=dominican-republic')->assertOk()->assertInertia(fn (Assert $page) => $page->where('filters.area', 'dominican-republic'));
     }
 
     public function test_every_ready_made_place_fits_inside_an_area(): void

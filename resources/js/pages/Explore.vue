@@ -13,7 +13,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
 type Place = { slug: string; name: string; bbox: number[]; id?: number };
 
-const props = defineProps<{ areas: Place[]; places: Place[]; boxes: Place[] }>();
+const props = defineProps<{ areas: Place[]; places: Place[]; boxes: Place[]; open?: { place: string | null; week: string | null } }>();
 const page = usePage();
 const user = computed(() => (page.props.auth as { user: unknown } | undefined)?.user ?? null);
 const saveName = ref('');
@@ -76,7 +76,7 @@ function draw() {
     source?.setData({ type: 'FeatureCollection', features: box.value ? [rect(box.value)] : [] });
 }
 
-async function analyze() {
+async function analyze(openWeek?: string | null) {
     if (!box.value) return;
     loading.value = true;
     error.value = null;
@@ -94,14 +94,14 @@ async function analyze() {
     }
 
     result.value = body.data;
-    await showWeek(body.data.alerts?.[0]?.week_start ?? null);
+    await showWeek(openWeek ?? body.data.alerts?.[0]?.week_start ?? null);
 }
 
-function go(place: Place) {
+function go(place: Place, openWeek?: string | null) {
     box.value = [...place.bbox];
     map?.fitBounds([place.bbox[0], place.bbox[1], place.bbox[2], place.bbox[3]], { padding: 40 });
     draw();
-    analyze();
+    analyze(openWeek);
 }
 
 function pick(area: { bbox: number[] }) {
@@ -130,6 +130,9 @@ onMounted(() => {
         map!.addLayer({ id: 'box-fill', type: 'fill', source: 'box', paint: { 'fill-color': COLORS.viirs, 'fill-opacity': 0.2 } });
         map!.addLayer({ id: 'box-line', type: 'line', source: 'box', paint: { 'line-color': COLORS.viirs, 'line-width': 2 } });
         addFireCells(map!);
+
+        const start = props.places.find((p) => p.slug === props.open?.place);
+        if (start) go(start, props.open?.week);
     });
 
     map.on('click', (e) => {
@@ -191,7 +194,7 @@ onBeforeUnmount(() => map?.remove());
             <span class="tabular-nums text-muted-foreground">
                 {{ box ? box.map((v) => v.toFixed(2)).join(', ') : t('No box yet') }}
             </span>
-            <button class="rounded-md bg-foreground px-3 py-1.5 text-background disabled:opacity-40" :disabled="!box || loading" @click="analyze">
+            <button class="rounded-md bg-foreground px-3 py-1.5 text-background disabled:opacity-40" :disabled="!box || loading" @click="analyze()">
                 {{ loading ? t('Analyzing…') : t('Analyze this box') }}
             </button>
             <span v-if="error" class="text-red-600">{{ error }}</span>

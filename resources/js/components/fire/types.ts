@@ -17,6 +17,7 @@ export type AlertRow = {
     severity: string;
     area?: string;
     slug?: string;
+    href?: string;
 };
 
 export type Fit = {

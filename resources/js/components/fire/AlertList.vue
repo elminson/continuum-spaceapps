@@ -9,7 +9,7 @@ defineProps<{ alerts: AlertRow[] }>();
 <template>
     <ul class="divide-y rounded-lg border text-sm">
         <li v-for="a in alerts" :key="`${a.slug}-${a.week_start}`">
-            <Link :href="`/areas/${a.slug}`" class="flex items-center justify-between gap-4 px-4 py-3 hover:bg-muted/50">
+            <Link :href="a.href ?? `/areas/${a.slug}`" class="flex items-center justify-between gap-4 px-4 py-3 hover:bg-muted/50">
                 <span>
                     <span class="font-medium">{{ a.area }}</span>
                     <span class="text-muted-foreground"> · {{ t('week of :date', { date: date(a.week_start) }) }}</span>
