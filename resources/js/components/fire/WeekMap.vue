@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { date, number, t } from '@/lib/i18n';
-import { addFireCells, loadFireCells, maplibregl, nasaMap, setDailyImagery, type Period } from '@/lib/map';
+import { addFireCells, loadFireCells, maplibregl, nasaMap, setDailyImagery, setFireDay, type Period } from '@/lib/map';
+import { Pause, Play } from 'lucide-vue-next';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import FireLegend from './FireLegend.vue';
 import Loading from './Loading.vue';
@@ -30,9 +31,58 @@ const label = computed(() => (props.week ? t('Week of :date', { date: date(props
 
 async function load() {
     if (!map) return;
+    stop();
     loading.value = true;
     cells.value = await loadFireCells(map, props.bbox, period.value);
     loading.value = false;
+}
+
+// Play the period day by day: cells appear on the day they first burned.
+const playing = ref(false);
+const day = ref<number | null>(null);
+let timer: ReturnType<typeof setInterval> | null = null;
+const totalDays = computed(() => (props.week ? 7 : (props.days ?? 30)));
+const startDate = computed(() => {
+    if (props.week) return new Date(`${props.week}T00:00:00Z`);
+    const d = new Date();
+    d.setUTCDate(d.getUTCDate() - (totalDays.value - 1));
+    return d;
+});
+const dayLabel = computed(() => {
+    if (day.value === null) return null;
+    const d = new Date(startDate.value);
+    d.setUTCDate(d.getUTCDate() + day.value);
+    return t('Day :n of :total · :date', { n: day.value + 1, total: totalDays.value, date: date(d.toISOString().slice(0, 10)) });
+});
+
+function stop() {
+    if (timer) clearInterval(timer);
+    timer = null;
+    playing.value = false;
+    day.value = null;
+    if (map) setFireDay(map, null);
+}
+
+function play() {
+    if (!map || playing.value) return stop();
+    playing.value = true;
+    day.value = 0;
+    setFireDay(map, 0);
+    timer = setInterval(
+        () => {
+            if (day.value === null || !map) return stop();
+            if (day.value >= totalDays.value - 1) {
+                clearInterval(timer!);
+                timer = null;
+                playing.value = false;
+                setTimeout(() => !playing.value && stop(), 1500);
+                return;
+            }
+            day.value++;
+            setFireDay(map, day.value);
+        },
+        props.week ? 900 : 350,
+    );
 }
 
 onMounted(() => {
@@ -52,12 +102,24 @@ watch(
     },
 );
 watch(photo, applyPhoto);
-onBeforeUnmount(() => map?.remove());
+onBeforeUnmount(() => {
+    if (timer) clearInterval(timer);
+    map?.remove();
+});
 </script>
 
 <template>
     <div class="relative overflow-hidden rounded-md bg-neutral-950" :class="height">
         <div ref="el" class="h-full w-full" />
+
+        <button
+            class="absolute left-3 top-3 inline-flex items-center gap-2 rounded-md bg-neutral-900/90 px-3 py-1.5 text-sm font-medium text-white hover:bg-neutral-800"
+            :aria-label="playing ? t('Pause') : t('Play day by day')"
+            @click="play"
+        >
+            <component :is="playing ? Pause : Play" class="size-4" />
+            {{ playing ? t('Pause') : t('Play day by day') }}
+        </button>
 
         <div class="absolute right-3 top-3 flex flex-col items-end gap-2">
             <slot name="controls" />
@@ -68,7 +130,7 @@ onBeforeUnmount(() => map?.remove());
             <slot name="panel-top" />
             <Loading v-if="loading" class="text-neutral-300" :label="t('Loading fires…')" />
             <template v-else>
-                <div class="text-sm text-neutral-300">{{ label }}</div>
+                <div class="text-sm text-neutral-300">{{ dayLabel ?? label }}</div>
                 <div v-if="week && times" class="mt-1 flex items-baseline gap-2 tabular-nums">
                     <span class="size-2 self-center rounded-full bg-orange-500" />
                     <span class="text-4xl font-semibold text-orange-500">×{{ number(times, 1) }}</span>

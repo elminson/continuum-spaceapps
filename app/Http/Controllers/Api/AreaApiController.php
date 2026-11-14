@@ -144,22 +144,23 @@ class AreaApiController extends Controller
         }
 
         $cells = DB::select(<<<'SQL'
-            select cell_lat, cell_lon, string_agg(distinct instrument, ',') as instruments, sum(detections) as detections, round(sum(frp_sum)::numeric, 1) as frp
+            select cell_lat, cell_lon, string_agg(distinct instrument, ',') as instruments, sum(detections) as detections, round(sum(frp_sum)::numeric, 1) as frp, (min(acq_date) - ?::date) as day
             from cell_days
             where acq_date between ? and ? and cell_lat >= ? and cell_lat < ? and cell_lon >= ? and cell_lon < ?
             group by cell_lat, cell_lon
             limit 20000
-            SQL, [$from->toDateString(), $to->toDateString(), $south, $north, $west, $east]);
+            SQL, [$from->toDateString(), $from->toDateString(), $to->toDateString(), $south, $north, $west, $east]);
 
         return response()->json([
             'type' => 'FeatureCollection',
+            'days' => (int) $from->diffInDays($to) + 1,
             'week' => $from->toDateString(),
             'from' => $from->toDateString(),
             'to' => $to->toDateString(),
             'features' => array_map(fn (object $c) => [
                 'type' => 'Feature',
                 'geometry' => ['type' => 'Point', 'coordinates' => [($c->cell_lon + 0.5) / 100, ($c->cell_lat + 0.5) / 100]],
-                'properties' => ['sensors' => $c->instruments, 'detections' => (int) $c->detections, 'frp' => (float) $c->frp],
+                'properties' => ['sensors' => $c->instruments, 'detections' => (int) $c->detections, 'frp' => (float) $c->frp, 'day' => (int) $c->day],
             ], $cells),
         ]);
     }

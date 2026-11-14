@@ -53,6 +53,11 @@ export function addFireCells(map: maplibregl.Map): void {
 
 export type Period = { week: string } | { days: number };
 
+/** Show only cells that had first burned by day `day` (0 = first day), or every cell when null. */
+export function setFireDay(map: maplibregl.Map, day: number | null): void {
+    if (map.getLayer('cells')) map.setFilter('cells', day === null ? null : ['<=', ['get', 'day'], day]);
+}
+
 /** Loads the fire cells of a box for one week or the last N days; returns how many cells burned. */
 export async function loadFireCells(map: maplibregl.Map, bbox: number[], period: Period): Promise<number> {
     const query = 'week' in period ? `week=${period.week}` : `days=${period.days}`;
