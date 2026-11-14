@@ -37,9 +37,10 @@ const option = computed(() => {
             min: 0,
             max,
             calculable: true,
-            orient: 'horizontal',
-            left: 'center',
-            bottom: 0,
+            orient: 'vertical',
+            right: 0,
+            top: 'middle',
+            itemHeight: 160,
             inRange: {
                 color: isDark.value
                     ? ['#1f1a17', '#7c2d12', '#c2410c', '#f97316', '#fdba74']
