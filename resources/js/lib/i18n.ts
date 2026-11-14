@@ -38,4 +38,20 @@ export function date(value: string): string {
     );
 }
 
+export function dateTime(iso: string | null | undefined): string {
+    if (!iso) return '—';
+
+    return new Intl.DateTimeFormat(locale() === 'es' ? 'es-DO' : 'en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+    }).format(new Date(iso));
+}
+
+export function dateRange(from: string, to: string): string {
+    return `${date(from)} → ${date(to)}`;
+}
+
 export const COLORS = { modis: '#3b82f6', viirs: '#f97316', harmonized: '#16a34a', muted: '#94a3b8' };

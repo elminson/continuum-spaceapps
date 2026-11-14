@@ -5,6 +5,7 @@ import Kpi from '@/components/fire/Kpi.vue';
 import Loading from '@/components/fire/Loading.vue';
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
 import Pager from '@/components/fire/Pager.vue';
+import TimesNormal from '@/components/fire/TimesNormal.vue';
 import type { AlertRow, Fit, Month } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { COLORS, date, number, percent, r, t } from '@/lib/i18n';
@@ -29,7 +30,7 @@ function save() {
 }
 
 function forget(b: Place) {
-    router.delete(`/boxes/${b.id}`, { preserveScroll: true, preserveState: true });
+    router.delete(`/boxes/${b.id}`, { preserveScroll: true, preserveState: true, onSuccess: () => (currentBox.value = null) });
 }
 
 type Result = { available: boolean; bbox: number[]; fit?: Fit; monthly?: Month[]; alerts?: AlertRow[] };
@@ -111,6 +112,20 @@ function go(place: Place, openWeek?: string | null) {
     analyze(openWeek);
 }
 
+const currentBox = ref<Place | null>(null);
+
+function startFrom(value: string) {
+    const [kind, slug] = value.split(':');
+    currentBox.value = null;
+
+    if (kind === 'place') go(props.places.find((p) => p.slug === slug)!);
+    if (kind === 'box') {
+        currentBox.value = props.boxes.find((b) => b.slug === slug) ?? null;
+        if (currentBox.value) go(currentBox.value);
+    }
+    if (kind === 'area') pick(props.areas.find((a) => a.slug === slug)!);
+}
+
 function pick(area: { bbox: number[] }) {
     const [w, s, e, n] = area.bbox;
     const dx = Math.min(1, (e - w) / 4);
@@ -161,29 +176,30 @@ onBeforeUnmount(() => map?.remove());
     <SiteLayout>
         <h1 class="text-2xl font-semibold tracking-tight">{{ t('Explore any box') }}</h1>
         <p class="mt-1 max-w-3xl text-sm text-muted-foreground">
-            {{
-                t(
-                    'Click two corners on the map inside a dashed area, or start from an area below. Continuum fits and tests its own MODIS/VIIRS ratio for that box and builds its 26-year calendar. No login needed.',
-                )
-            }}
+            {{ t('Continuum fits and tests its own MODIS/VIIRS ratio for any box inside the dashed areas and builds its 26-year calendar.') }}
         </p>
 
         <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
-            <span class="text-muted-foreground">{{ t('Ready to open') }}</span>
-            <button v-for="p in places" :key="p.slug" class="rounded-md border px-2 py-1 hover:bg-muted" @click="go(p)">{{ p.name }}</button>
-        </div>
-
-        <div v-if="boxes.length" class="mt-2 flex flex-wrap items-center gap-2 text-sm">
-            <span class="text-muted-foreground">{{ t('My boxes') }}</span>
-            <span v-for="b in boxes" :key="b.slug" class="inline-flex items-center rounded-md border">
-                <button class="px-2 py-1 hover:bg-muted" @click="go(b)">{{ b.name }}</button>
-                <button class="border-l px-1.5 py-1 text-muted-foreground hover:text-red-600" :aria-label="t('Delete')" @click="forget(b)">×</button>
-            </span>
-        </div>
-
-        <div class="mt-2 flex flex-wrap items-center gap-2 text-sm">
-            <span class="text-muted-foreground">{{ t('Or start a box in') }}</span>
-            <button v-for="a in areas" :key="a.slug" class="rounded-md border px-2 py-1 hover:bg-muted" @click="pick(a)">{{ a.name }}</button>
+            <select
+                class="rounded-md border bg-background px-2 py-1.5"
+                :aria-label="t('Start from')"
+                @change="startFrom(($event.target as HTMLSelectElement).value)"
+            >
+                <option value="">{{ t('Start from…') }}</option>
+                <optgroup :label="t('Ready to open')">
+                    <option v-for="p in places" :key="p.slug" :value="`place:${p.slug}`">{{ p.name }}</option>
+                </optgroup>
+                <optgroup v-if="boxes.length" :label="t('My boxes')">
+                    <option v-for="b in boxes" :key="b.slug" :value="`box:${b.slug}`">{{ b.name }}</option>
+                </optgroup>
+                <optgroup :label="t('Areas of interest')">
+                    <option v-for="a in areas" :key="a.slug" :value="`area:${a.slug}`">{{ a.name }}</option>
+                </optgroup>
+            </select>
+            <span class="text-muted-foreground">{{ t('or click two corners on the map') }}</span>
+            <button v-if="currentBox" class="ml-auto text-muted-foreground hover:text-red-600" @click="forget(currentBox)">
+                {{ t('Delete “:name”', { name: currentBox.name }) }}
+            </button>
         </div>
 
         <div v-if="loading" class="mt-3"><Loading :label="t('Fitting MODIS and VIIRS for this box over 26 years…')" /></div>
@@ -195,7 +211,7 @@ onBeforeUnmount(() => map?.remove());
             </span>
             <FireLegend />
         </div>
-        <div ref="el" class="mt-2 h-[32rem] w-full overflow-hidden rounded-lg border" />
+        <div ref="el" class="mt-2 h-[32rem] w-full overflow-hidden rounded-md" />
 
         <div class="mt-3 flex flex-wrap items-center gap-3 text-sm">
             <span class="tabular-nums text-muted-foreground">
@@ -248,16 +264,16 @@ onBeforeUnmount(() => map?.remove());
 
             <section class="mt-8">
                 <h2 class="text-lg font-semibold">{{ t('Unusual weeks') }}</h2>
-                <ul v-if="result.alerts?.length" class="mt-3 divide-y rounded-lg border text-sm">
+                <ul v-if="result.alerts?.length" class="mt-3 text-sm">
                     <li
                         v-for="a in shown"
                         :key="a.week_start"
-                        class="flex cursor-pointer justify-between px-4 py-2 tabular-nums hover:bg-muted/50"
+                        class="-mx-2 flex cursor-pointer items-center justify-between rounded-md px-2 py-2 hover:bg-muted"
                         :class="{ 'bg-muted': a.week_start === week }"
                         @click="showWeek(a.week_start)"
                     >
-                        <span>{{ t('week of :date', { date: date(a.week_start) }) }}</span>
-                        <span>×{{ number(a.times, 1) }} {{ t('normal') }}</span>
+                        <span>{{ t('Week of :date', { date: date(a.week_start) }) }}</span>
+                        <TimesNormal :times="a.times" :severity="a.severity" />
                     </li>
                 </ul>
                 <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks.') }}</p>

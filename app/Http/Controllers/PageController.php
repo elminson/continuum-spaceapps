@@ -98,9 +98,13 @@ class PageController extends Controller
         ]);
     }
 
-    public function howItWorks(DataStatus $status): Response
+    public function howItWorks(DataStatus $status, Insights $insights): Response
     {
-        return Inertia::render('HowItWorks', ['status' => $status->summary()]);
+        return Inertia::render('HowItWorks', [
+            'status' => $status->summary(),
+            'evidence' => Area::query()->orderBy('id')->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'fit' => $insights->fit($a)])->all(),
+            'hispaniola' => Area::query()->where('slug', 'hispaniola')->first(['west', 'south', 'east', 'north'])?->only('west', 'south', 'east', 'north'),
+        ]);
     }
 
     public function apiDocs(): Response

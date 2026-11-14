@@ -20,14 +20,13 @@ const props = defineProps<{
     perPage: number;
 }>();
 
-const SEVERITY_COLORS = { extreme: '#dc2626', high: '#f97316', elevated: '#eab308', none: '#64748b' };
+const SEVERITY_COLORS = { extreme: '#c2410c', high: '#ea580c', elevated: '#fb923c', none: '#64748b' };
 const el = ref<HTMLDivElement | null>(null);
 let map: maplibregl.Map | null = null;
 let markers: maplibregl.Marker[] = [];
 
 const worst = (s: Source) => (s.counts.extreme ? 'extreme' : s.counts.high ? 'high' : s.counts.elevated ? 'elevated' : 'none');
 const flagged = (s: Source) => s.counts.extreme + s.counts.high + s.counts.elevated;
-const totals = (sev: 'extreme' | 'high' | 'elevated') => props.sources.filter((s) => s.kind === 'area').reduce((n, s) => n + s.counts[sev], 0);
 
 function filter(changes: Partial<typeof props.filters>, page = 1) {
     const next = { ...props.filters, ...changes, page: page > 1 ? page : null };
@@ -161,13 +160,9 @@ onBeforeUnmount(() => map?.remove());
             </div>
         </div>
 
-        <section class="mt-4 rounded-lg border p-4">
-            <h2 class="font-semibold">{{ t('Where') }}</h2>
-            <p class="text-sm text-muted-foreground">
-                {{ t('Each area is coloured by its worst flagged week and shows how many weeks were flagged; click one to filter the list.') }}
-            </p>
-            <div class="relative mt-3">
-                <div ref="el" class="h-[26rem] w-full overflow-hidden rounded-lg" />
+        <section class="mt-4">
+            <div class="relative">
+                <div ref="el" class="h-[26rem] w-full overflow-hidden rounded-md" />
                 <button
                     v-if="filters.area"
                     class="absolute left-3 top-3 rounded-md bg-background/90 px-2 py-1 text-sm shadow"
@@ -175,18 +170,14 @@ onBeforeUnmount(() => map?.remove());
                 >
                     ← {{ t('All areas') }}
                 </button>
-                <div class="absolute bottom-3 left-3 rounded-md bg-background/90 px-3 py-2 text-xs shadow">
-                    <div v-for="sev in ['extreme', 'high', 'elevated'] as const" :key="sev" class="flex items-center gap-2">
-                        <span class="inline-block size-2.5 rounded-full" :style="{ background: SEVERITY_COLORS[sev] }" />
-                        {{ t(sev) }} · {{ number(totals(sev)) }}
-                    </div>
-                    <div class="mt-1 text-muted-foreground">{{ t('colour = worst week · number = flagged weeks') }}</div>
-                </div>
+                <p class="absolute bottom-3 left-3 rounded-md bg-background/90 px-3 py-2 text-xs shadow">
+                    {{ t('Number = flagged weeks · darker = a stronger worst week. Click to filter.') }}
+                </p>
             </div>
         </section>
 
         <section id="flagged" class="mt-6 scroll-mt-4">
-            <h2 class="text-lg font-semibold">{{ t(':n flagged weeks', { n: number(total) }) }}</h2>
+            <h2 class="font-semibold">{{ t(':n flagged weeks', { n: number(total) }) }}</h2>
             <AlertList v-if="alerts.length" class="mt-3" :alerts="alerts" />
             <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks match these filters.') }}</p>
             <Pager :page="page" :pages="pages" :total="total" :per-page="perPage" @go="goTo" />

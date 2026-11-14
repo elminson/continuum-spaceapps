@@ -72,6 +72,7 @@ class Explorer
             'name' => $es ? $p[1] : $p[0],
             'bbox' => $p[2],
             'top_week' => Cache::get(self::key($p[2]))['alerts'][0]['week_start'] ?? null,
+            'top_times' => Cache::get(self::key($p[2]))['alerts'][0]['times'] ?? null,
         ], array_keys(self::PLACES), self::PLACES);
     }
 

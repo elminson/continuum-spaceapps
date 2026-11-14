@@ -4,8 +4,9 @@ import { addFireCells, loadFireCells, maplibregl, nasaMap, type Period } from '@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import FireLegend from './FireLegend.vue';
 import Loading from './Loading.vue';
+import TimesNormal from './TimesNormal.vue';
 
-const props = defineProps<{ bbox: number[]; week?: string | null; days?: number }>();
+const props = defineProps<{ bbox: number[]; week?: string | null; days?: number; times?: number | null }>();
 const el = ref<HTMLDivElement | null>(null);
 const cells = ref<number | null>(null);
 const loading = ref(false);
@@ -44,8 +45,9 @@ onBeforeUnmount(() => map?.remove());
         <div class="mb-2 flex flex-wrap gap-4 text-xs text-muted-foreground">
             <Loading v-if="loading" :label="t('Loading fires…')" />
             <span v-else>{{ label }} · {{ t(':n cells with fire', { n: number(cells) }) }}</span>
+            <TimesNormal v-if="week && times" :times="times" />
             <FireLegend />
         </div>
-        <div ref="el" class="h-[28rem] w-full overflow-hidden rounded-lg border" />
+        <div ref="el" class="h-[28rem] w-full overflow-hidden rounded-md" />
     </div>
 </template>

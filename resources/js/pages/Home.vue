@@ -1,24 +1,15 @@
 <script setup lang="ts">
 import AlertList from '@/components/fire/AlertList.vue';
-import Kpi from '@/components/fire/Kpi.vue';
 import Spark from '@/components/fire/Spark.vue';
 import type { AlertRow, Place, Status } from '@/components/fire/types';
 import WeekMap from '@/components/fire/WeekMap.vue';
 import SiteLayout from '@/layouts/SiteLayout.vue';
-import { date, number, percent, t } from '@/lib/i18n';
+import { date, dateRange, number, percent, t } from '@/lib/i18n';
 import { Head, Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
-    areas: {
-        slug: string;
-        name: string;
-        first_month: string | null;
-        last_month: string | null;
-        spark: (number | null)[];
-        improvement: number | null;
-        latest_alert: AlertRow | null;
-    }[];
+    areas: { slug: string; name: string; spark: (number | null)[]; improvement: number | null; latest_alert: AlertRow | null }[];
     status: Status;
     places: Place[];
     topAlerts: AlertRow[];
@@ -33,52 +24,30 @@ const viirs = computed(() => props.status.instruments.find((i) => i.instrument =
 <template>
     <Head :title="t('Overview')" />
     <SiteLayout>
-        <section class="rounded-xl border bg-gradient-to-br from-orange-50 to-background p-6 dark:from-orange-950/30">
-            <p class="text-xs font-semibold uppercase tracking-wide text-orange-600">
-                {{ t('NASA Space Apps 2026 · Harmonization of MODIS and VIIRS hot spots') }}
-            </p>
-            <h1 class="mt-2 max-w-3xl text-3xl font-semibold tracking-tight">{{ t('One continuous fire record, from November 2000 to today') }}</h1>
-            <p class="mt-3 max-w-3xl text-muted-foreground">
+        <section class="max-w-3xl">
+            <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">{{ t('Was this fire unusual?') }}</h1>
+            <p class="mt-3 text-muted-foreground">
                 {{
                     t(
-                        'MODIS (since 2000) and VIIRS (since 2012) count the same fires very differently. Continuum puts both on one 1 km grid and one scale, so a busy fire season reads as a busy season, not as a new satellite.',
+                        'Continuum puts every NASA MODIS and VIIRS fire detection since November 2000 on one 1 km grid and one scale, so any week can be compared with the same week in every other year.',
                     )
                 }}
             </p>
-            <div class="mt-4 flex flex-wrap gap-2 text-sm">
-                <Link href="/explore" class="rounded-md bg-foreground px-3 py-2 text-background">{{ t('Explore the Dominican Republic') }}</Link>
-                <Link href="/method" class="rounded-md border px-3 py-2 hover:bg-muted">{{ t('Method') }}</Link>
-                <Link href="/api-docs" class="rounded-md border px-3 py-2 hover:bg-muted">API</Link>
+            <div class="mt-5 flex flex-wrap items-center gap-4 text-sm">
+                <Link href="/explore?place=dominican-republic" class="rounded-md bg-foreground px-3 py-2 text-background">{{
+                    t('Explore the Dominican Republic')
+                }}</Link>
+                <Link href="/how-it-works" class="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">{{
+                    t('How it works')
+                }}</Link>
             </div>
         </section>
 
-        <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Kpi
-                :label="t('NASA FIRMS detections')"
-                :value="number(status.detections)"
-                :hint="status.instruments.map((i) => `${i.instrument.toUpperCase()} ${number(i.detections)}`).join(' · ')"
-            />
-            <Kpi :label="t('1 km cell-days')" :value="number(status.cell_days)" :hint="t('pixels collapsed to one grid')" />
-            <Kpi
-                :label="t('VIIRS pixels per 1 km cell')"
-                :value="`×${number(viirs?.pixels_per_cell, 1)}`"
-                :hint="t('the inflation removed by gridding')"
-            />
-            <Kpi :label="t('Record')" :value="t(':n days', { n: number(status.record_days) })" :hint="`${status.first_day} → ${status.last_day}`" />
-        </div>
-
-        <section class="mt-6">
-            <div class="flex flex-wrap items-end justify-between gap-2">
-                <div>
-                    <h2 class="text-lg font-semibold">{{ t('Fire map · :place', { place: place.name }) }}</h2>
-                    <p class="text-sm text-muted-foreground">
-                        {{
-                            week
-                                ? t('Its most unusual week on record: every 1 km cell where MODIS or VIIRS saw fire.')
-                                : t('Every 1 km cell where MODIS or VIIRS saw fire in the last 30 days. New NASA data every hour.')
-                        }}
-                    </p>
-                </div>
+        <section class="mt-10">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <select v-model="place" class="rounded-md border bg-background px-2 py-1.5 text-sm font-medium" :aria-label="t('Place')">
+                    <option v-for="p in places" :key="p.slug" :value="p">{{ p.name }}</option>
+                </select>
                 <div class="inline-flex rounded-md border p-0.5 text-sm">
                     <button
                         class="rounded px-3 py-1"
@@ -96,50 +65,61 @@ const viirs = computed(() => props.status.instruments.find((i) => i.instrument =
                     </button>
                 </div>
             </div>
-            <div class="mt-3 flex flex-wrap gap-1 text-sm">
-                <button
-                    v-for="p in places"
-                    :key="p.slug"
-                    class="rounded-md border px-2 py-1"
-                    :class="p.slug === place.slug ? 'bg-foreground text-background' : 'hover:bg-muted'"
-                    @click="place = p"
-                >
-                    {{ p.name }}
-                </button>
-            </div>
-            <WeekMap class="mt-3" :week="week" :days="30" :bbox="place.bbox" />
+            <WeekMap class="mt-3" :week="week" :days="30" :bbox="place.bbox" :times="place.top_times" />
         </section>
 
-        <section class="mt-8 grid gap-6 lg:grid-cols-2">
+        <dl class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-                <h2 class="text-lg font-semibold">{{ t('Areas of interest') }}</h2>
-                <div class="mt-3 grid gap-3">
-                    <Link
-                        v-for="area in areas"
-                        :key="area.slug"
-                        :href="`/areas/${area.slug}`"
-                        class="rounded-lg border p-4 transition hover:border-foreground/40"
-                    >
-                        <div class="flex justify-between gap-2">
-                            <span class="font-medium">{{ area.name }}</span>
-                            <span v-if="area.improvement !== null" class="text-xs text-muted-foreground">{{
-                                t('Error vs naive merge −:p', { p: percent(area.improvement) })
-                            }}</span>
-                        </div>
-                        <Spark class="mt-2" :values="area.spark" />
-                        <div v-if="area.latest_alert" class="text-xs text-muted-foreground">
-                            {{ t('Last unusual week: :date', { date: date(area.latest_alert.week_start) }) }}
-                        </div>
-                    </Link>
-                </div>
+                <dt class="text-sm text-muted-foreground">{{ t('NASA FIRMS detections') }}</dt>
+                <dd class="mt-1 text-2xl font-semibold tabular-nums">{{ number(status.detections) }}</dd>
             </div>
             <div>
-                <h2 class="text-lg font-semibold">{{ t('Most unusual weeks on record') }}</h2>
+                <dt class="text-sm text-muted-foreground">{{ t('1 km cell-days') }}</dt>
+                <dd class="mt-1 text-2xl font-semibold tabular-nums">{{ number(status.cell_days) }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm text-muted-foreground">{{ t('VIIRS pixels per 1 km cell') }}</dt>
+                <dd class="mt-1 text-2xl font-semibold tabular-nums">×{{ number(viirs?.pixels_per_cell, 1) }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm text-muted-foreground">{{ t('Record') }}</dt>
+                <dd class="mt-1 text-2xl font-semibold tabular-nums">{{ t(':n days', { n: number(status.record_days) }) }}</dd>
+                <dd class="text-xs text-muted-foreground">{{ dateRange(status.first_day, status.last_day) }}</dd>
+            </div>
+        </dl>
+
+        <div class="mt-12 grid gap-10 lg:grid-cols-2">
+            <section>
+                <h2 class="font-semibold">{{ t('Areas of interest') }}</h2>
+                <ul class="mt-3 text-sm">
+                    <li v-for="area in areas" :key="area.slug">
+                        <Link
+                            :href="`/areas/${area.slug}`"
+                            class="-mx-2 grid grid-cols-[1fr_6rem] items-center gap-4 rounded-md px-2 py-2 hover:bg-muted"
+                        >
+                            <span class="min-w-0">
+                                <span class="block truncate">{{ area.name }}</span>
+                                <span class="text-xs text-muted-foreground">
+                                    <template v-if="area.improvement !== null">{{
+                                        t('−:p error vs naive merge', { p: percent(area.improvement) })
+                                    }}</template>
+                                    <template v-if="area.latest_alert">
+                                        · {{ t('last unusual week :date', { date: date(area.latest_alert.week_start) }) }}</template
+                                    >
+                                </span>
+                            </span>
+                            <Spark :values="area.spark" />
+                        </Link>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h2 class="font-semibold">{{ t('Most unusual weeks on record') }}</h2>
                 <AlertList class="mt-3" :alerts="topAlerts" />
                 <Link href="/alerts" class="mt-2 inline-block text-sm text-muted-foreground hover:text-foreground">{{
                     t('All unusual periods →')
                 }}</Link>
-            </div>
-        </section>
+            </section>
+        </div>
     </SiteLayout>
 </template>

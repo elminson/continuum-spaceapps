@@ -1,33 +1,21 @@
 <script setup lang="ts">
-import { date, number, t } from '@/lib/i18n';
+import { date, t } from '@/lib/i18n';
 import { Link } from '@inertiajs/vue3';
+import TimesNormal from './TimesNormal.vue';
 import type { AlertRow } from './types';
 
-defineProps<{ alerts: AlertRow[] }>();
+defineProps<{ alerts: AlertRow[]; showArea?: boolean }>();
 </script>
 
 <template>
-    <ul class="divide-y rounded-lg border text-sm">
+    <ul class="text-sm">
         <li v-for="a in alerts" :key="`${a.slug}-${a.week_start}`">
-            <Link :href="a.href ?? `/areas/${a.slug}`" class="flex items-center justify-between gap-4 px-4 py-3 hover:bg-muted/50">
-                <span>
-                    <span class="font-medium">{{ a.area }}</span>
-                    <span class="text-muted-foreground"> · {{ t('week of :date', { date: date(a.week_start) }) }}</span>
+            <Link :href="a.href ?? `/areas/${a.slug}`" class="-mx-2 flex items-center justify-between gap-4 rounded-md px-2 py-2 hover:bg-muted">
+                <span class="min-w-0 truncate">
+                    <span>{{ t('Week of :date', { date: date(a.week_start) }) }}</span>
+                    <span v-if="showArea !== false" class="text-muted-foreground"> · {{ a.area }}</span>
                 </span>
-                <span class="shrink-0 tabular-nums">
-                    ×{{ number(a.times, 1) }} {{ t('normal') }}
-                    <span
-                        class="ml-2 rounded px-1.5 py-0.5 text-xs"
-                        :class="
-                            a.severity === 'extreme'
-                                ? 'bg-red-100 text-red-700'
-                                : a.severity === 'high'
-                                  ? 'bg-orange-100 text-orange-700'
-                                  : 'bg-yellow-100 text-yellow-800'
-                        "
-                        >{{ t(a.severity) }}</span
-                    >
-                </span>
+                <TimesNormal :times="a.times" :severity="a.severity" />
             </Link>
         </li>
     </ul>

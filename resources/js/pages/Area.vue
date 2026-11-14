@@ -4,6 +4,7 @@ import Kpi from '@/components/fire/Kpi.vue';
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
 import Pager from '@/components/fire/Pager.vue';
 import RetirementPanel from '@/components/fire/RetirementPanel.vue';
+import TimesNormal from '@/components/fire/TimesNormal.vue';
 import WeekMap from '@/components/fire/WeekMap.vue';
 import type { AlertRow, Fit, Month } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
@@ -100,11 +101,10 @@ const shown = computed(() => props.alerts.slice((page.value - 1) * PER_PAGE, pag
                         <th class="py-2 font-normal">{{ t('Week of') }}</th>
                         <th class="font-normal">{{ t('Observed') }}</th>
                         <th class="font-normal">{{ t('Typical') }}</th>
-                        <th class="font-normal">{{ t('Times normal') }}</th>
-                        <th class="font-normal">{{ t('Severity') }}</th>
+                        <th class="text-right font-normal">{{ t('Compared with the same week in other years') }}</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y">
+                <tbody>
                     <tr
                         v-for="a in shown"
                         :key="a.week_start"
@@ -115,8 +115,7 @@ const shown = computed(() => props.alerts.slice((page.value - 1) * PER_PAGE, pag
                         <td class="py-2">{{ date(a.week_start) }}</td>
                         <td>{{ number(a.observed) }}</td>
                         <td>{{ number(a.typical) }}</td>
-                        <td>×{{ number(a.times, 1) }}</td>
-                        <td>{{ t(a.severity) }}</td>
+                        <td class="text-right"><TimesNormal :times="a.times" :severity="a.severity" /></td>
                     </tr>
                 </tbody>
             </table>
