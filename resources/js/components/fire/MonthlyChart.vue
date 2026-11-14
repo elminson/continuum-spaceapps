@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { COLORS, number, t } from '@/lib/i18n';
+import { isDark } from '@/lib/theme';
 import * as echarts from 'echarts';
 import { computed } from 'vue';
 import VChart from 'vue-echarts';
@@ -11,6 +12,7 @@ const props = defineProps<{ months: Month[]; scale: string }>();
 
 const option = computed(() => ({
     animation: false,
+    backgroundColor: 'transparent',
     grid: { left: 56, right: 16, top: 40, bottom: 64 },
     legend: { top: 0, data: [t('MODIS (1 km)'), t('VIIRS (375 m)'), t('Harmonized (:scale scale)', { scale: props.scale.toUpperCase() })] },
     tooltip: {
@@ -77,5 +79,5 @@ const option = computed(() => ({
 </script>
 
 <template>
-    <VChart :option="option" autoresize class="h-80 w-full" />
+    <VChart :theme="isDark ? 'dark' : undefined" :option="option" autoresize class="h-80 w-full" />
 </template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { COLORS, dateRange, number, t } from '@/lib/i18n';
+import { isDark } from '@/lib/theme';
 import * as echarts from 'echarts';
 import { computed, ref } from 'vue';
 import VChart from 'vue-echarts';
@@ -51,6 +52,7 @@ const option = computed(() => {
 
     return {
         animation: false,
+        backgroundColor: 'transparent',
         grid: { left: 48, right: 8, top: 16, bottom: 28 },
         tooltip: {
             trigger: 'axis',
@@ -106,7 +108,7 @@ const option = computed(() => {
                 <span class="text-muted-foreground"> · {{ t('rank :rank of :of years', { rank: result.rank ?? '—', of: result.of }) }}</span>
             </p>
             <p v-else class="text-sm text-muted-foreground">{{ t('Some of these days have no data yet; showing the same dates in other years.') }}</p>
-            <VChart :option="option" autoresize class="mt-2 h-56 w-full" />
+            <VChart :theme="isDark ? 'dark' : undefined" :option="option" autoresize class="mt-2 h-56 w-full" />
             <p class="text-xs text-muted-foreground">
                 {{ t('Each bar is the same dates in one year, on the MODIS scale. The line is the median.') }}
             </p>

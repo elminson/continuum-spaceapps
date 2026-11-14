@@ -291,5 +291,9 @@
     "MODIS pixels per cell": "Píxeles MODIS por celda",
     "error vs naive merge, on held-out days": "de error frente a la mezcla ingenua, en días reservados",
     "Try it on Hispaniola →": "Pruébalo en La Española →",
-    "VIIRS cell-days per MODIS cell-day on Hispaniola": "celdas-día VIIRS por cada celda-día MODIS en La Española"
+    "VIIRS cell-days per MODIS cell-day on Hispaniola": "celdas-día VIIRS por cada celda-día MODIS en La Española",
+    "Theme": "Tema",
+    "Light": "Claro",
+    "Dark": "Oscuro",
+    "Auto": "Auto"
 }

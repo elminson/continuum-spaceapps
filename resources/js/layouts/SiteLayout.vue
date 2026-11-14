@@ -1,10 +1,33 @@
 <script setup lang="ts">
+import { useAppearance } from '@/composables/useAppearance';
 import { locale, t } from '@/lib/i18n';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BellRing, BookOpen, Code, Compass, Cpu, Database, ExternalLink, LayoutGrid, LogIn, LogOut, MapPin, Rocket } from 'lucide-vue-next';
+import {
+    BellRing,
+    BookOpen,
+    Code,
+    Compass,
+    Cpu,
+    Database,
+    ExternalLink,
+    LayoutGrid,
+    LogIn,
+    LogOut,
+    MapPin,
+    Monitor,
+    Moon,
+    Rocket,
+    Sun,
+} from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const page = usePage();
+const { appearance, updateAppearance } = useAppearance();
+const themes = [
+    { value: 'light', label: 'Light', icon: Sun },
+    { value: 'dark', label: 'Dark', icon: Moon },
+    { value: 'system', label: 'Auto', icon: Monitor },
+] as const;
 const user = computed(() => (page.props.auth as { user: { name: string } | null } | undefined)?.user ?? null);
 
 const nav = [
@@ -69,7 +92,21 @@ const active = (href: string) => (href === '/' ? page.url === '/' : page.url.sta
         </aside>
 
         <div class="min-w-0 flex-1">
-            <div class="flex justify-end px-4 pt-4 lg:px-8">
+            <div class="flex flex-wrap justify-end gap-2 px-4 pt-4 lg:px-8">
+                <div class="inline-flex rounded-md border p-0.5 text-sm" role="group" :aria-label="t('Theme')">
+                    <button
+                        v-for="th in themes"
+                        :key="th.value"
+                        class="inline-flex items-center gap-1.5 rounded px-2.5 py-1"
+                        :class="appearance === th.value ? 'bg-foreground text-background' : 'text-muted-foreground hover:text-foreground'"
+                        :aria-pressed="appearance === th.value"
+                        :title="t(th.label)"
+                        @click="updateAppearance(th.value)"
+                    >
+                        <component :is="th.icon" class="size-3.5" />
+                        <span class="hidden sm:inline">{{ t(th.label) }}</span>
+                    </button>
+                </div>
                 <div class="inline-flex rounded-md border p-0.5 text-sm" role="group" aria-label="Language">
                     <a
                         v-for="[code, name] in [

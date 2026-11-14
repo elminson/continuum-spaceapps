@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { COLORS, number, percent, r, t } from '@/lib/i18n';
+import { isDark } from '@/lib/theme';
 import * as echarts from 'echarts';
 import { computed, onMounted, ref } from 'vue';
 import VChart from 'vue-echarts';
@@ -45,6 +46,7 @@ const option = computed(() => {
 
     return {
         animation: false,
+        backgroundColor: 'transparent',
         grid: { left: 56, right: 16, top: 40, bottom: 32 },
         legend: { top: 0, data: [t('MODIS (real)'), t('VIIRS only → MODIS scale')] },
         tooltip: { trigger: 'axis' },
@@ -138,6 +140,6 @@ const total = computed(() => {
             />
             <Kpi :label="t('Monthly correlation')" :value="r(result.monthly_r)" :hint="t('VIIRS-only estimate vs real MODIS')" />
         </div>
-        <VChart :option="option" autoresize class="h-72 w-full" />
+        <VChart :theme="isDark ? 'dark' : undefined" :option="option" autoresize class="h-72 w-full" />
     </div>
 </template>

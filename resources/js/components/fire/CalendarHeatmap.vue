@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { locale, number, t } from '@/lib/i18n';
+import { isDark } from '@/lib/theme';
 import * as echarts from 'echarts';
 import { computed } from 'vue';
 import VChart from 'vue-echarts';
@@ -24,6 +25,7 @@ const option = computed(() => {
 
     return {
         animation: false,
+        backgroundColor: 'transparent',
         grid: { left: 48, right: 72, top: 8, bottom: 32 },
         tooltip: {
             formatter: (p: { data: number[] }) =>
@@ -38,13 +40,23 @@ const option = computed(() => {
             orient: 'horizontal',
             left: 'center',
             bottom: 0,
-            inRange: { color: ['#fff7ed', '#fdba74', '#f97316', '#c2410c', '#7c2d12'] },
+            inRange: {
+                color: isDark.value
+                    ? ['#1f1a17', '#7c2d12', '#c2410c', '#f97316', '#fdba74']
+                    : ['#fff7ed', '#fdba74', '#f97316', '#c2410c', '#7c2d12'],
+            },
         },
-        series: [{ type: 'heatmap', data, itemStyle: { borderColor: '#fff', borderWidth: 1 } }],
+        series: [{ type: 'heatmap', data, itemStyle: { borderColor: isDark.value ? '#0f1113' : '#fff', borderWidth: 1 } }],
     };
 });
 </script>
 
 <template>
-    <VChart :option="option" autoresize class="w-full" :style="{ height: `${Math.max(300, years.length * 18 + 48)}px` }" />
+    <VChart
+        :theme="isDark ? 'dark' : undefined"
+        :option="option"
+        autoresize
+        class="w-full"
+        :style="{ height: `${Math.max(300, years.length * 18 + 48)}px` }"
+    />
 </template>
