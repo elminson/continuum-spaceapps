@@ -60,7 +60,7 @@ class AreaApiController extends Controller
     /** GeoJSON of the ~1 km cells with fire in the area during one week (both sensors). */
     public function week(Request $request, Area $area): JsonResponse
     {
-        return $this->cells($area->cellBounds(), (string) $request->query('week', ''));
+        return $this->cells($area->cellBounds(), $request);
     }
 
     /** The same for any box: ?bbox=west,south,east,north&week=YYYY-MM-DD */
@@ -69,7 +69,7 @@ class AreaApiController extends Controller
         $bbox = self::bbox($request);
         abort_if($bbox === null, 422, 'bbox=west,south,east,north');
 
-        return $this->cells([(int) floor($bbox[1] * 100), (int) ceil($bbox[3] * 100), (int) floor($bbox[0] * 100), (int) ceil($bbox[2] * 100)], (string) $request->query('week', ''));
+        return $this->cells([(int) floor($bbox[1] * 100), (int) ceil($bbox[3] * 100), (int) floor($bbox[0] * 100), (int) ceil($bbox[2] * 100)], $request);
     }
 
     /** Instant analysis of a box inside the areas: ?bbox=west,south,east,north */
@@ -93,11 +93,23 @@ class AreaApiController extends Controller
         return count($parts) === 4 && array_filter($parts, 'is_numeric') === $parts ? array_map('floatval', $parts) : null;
     }
 
-    /** @param  array{0: int, 1: int, 2: int, 3: int}  $bounds */
-    private function cells(array $bounds, string $week): JsonResponse
+    /**
+     * Either ?week=YYYY-MM-DD (that Monday-to-Sunday week) or ?days=N (the last N days, up to 31).
+     *
+     * @param  array{0: int, 1: int, 2: int, 3: int}  $bounds
+     */
+    private function cells(array $bounds, Request $request): JsonResponse
     {
         [$south, $north, $west, $east] = $bounds;
-        $from = CarbonImmutable::parse($week ?: now()->toDateString())->startOfWeek();
+        $days = min(31, max(1, $request->integer('days')));
+
+        if ($request->filled('days')) {
+            $to = CarbonImmutable::today();
+            $from = $to->subDays($days - 1);
+        } else {
+            $from = CarbonImmutable::parse((string) $request->query('week', now()->toDateString()))->startOfWeek();
+            $to = $from->addDays(6);
+        }
 
         $cells = DB::select(<<<'SQL'
             select cell_lat, cell_lon, string_agg(distinct instrument, ',') as instruments, sum(detections) as detections, round(sum(frp_sum)::numeric, 1) as frp
@@ -105,11 +117,13 @@ class AreaApiController extends Controller
             where acq_date between ? and ? and cell_lat >= ? and cell_lat < ? and cell_lon >= ? and cell_lon < ?
             group by cell_lat, cell_lon
             limit 20000
-            SQL, [$from->toDateString(), $from->addDays(6)->toDateString(), $south, $north, $west, $east]);
+            SQL, [$from->toDateString(), $to->toDateString(), $south, $north, $west, $east]);
 
         return response()->json([
             'type' => 'FeatureCollection',
             'week' => $from->toDateString(),
+            'from' => $from->toDateString(),
+            'to' => $to->toDateString(),
             'features' => array_map(fn (object $c) => [
                 'type' => 'Feature',
                 'geometry' => ['type' => 'Point', 'coordinates' => [($c->cell_lon + 0.5) / 100, ($c->cell_lat + 0.5) / 100]],

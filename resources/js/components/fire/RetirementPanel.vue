@@ -4,6 +4,7 @@ import * as echarts from 'echarts';
 import { computed, onMounted, ref } from 'vue';
 import VChart from 'vue-echarts';
 import Kpi from './Kpi.vue';
+import Loading from './Loading.vue';
 
 void echarts;
 
@@ -25,11 +26,15 @@ const props = defineProps<{ slug: string }>();
 const result = ref<Result | null>(null);
 const loading = ref(false);
 
+const pending = ref<number | null>(null);
+
 async function load(year?: number) {
     loading.value = true;
+    pending.value = year ?? null;
     const response = await fetch(`/api/areas/${props.slug}/retirement${year ? `?year=${year}` : ''}`);
     result.value = (await response.json()).data;
     loading.value = false;
+    pending.value = null;
 }
 
 onMounted(() => load());
@@ -104,7 +109,7 @@ const total = computed(() => {
 </script>
 
 <template>
-    <div v-if="!result" class="h-72 animate-pulse rounded-lg bg-muted" />
+    <div v-if="!result" class="grid h-72 place-items-center rounded-lg bg-muted"><Loading /></div>
     <p v-else-if="!result.available" class="text-sm text-muted-foreground">{{ t('Not enough overlap yet to simulate the end of MODIS here.') }}</p>
     <div v-else class="flex flex-col gap-4" :class="{ 'opacity-60': loading }">
         <div class="flex flex-wrap items-center gap-2 text-sm">
@@ -118,6 +123,7 @@ const total = computed(() => {
             >
                 {{ year }}
             </button>
+            <Loading v-if="loading" :label="pending ? t('Fitting on the years before :year…', { year: pending }) : undefined" />
         </div>
         <div class="grid gap-3 sm:grid-cols-3">
             <Kpi

@@ -169,5 +169,16 @@
     "Space Apps challenge": "Reto de Space Apps",
     "Sign in to save areas": "Inicia sesión para guardar áreas",
     "Sign out (:name)": "Cerrar sesión (:name)",
-    "Up to 20 saved boxes.": "Hasta 20 recuadros guardados."
+    "Up to 20 saved boxes.": "Hasta 20 recuadros guardados.",
+    "Fire map · :place": "Mapa de fuego · :place",
+    "Its most unusual week on record: every 1 km cell where MODIS or VIIRS saw fire.": "Su semana más inusual del registro: cada celda de 1 km donde MODIS o VIIRS vio fuego.",
+    "Every 1 km cell where MODIS or VIIRS saw fire in the last 30 days. New NASA data every hour.": "Cada celda de 1 km donde MODIS o VIIRS vio fuego en los últimos 30 días. Datos nuevos de la NASA cada hora.",
+    "Most unusual week": "Semana más inusual",
+    "Last 30 days": "Últimos 30 días",
+    "Last :n days": "Últimos :n días",
+    "Show the last 30 days on the map": "Ver los últimos 30 días en el mapa",
+    "Loading…": "Cargando…",
+    "Loading fires…": "Cargando fuegos…",
+    "Fitting on the years before :year…": "Ajustando con los años antes de :year…",
+    "Fitting MODIS and VIIRS for this box over 26 years…": "Ajustando MODIS y VIIRS para este recuadro en 26 años…"
 }

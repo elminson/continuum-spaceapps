@@ -1,6 +1,7 @@
 import * as maplibregl from 'maplibre-gl';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { COLORS } from './i18n';
 
 maplibregl.setWorkerUrl(workerUrl);
 
@@ -31,6 +32,34 @@ export function nasaMap(container: HTMLElement, bounds: [number, number, number,
     new ResizeObserver(() => map.resize()).observe(container);
 
     return map;
+}
+
+/** Adds the layer of 1 km fire cells, coloured by which sensor saw them. Call after 'load'. */
+export function addFireCells(map: maplibregl.Map): void {
+    map.addSource('cells', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+    map.addLayer({
+        id: 'cells',
+        type: 'circle',
+        source: 'cells',
+        paint: {
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 4, 2, 9, 6],
+            'circle-color': ['match', ['get', 'sensors'], 'modis', COLORS.modis, 'viirs', COLORS.viirs, '#facc15'],
+            'circle-opacity': 0.85,
+            'circle-stroke-width': 0.5,
+            'circle-stroke-color': '#111827',
+        },
+    });
+}
+
+export type Period = { week: string } | { days: number };
+
+/** Loads the fire cells of a box for one week or the last N days; returns how many cells burned. */
+export async function loadFireCells(map: maplibregl.Map, bbox: number[], period: Period): Promise<number> {
+    const query = 'week' in period ? `week=${period.week}` : `days=${period.days}`;
+    const data = await (await fetch(`/api/week?bbox=${bbox.map((v) => v.toFixed(2)).join(',')}&${query}`)).json();
+    (map.getSource('cells') as maplibregl.GeoJSONSource | undefined)?.setData(data);
+
+    return data.features.length;
 }
 
 export { maplibregl };

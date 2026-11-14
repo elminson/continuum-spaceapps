@@ -37,7 +37,7 @@ export type Fit = {
     months: { month: number; ratio: number; low: number; high: number; days: number }[];
 };
 
-export type Place = { slug: string; name: string; bbox: number[]; id?: number };
+export type Place = { slug: string; name: string; bbox: number[]; id?: number; top_week?: string | null };
 
 export type Status = {
     detections: number;

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import CalendarHeatmap from '@/components/fire/CalendarHeatmap.vue';
+import FireLegend from '@/components/fire/FireLegend.vue';
 import Kpi from '@/components/fire/Kpi.vue';
+import Loading from '@/components/fire/Loading.vue';
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
 import type { AlertRow, Fit, Month } from '@/components/fire/types';
-import WeekMap from '@/components/fire/WeekMap.vue';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { COLORS, date, number, percent, r, t } from '@/lib/i18n';
-import { maplibregl, nasaMap } from '@/lib/map';
+import { addFireCells, loadFireCells, maplibregl, nasaMap } from '@/lib/map';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
@@ -39,6 +40,18 @@ const result = ref<Result | null>(null);
 const error = ref<string | null>(null);
 const loading = ref(false);
 const week = ref<string | null>(null);
+const cells = ref<number | null>(null);
+const loadingCells = ref(false);
+
+async function showWeek(start: string | null) {
+    week.value = start;
+
+    if (map && result.value?.available) {
+        loadingCells.value = true;
+        cells.value = await loadFireCells(map, result.value.bbox, start ? { week: start } : { days: 30 });
+        loadingCells.value = false;
+    }
+}
 let map: maplibregl.Map | null = null;
 
 const rect = (b: number[]) => ({
@@ -68,6 +81,8 @@ async function analyze() {
     loading.value = true;
     error.value = null;
     week.value = null;
+    cells.value = null;
+    (map?.getSource('cells') as maplibregl.GeoJSONSource | undefined)?.setData({ type: 'FeatureCollection', features: [] });
     const response = await fetch(`/api/explore?bbox=${box.value.map((v) => v.toFixed(2)).join(',')}`);
     const body = await response.json();
     loading.value = false;
@@ -79,7 +94,7 @@ async function analyze() {
     }
 
     result.value = body.data;
-    week.value = body.data.alerts?.[0]?.week_start ?? null;
+    await showWeek(body.data.alerts?.[0]?.week_start ?? null);
 }
 
 function go(place: Place) {
@@ -114,6 +129,7 @@ onMounted(() => {
         map!.addSource('box', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
         map!.addLayer({ id: 'box-fill', type: 'fill', source: 'box', paint: { 'fill-color': COLORS.viirs, 'fill-opacity': 0.2 } });
         map!.addLayer({ id: 'box-line', type: 'line', source: 'box', paint: { 'line-color': COLORS.viirs, 'line-width': 2 } });
+        addFireCells(map!);
     });
 
     map.on('click', (e) => {
@@ -160,7 +176,16 @@ onBeforeUnmount(() => map?.remove());
             <button v-for="a in areas" :key="a.slug" class="rounded-md border px-2 py-1 hover:bg-muted" @click="pick(a)">{{ a.name }}</button>
         </div>
 
-        <div ref="el" class="mt-3 h-[28rem] w-full overflow-hidden rounded-lg border" />
+        <div v-if="loading" class="mt-3"><Loading :label="t('Fitting MODIS and VIIRS for this box over 26 years…')" /></div>
+        <div v-else-if="result?.available" class="mt-3 flex flex-wrap gap-4 text-xs text-muted-foreground">
+            <Loading v-if="loadingCells" :label="t('Loading fires…')" />
+            <span v-else>
+                {{ week ? t('Week of :date', { date: date(week) }) : t('Last :n days', { n: 30 }) }} ·
+                {{ t(':n cells with fire', { n: number(cells) }) }}
+            </span>
+            <FireLegend />
+        </div>
+        <div ref="el" class="mt-2 h-[32rem] w-full overflow-hidden rounded-lg border" />
 
         <div class="mt-3 flex flex-wrap items-center gap-3 text-sm">
             <span class="tabular-nums text-muted-foreground">
@@ -219,14 +244,16 @@ onBeforeUnmount(() => map?.remove());
                         :key="a.week_start"
                         class="flex cursor-pointer justify-between px-4 py-2 tabular-nums hover:bg-muted/50"
                         :class="{ 'bg-muted': a.week_start === week }"
-                        @click="week = a.week_start"
+                        @click="showWeek(a.week_start)"
                     >
                         <span>{{ t('week of :date', { date: date(a.week_start) }) }}</span>
                         <span>×{{ number(a.times, 1) }} {{ t('normal') }}</span>
                     </li>
                 </ul>
                 <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks.') }}</p>
-                <WeekMap v-if="week" class="mt-4" :week="week" :bbox="result.bbox" />
+                <button class="mt-2 text-sm text-muted-foreground hover:text-foreground" @click="showWeek(null)">
+                    {{ t('Show the last 30 days on the map') }}
+                </button>
             </section>
         </template>
     </SiteLayout>

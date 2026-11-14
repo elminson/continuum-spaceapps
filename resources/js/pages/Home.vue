@@ -25,7 +25,8 @@ const props = defineProps<{
 }>();
 
 const place = ref<Place>(props.places[0]);
-const today = new Date().toISOString().slice(0, 10);
+const mode = ref<'unusual' | 'recent'>('unusual');
+const week = computed(() => (mode.value === 'unusual' ? (place.value.top_week ?? null) : null));
 const viirs = computed(() => props.status.instruments.find((i) => i.instrument === 'viirs'));
 </script>
 
@@ -69,24 +70,44 @@ const viirs = computed(() => props.status.instruments.find((i) => i.instrument =
         <section class="mt-6">
             <div class="flex flex-wrap items-end justify-between gap-2">
                 <div>
-                    <h2 class="text-lg font-semibold">{{ t('Fires this week · :place', { place: place.name }) }}</h2>
+                    <h2 class="text-lg font-semibold">{{ t('Fire map · :place', { place: place.name }) }}</h2>
                     <p class="text-sm text-muted-foreground">
-                        {{ t('Every 1 km cell where MODIS or VIIRS saw fire since Monday. New NASA data every hour.') }}
+                        {{
+                            week
+                                ? t('Its most unusual week on record: every 1 km cell where MODIS or VIIRS saw fire.')
+                                : t('Every 1 km cell where MODIS or VIIRS saw fire in the last 30 days. New NASA data every hour.')
+                        }}
                     </p>
                 </div>
-                <div class="flex flex-wrap gap-1 text-sm">
+                <div class="inline-flex rounded-md border p-0.5 text-sm">
                     <button
-                        v-for="p in places"
-                        :key="p.slug"
-                        class="rounded-md border px-2 py-1"
-                        :class="p.slug === place.slug ? 'bg-foreground text-background' : 'hover:bg-muted'"
-                        @click="place = p"
+                        class="rounded px-3 py-1"
+                        :class="mode === 'unusual' ? 'bg-foreground text-background' : 'text-muted-foreground'"
+                        @click="mode = 'unusual'"
                     >
-                        {{ p.name }}
+                        {{ t('Most unusual week') }}
+                    </button>
+                    <button
+                        class="rounded px-3 py-1"
+                        :class="mode === 'recent' ? 'bg-foreground text-background' : 'text-muted-foreground'"
+                        @click="mode = 'recent'"
+                    >
+                        {{ t('Last 30 days') }}
                     </button>
                 </div>
             </div>
-            <WeekMap class="mt-3" :week="today" :bbox="place.bbox" />
+            <div class="mt-3 flex flex-wrap gap-1 text-sm">
+                <button
+                    v-for="p in places"
+                    :key="p.slug"
+                    class="rounded-md border px-2 py-1"
+                    :class="p.slug === place.slug ? 'bg-foreground text-background' : 'hover:bg-muted'"
+                    @click="place = p"
+                >
+                    {{ p.name }}
+                </button>
+            </div>
+            <WeekMap class="mt-3" :week="week" :days="30" :bbox="place.bbox" />
         </section>
 
         <section class="mt-8 grid gap-6 lg:grid-cols-2">

@@ -1,42 +1,36 @@
 <script setup lang="ts">
-import { COLORS, date, number, t } from '@/lib/i18n';
-import { maplibregl, nasaMap } from '@/lib/map';
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { date, number, t } from '@/lib/i18n';
+import { addFireCells, loadFireCells, maplibregl, nasaMap, type Period } from '@/lib/map';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import FireLegend from './FireLegend.vue';
+import Loading from './Loading.vue';
 
-const props = defineProps<{ week: string; bbox: number[] }>();
+const props = defineProps<{ bbox: number[]; week?: string | null; days?: number }>();
 const el = ref<HTMLDivElement | null>(null);
 const cells = ref<number | null>(null);
+const loading = ref(false);
 let map: maplibregl.Map | null = null;
 
+const period = computed<Period>(() => (props.week ? { week: props.week } : { days: props.days ?? 30 }));
+const label = computed(() => (props.week ? t('Week of :date', { date: date(props.week) }) : t('Last :n days', { n: props.days ?? 30 })));
+
 async function load() {
-    const data = await (await fetch(`/api/week?bbox=${props.bbox.join(',')}&week=${props.week}`)).json();
-    cells.value = data.features.length;
-    (map?.getSource('cells') as maplibregl.GeoJSONSource | undefined)?.setData(data);
+    if (!map) return;
+    loading.value = true;
+    cells.value = await loadFireCells(map, props.bbox, period.value);
+    loading.value = false;
 }
 
 onMounted(() => {
     map = nasaMap(el.value!, [props.bbox[0], props.bbox[1], props.bbox[2], props.bbox[3]]);
-
     map.on('load', () => {
-        map!.addSource('cells', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-        map!.addLayer({
-            id: 'cells',
-            type: 'circle',
-            source: 'cells',
-            paint: {
-                'circle-radius': ['interpolate', ['linear'], ['zoom'], 4, 2, 9, 6],
-                'circle-color': ['match', ['get', 'sensors'], 'modis', COLORS.modis, 'viirs', COLORS.viirs, '#facc15'],
-                'circle-opacity': 0.85,
-                'circle-stroke-width': 0.5,
-                'circle-stroke-color': '#111827',
-            },
-        });
+        addFireCells(map!);
         load();
     });
 });
 
 watch(
-    () => [props.week, props.bbox.join(',')],
+    () => [props.week, props.days, props.bbox.join(',')],
     () => {
         map?.fitBounds([props.bbox[0], props.bbox[1], props.bbox[2], props.bbox[3]], { duration: 0 });
         load();
@@ -48,11 +42,10 @@ onBeforeUnmount(() => map?.remove());
 <template>
     <div>
         <div class="mb-2 flex flex-wrap gap-4 text-xs text-muted-foreground">
-            <span>{{ t('Week of :date', { date: date(week) }) }} · {{ t(':n cells with fire', { n: number(cells) }) }}</span>
-            <span><span class="inline-block size-2 rounded-full bg-[#facc15]" /> {{ t('both sensors') }}</span>
-            <span><span class="inline-block size-2 rounded-full bg-[#f97316]" /> {{ t('VIIRS only') }}</span>
-            <span><span class="inline-block size-2 rounded-full bg-[#3b82f6]" /> {{ t('MODIS only') }}</span>
+            <Loading v-if="loading" :label="t('Loading fires…')" />
+            <span v-else>{{ label }} · {{ t(':n cells with fire', { n: number(cells) }) }}</span>
+            <FireLegend />
         </div>
-        <div ref="el" class="h-96 w-full overflow-hidden rounded-lg border" />
+        <div ref="el" class="h-[28rem] w-full overflow-hidden rounded-lg border" />
     </div>
 </template>

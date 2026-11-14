@@ -34,9 +34,8 @@ class Explorer
     {
         [$west, $south, $east, $north] = array_map(fn ($v) => round((float) $v, 2), $bbox);
         $cells = [(int) floor($south * 100), (int) ceil($north * 100), (int) floor($west * 100), (int) ceil($east * 100)];
-        $key = 'explore:'.implode(':', $cells).':'.(Area::query()->max('processed_at') ?? '');
 
-        return Cache::remember($key, now()->addDay(), function () use ($cells, $west, $south, $east, $north) {
+        return Cache::remember(self::key($bbox), now()->addDay(), function () use ($cells, $west, $south, $east, $north) {
             $days = $this->record->forCells($cells);
             $pairs = Calibrate::overlap($days);
 
@@ -59,12 +58,30 @@ class Explorer
         });
     }
 
-    /** @return list<array{slug: string, name: string, bbox: array{0: float, 1: float, 2: float, 3: float}}> */
+    /**
+     * The ready-made places, with their strongest unusual week when it is already computed.
+     *
+     * @return list<array{slug: string, name: string, bbox: array{0: float, 1: float, 2: float, 3: float}, top_week: ?string}>
+     */
     public static function places(): array
     {
         $es = app()->getLocale() === 'es';
 
-        return array_map(fn (string $slug, array $p) => ['slug' => $slug, 'name' => $es ? $p[1] : $p[0], 'bbox' => $p[2]], array_keys(self::PLACES), self::PLACES);
+        return array_map(fn (string $slug, array $p) => [
+            'slug' => $slug,
+            'name' => $es ? $p[1] : $p[0],
+            'bbox' => $p[2],
+            'top_week' => Cache::get(self::key($p[2]))['alerts'][0]['week_start'] ?? null,
+        ], array_keys(self::PLACES), self::PLACES);
+    }
+
+    /** @param  array{0: float, 1: float, 2: float, 3: float}  $bbox */
+    private static function key(array $bbox): string
+    {
+        [$west, $south, $east, $north] = array_map(fn ($v) => round((float) $v, 2), $bbox);
+        $cells = [(int) floor($south * 100), (int) ceil($north * 100), (int) floor($west * 100), (int) ceil($east * 100)];
+
+        return 'explore:'.implode(':', $cells).':'.(Area::query()->max('processed_at') ?? '');
     }
 
     /** @return string|null why a box cannot be analysed */
