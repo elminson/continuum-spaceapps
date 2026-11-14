@@ -36,12 +36,14 @@ const toc = [
 
 const VIDEOS = {
     es: {
+        youtube: 'https://youtu.be/Sbg-dRMqPS8',
         src: '/videos/continuum-local-es.mp4',
         poster: '/videos/continuum-local-es.jpg',
-        label: '2:48 explanation (Spanish, English subtitles)',
+        label: '2:50 explanation (Spanish, English subtitles)',
         audience: 'for the Santiago judges',
     },
     en: {
+        youtube: 'https://youtu.be/LJ6uETwGb_0',
         src: '/videos/continuum-demo-en.mp4',
         poster: '/videos/continuum-demo-en.jpg',
         label: '30-second demo (English)',
@@ -62,9 +64,9 @@ onMounted(() => {
 onBeforeUnmount(() => observer?.disconnect());
 
 const resources = computed(() => [
-    { href: main.value.src, label: main.value.label, icon: PlayCircle },
+    { href: main.value.youtube, label: main.value.label, icon: PlayCircle },
     { href: '/slides/continuum-slides.pdf', label: '7-slide deck (PDF)', icon: FileText },
-    { href: other.value.src, label: other.value.label, icon: PlayCircle },
+    { href: other.value.youtube, label: other.value.label, icon: PlayCircle },
     { href: 'https://github.com/elminson/continuum-spaceapps', label: 'Code on GitHub', icon: Github },
     { href: '/api-docs', label: 'Open API', icon: Code },
 ]);
@@ -129,7 +131,15 @@ const resources = computed(() => [
                         </figcaption>
                     </figure>
                     <a
-                        :href="other.src"
+                        :href="main.youtube"
+                        target="_blank"
+                        rel="noopener"
+                        class="mr-4 mt-3 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+                    >
+                        <PlayCircle class="size-4" /> {{ t('Watch on YouTube') }}
+                    </a>
+                    <a
+                        :href="other.youtube"
                         target="_blank"
                         class="mt-3 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
                     >
