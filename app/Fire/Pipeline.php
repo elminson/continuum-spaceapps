@@ -15,17 +15,18 @@ class Pipeline
         private DetectAlerts $alerts,
     ) {}
 
-    public function run(string $from, string $to, ?callable $log = null): void
+    /** @param  list<string>|null  $only  area slugs to process (default all) */
+    public function run(string $from, string $to, ?callable $log = null, bool $grid = true, ?array $only = null): void
     {
         $log ??= fn (string $message) => null;
 
-        for ($start = CarbonImmutable::parse($from); $start->lte($to); $start = $start->addYear()->startOfYear()) {
+        for ($start = CarbonImmutable::parse($from); $grid && $start->lte($to); $start = $start->addYear()->startOfYear()) {
             $end = min($start->endOfYear()->toDateString(), $to);
             $log("Grid {$start->toDateString()} → {$end}");
             ($this->grid)($start->toDateString(), $end);
         }
 
-        foreach (Area::all() as $area) {
+        foreach (Area::query()->when($only, fn ($q) => $q->whereIn('slug', $only))->get() as $area) {
             $log("Area {$area->slug}");
             ($this->areaDays)($area, $from, $to);
             ($this->calibrate)($area);

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Fit, Status } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
-import { number, percent, r, t } from '@/lib/i18n';
+import { locale, number, percent, r, t } from '@/lib/i18n';
 import { Head, Link } from '@inertiajs/vue3';
 import { Code, FileText, Github, PlayCircle } from 'lucide-vue-next';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
@@ -29,6 +29,23 @@ const toc = [
     ['limits', 'Data and limits'],
 ] as const;
 
+const VIDEOS = {
+    es: {
+        src: '/videos/continuum-local-es.mp4',
+        poster: '/videos/continuum-local-es.jpg',
+        label: '2:48 explanation (Spanish, English subtitles)',
+        audience: 'for the Santiago judges',
+    },
+    en: {
+        src: '/videos/continuum-demo-en.mp4',
+        poster: '/videos/continuum-demo-en.jpg',
+        label: '30-second demo (English)',
+        audience: 'for the NASA global judges',
+    },
+};
+const main = computed(() => (locale() === 'es' ? VIDEOS.es : VIDEOS.en));
+const other = computed(() => (locale() === 'es' ? VIDEOS.en : VIDEOS.es));
+
 const current = ref<string>('media');
 let observer: IntersectionObserver | null = null;
 onMounted(() => {
@@ -39,13 +56,13 @@ onMounted(() => {
 });
 onBeforeUnmount(() => observer?.disconnect());
 
-const resources = [
+const resources = computed(() => [
+    { href: main.value.src, label: main.value.label, icon: PlayCircle },
     { href: '/slides/continuum-slides.pdf', label: '7-slide deck (PDF)', icon: FileText },
-    { href: '/videos/continuum-demo-en.mp4', label: '30-second demo (English)', icon: PlayCircle },
-    { href: '/videos/continuum-local-es.mp4', label: '2:48 explanation (Spanish, English subtitles)', icon: PlayCircle },
+    { href: other.value.src, label: other.value.label, icon: PlayCircle },
     { href: 'https://github.com/elminson/continuum-spaceapps', label: 'Code on GitHub', icon: Github },
     { href: '/api-docs', label: 'Open API', icon: Code },
-];
+]);
 </script>
 
 <template>
@@ -98,26 +115,21 @@ const resources = [
             <div class="min-w-0 max-w-3xl space-y-16">
                 <section id="media" class="scroll-mt-6">
                     <h2 class="text-xl font-semibold tracking-tight">{{ t('Presentation & videos') }}</h2>
-                    <div class="mt-4 grid gap-6 md:grid-cols-2">
-                        <figure>
-                            <video controls preload="none" poster="/videos/continuum-demo-en.jpg" class="aspect-video w-full rounded-md bg-black">
-                                <source src="/videos/continuum-demo-en.mp4" type="video/mp4" />
-                            </video>
-                            <figcaption class="mt-2 text-sm">
-                                {{ t('30-second demo (English)') }}
-                                <span class="text-muted-foreground"> · {{ t('for the NASA global judges') }}</span>
-                            </figcaption>
-                        </figure>
-                        <figure>
-                            <video controls preload="none" poster="/videos/continuum-local-es.jpg" class="aspect-video w-full rounded-md bg-black">
-                                <source src="/videos/continuum-local-es.mp4" type="video/mp4" />
-                            </video>
-                            <figcaption class="mt-2 text-sm">
-                                {{ t('2:48 explanation (Spanish, English subtitles)') }}
-                                <span class="text-muted-foreground"> · {{ t('for the Santiago judges') }}</span>
-                            </figcaption>
-                        </figure>
-                    </div>
+                    <figure class="mt-4">
+                        <video :key="main.src" controls preload="metadata" :poster="main.poster" class="aspect-video w-full rounded-md bg-black">
+                            <source :src="main.src" type="video/mp4" />
+                        </video>
+                        <figcaption class="mt-2 text-sm">
+                            {{ t(main.label) }} <span class="text-muted-foreground"> · {{ t(main.audience) }}</span>
+                        </figcaption>
+                    </figure>
+                    <a
+                        :href="other.src"
+                        target="_blank"
+                        class="mt-3 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+                    >
+                        <PlayCircle class="size-4" /> {{ t('Also available: :label', { label: t(other.label) }) }}
+                    </a>
                     <p class="mt-3 text-sm text-muted-foreground">
                         {{ t('Narration is an AI-generated voice; every image is a real screen of this app.') }}
                         <a href="/slides/continuum-slides.pdf" target="_blank" class="text-foreground underline underline-offset-4">{{
@@ -155,7 +167,7 @@ const resources = [
                             <div class="text-2xl font-semibold tabular-nums text-orange-700 dark:text-orange-400">
                                 ×{{ number(1 / (evidence[0]?.fit?.ratio ?? 0.129), 1) }}
                             </div>
-                            <div class="text-xs text-muted-foreground">{{ t('VIIRS cell-days per MODIS cell-day on Hispaniola') }}</div>
+                            <div class="text-xs text-muted-foreground">{{ t('VIIRS cell-days per MODIS cell-day in the Dominican Republic') }}</div>
                             <div class="mt-1 font-medium">{{ t('Sensitivity') }}</div>
                             <p class="mt-1 text-sm text-muted-foreground">
                                 {{

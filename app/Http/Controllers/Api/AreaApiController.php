@@ -18,7 +18,7 @@ class AreaApiController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(['data' => Area::query()->orderBy('id')->get(['slug', 'name', 'west', 'south', 'east', 'north', 'processed_at'])]);
+        return response()->json(['data' => Area::query()->ordered()->get(['slug', 'name', 'west', 'south', 'east', 'north', 'processed_at'])]);
     }
 
     public function monthly(Request $request, Area $area, Insights $insights): JsonResponse

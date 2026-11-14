@@ -21,7 +21,7 @@ class PageController extends Controller
     public function home(Insights $insights, DataStatus $status): Response
     {
         return Inertia::render('Home', [
-            'areas' => Area::query()->orderBy('id')->get()->map(fn (Area $area) => $insights->card($area))->all(),
+            'areas' => Area::query()->ordered()->get()->map(fn (Area $area) => $insights->card($area))->all(),
             'status' => $status->summary(),
             'places' => Explorer::places(),
             'topAlerts' => $this->topAlerts(5),
@@ -31,7 +31,7 @@ class PageController extends Controller
     public function areas(Insights $insights): Response
     {
         return Inertia::render('Areas', [
-            'areas' => Area::query()->orderBy('id')->get()->map(fn (Area $area) => [...$insights->card($area), 'bbox' => [$area->west, $area->south, $area->east, $area->north], 'fit' => $insights->fit($area)])->all(),
+            'areas' => Area::query()->ordered()->get()->map(fn (Area $area) => [...$insights->card($area), 'bbox' => [$area->west, $area->south, $area->east, $area->north], 'fit' => $insights->fit($area)])->all(),
         ]);
     }
 
@@ -40,7 +40,7 @@ class PageController extends Controller
         $severities = ['extreme', 'high', 'elevated'];
         $severity = in_array($request->query('severity'), $severities, true) ? $request->query('severity') : null;
         $sort = $request->query('sort') === 'strongest' ? 'strongest' : 'recent';
-        $areas = Area::query()->orderBy('id')->get();
+        $areas = Area::query()->ordered()->get();
         $places = Explorer::places();
         $selected = (string) $request->query('area', '');
 
@@ -102,8 +102,8 @@ class PageController extends Controller
     {
         return Inertia::render('HowItWorks', [
             'status' => $status->summary(),
-            'evidence' => Area::query()->orderBy('id')->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'fit' => $insights->fit($a)])->all(),
-            'hispaniola' => Area::query()->where('slug', 'hispaniola')->first(['west', 'south', 'east', 'north'])?->only('west', 'south', 'east', 'north'),
+            'evidence' => Area::query()->ordered()->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'fit' => $insights->fit($a)])->all(),
+            'hispaniola' => Area::query()->where('slug', Area::FOCUS)->first(['west', 'south', 'east', 'north'])?->only('west', 'south', 'east', 'north'),
         ]);
     }
 
@@ -137,7 +137,7 @@ class PageController extends Controller
     public function explore(Request $request): Response
     {
         return Inertia::render('Explore', [
-            'areas' => Area::query()->orderBy('id')->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'bbox' => [$a->west, $a->south, $a->east, $a->north]])->all(),
+            'areas' => Area::query()->ordered()->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'bbox' => [$a->west, $a->south, $a->east, $a->north]])->all(),
             'places' => Explorer::places(),
             'open' => ['place' => $request->query('place'), 'week' => $request->query('week')],
             'boxes' => $request->user()?->savedBoxes()->latest()->get()->map(fn (SavedBox $b) => $b->toPlace())->all() ?? [],
@@ -148,7 +148,7 @@ class PageController extends Controller
     {
         return Inertia::render('Method', [
             'status' => $status->summary(),
-            'evidence' => Area::query()->orderBy('id')->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'fit' => $insights->fit($a)])->all(),
+            'evidence' => Area::query()->ordered()->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'fit' => $insights->fit($a)])->all(),
         ]);
     }
 

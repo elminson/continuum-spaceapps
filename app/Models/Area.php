@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -18,6 +19,14 @@ class Area extends Model
             'north' => 'float',
             'processed_at' => 'datetime',
         ];
+    }
+
+    public const FOCUS = 'dominican-republic';
+
+    /** The Dominican Republic first, then the rest in the order they were added. */
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderByRaw('case when slug = ? then 0 else 1 end', [self::FOCUS])->orderBy('id');
     }
 
     public function getRouteKeyName(): string
