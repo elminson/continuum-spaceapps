@@ -4,9 +4,10 @@ import { addFireCells, loadFireCells, maplibregl, nasaMap, setDailyImagery, type
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import FireLegend from './FireLegend.vue';
 import Loading from './Loading.vue';
-import TimesNormal from './TimesNormal.vue';
 
-const props = defineProps<{ bbox: number[]; week?: string | null; days?: number; times?: number | null }>();
+const props = withDefaults(defineProps<{ bbox: number[]; week?: string | null; days?: number; times?: number | null; height?: string }>(), {
+    height: 'h-[28rem]',
+});
 const el = ref<HTMLDivElement | null>(null);
 const cells = ref<number | null>(null);
 const loading = ref(false);
@@ -55,17 +56,30 @@ onBeforeUnmount(() => map?.remove());
 </script>
 
 <template>
-    <div>
-        <div class="mb-2 flex flex-wrap gap-4 text-xs text-muted-foreground">
-            <Loading v-if="loading" :label="t('Loading fires…')" />
-            <span v-else>{{ label }} · {{ t(':n cells with fire', { n: number(cells) }) }}</span>
-            <TimesNormal v-if="week && times" :times="times" />
-            <label class="ml-auto inline-flex cursor-pointer items-center gap-1.5">
+    <div class="relative overflow-hidden rounded-md bg-neutral-950" :class="height">
+        <div ref="el" class="absolute inset-0" />
+
+        <div class="absolute right-3 top-3 flex flex-col items-end gap-2">
+            <slot name="controls" />
+            <div class="rounded-md bg-neutral-900/90 px-2.5 py-1.5 text-xs text-neutral-200"><FireLegend /></div>
+        </div>
+
+        <div class="absolute bottom-3 left-3 w-[min(22rem,calc(100%-1.5rem))] rounded-md bg-neutral-900 p-4 text-neutral-100 shadow-lg">
+            <slot name="panel-top" />
+            <Loading v-if="loading" class="text-neutral-300" :label="t('Loading fires…')" />
+            <template v-else>
+                <div class="text-sm text-neutral-300">{{ label }}</div>
+                <div v-if="week && times" class="mt-1 flex items-baseline gap-2 tabular-nums">
+                    <span class="size-2 self-center rounded-full bg-orange-500" />
+                    <span class="text-4xl font-semibold text-orange-500">×{{ number(times, 1) }}</span>
+                    <span class="text-neutral-300">{{ t('normal') }}</span>
+                </div>
+                <div class="mt-1 text-sm text-neutral-300">{{ t(':n cells with fire', { n: number(cells) }) }}</div>
+            </template>
+            <label class="mt-3 flex cursor-pointer items-center gap-2 border-t border-neutral-700 pt-3 text-xs text-neutral-300">
                 <input v-model="photo" type="checkbox" class="size-3.5 accent-orange-600" />
                 {{ t('NASA satellite image of :date', { date: date(photoDay) }) }}
             </label>
-            <FireLegend />
         </div>
-        <div ref="el" class="h-[28rem] w-full overflow-hidden rounded-md" />
     </div>
 </template>

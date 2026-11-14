@@ -24,16 +24,18 @@ const viirs = computed(() => props.status.instruments.find((i) => i.instrument =
 <template>
     <Head :title="t('Overview')" />
     <SiteLayout>
-        <section class="max-w-3xl">
-            <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">{{ t('Was this fire unusual?') }}</h1>
-            <p class="mt-3 text-muted-foreground">
-                {{
-                    t(
-                        'Continuum puts every NASA MODIS and VIIRS fire detection since November 2000 on one 1 km grid and one scale, so any week can be compared with the same week in every other year.',
-                    )
-                }}
-            </p>
-            <div class="mt-5 flex flex-wrap items-center gap-4 text-sm">
+        <header class="flex flex-wrap items-start justify-between gap-x-8 gap-y-4">
+            <div class="max-w-2xl">
+                <h1 class="text-3xl font-semibold tracking-tight">{{ t('Was this fire unusual?') }}</h1>
+                <p class="mt-2 text-muted-foreground">
+                    {{
+                        t(
+                            'Continuum puts every NASA MODIS and VIIRS fire detection since November 2000 on one 1 km grid and one scale, so any week can be compared with the same week in every other year.',
+                        )
+                    }}
+                </p>
+            </div>
+            <div class="flex items-center gap-4 text-sm">
                 <Link href="/explore?place=dominican-republic" class="rounded-md bg-foreground px-3 py-2 text-background">{{
                     t('Explore the Dominican Republic')
                 }}</Link>
@@ -41,32 +43,37 @@ const viirs = computed(() => props.status.instruments.find((i) => i.instrument =
                     t('How it works')
                 }}</Link>
             </div>
-        </section>
+        </header>
 
-        <section class="mt-10">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <select v-model="place" class="rounded-md border bg-background px-2 py-1.5 text-sm font-medium" :aria-label="t('Place')">
-                    <option v-for="p in places" :key="p.slug" :value="p">{{ p.name }}</option>
-                </select>
-                <div class="inline-flex rounded-md border p-0.5 text-sm">
+        <WeekMap class="mt-6" height="h-[62vh] min-h-[26rem]" :week="week" :days="30" :bbox="place.bbox" :times="place.top_times">
+            <template #controls>
+                <div class="inline-flex rounded-md bg-neutral-900/90 p-0.5 text-sm">
                     <button
                         class="rounded px-3 py-1"
-                        :class="mode === 'unusual' ? 'bg-foreground text-background' : 'text-muted-foreground'"
+                        :class="mode === 'unusual' ? 'bg-white text-neutral-900' : 'text-neutral-300'"
                         @click="mode = 'unusual'"
                     >
                         {{ t('Most unusual week') }}
                     </button>
                     <button
                         class="rounded px-3 py-1"
-                        :class="mode === 'recent' ? 'bg-foreground text-background' : 'text-muted-foreground'"
+                        :class="mode === 'recent' ? 'bg-white text-neutral-900' : 'text-neutral-300'"
                         @click="mode = 'recent'"
                     >
                         {{ t('Last 30 days') }}
                     </button>
                 </div>
-            </div>
-            <WeekMap class="mt-3" :week="week" :days="30" :bbox="place.bbox" :times="place.top_times" />
-        </section>
+            </template>
+            <template #panel-top>
+                <select
+                    v-model="place"
+                    class="mb-3 w-full rounded-md border border-neutral-700 bg-neutral-800 px-2 py-1.5 text-base font-semibold text-white"
+                    :aria-label="t('Place')"
+                >
+                    <option v-for="p in places" :key="p.slug" :value="p">{{ p.name }}</option>
+                </select>
+            </template>
+        </WeekMap>
 
         <dl class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div>

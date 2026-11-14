@@ -2,7 +2,6 @@
 import BulletinCard from '@/components/fire/BulletinCard.vue';
 import CalendarHeatmap from '@/components/fire/CalendarHeatmap.vue';
 import ComparePanel from '@/components/fire/ComparePanel.vue';
-import Kpi from '@/components/fire/Kpi.vue';
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
 import Pager from '@/components/fire/Pager.vue';
 import RetirementPanel from '@/components/fire/RetirementPanel.vue';
@@ -85,46 +84,61 @@ const shown = computed(() => sorted.value.slice((page.value - 1) * PER_PAGE, pag
             </div>
         </header>
 
-        <section id="map" class="mt-6 scroll-mt-4">
-            <WeekMap :week="week" :days="30" :bbox="area.bbox" :times="alerts.find((a) => a.week_start === week)?.times ?? null" />
+        <section id="map" class="mt-5 scroll-mt-4">
+            <WeekMap
+                height="h-[55vh] min-h-[24rem]"
+                :week="week"
+                :days="30"
+                :bbox="area.bbox"
+                :times="alerts.find((a) => a.week_start === week)?.times ?? null"
+            />
             <p class="mt-2 text-xs text-muted-foreground">{{ t('Click a week under Unusual weeks to map it here.') }}</p>
         </section>
 
-        <BulletinCard class="mt-4" :slug="area.slug" :week="week" />
+        <dl v-if="fit?.validation" class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+                <dt class="text-sm text-muted-foreground">{{ t('MODIS ÷ VIIRS cell-days') }}</dt>
+                <dd class="text-2xl font-semibold tabular-nums">×{{ number(fit.ratio, 3) }}</dd>
+                <dd class="text-xs text-muted-foreground">
+                    {{ t('95% interval :low–:high', { low: number(fit.low, 3), high: number(fit.high, 3) }) }}
+                </dd>
+            </div>
+            <div>
+                <dt class="text-sm text-muted-foreground">{{ t('Error vs naive merge') }}</dt>
+                <dd class="text-2xl font-semibold tabular-nums text-orange-700 dark:text-orange-400">−{{ percent(fit.validation.improvement) }}</dd>
+                <dd class="text-xs text-muted-foreground">{{ t('on :days held-out days', { days: number(fit.validation.test_days) }) }}</dd>
+            </div>
+            <div>
+                <dt class="text-sm text-muted-foreground">{{ t('Daily error') }}</dt>
+                <dd class="text-2xl font-semibold tabular-nums">{{ number(fit.validation.mae, 1) }}</dd>
+                <dd class="text-xs text-muted-foreground">
+                    {{ t('naive merge: :naive cell-days', { naive: number(fit.validation.naive_mae, 1) }) }}
+                </dd>
+            </div>
+            <div>
+                <dt class="text-sm text-muted-foreground">{{ t('Correlation on held-out days') }}</dt>
+                <dd class="text-2xl font-semibold tabular-nums">{{ r(fit.validation.correlation) }}</dd>
+                <dd class="text-xs text-muted-foreground">
+                    {{ t('overlap :from → :to', { from: fit.validation.overlap_from, to: fit.validation.overlap_to }) }}
+                </dd>
+            </div>
+        </dl>
 
-        <div v-if="fit?.validation" class="mt-6 grid gap-3 sm:grid-cols-4">
-            <Kpi
-                :label="t('MODIS ÷ VIIRS cell-days')"
-                :value="`×${number(fit.ratio, 3)}`"
-                :hint="t('95% interval :low–:high', { low: number(fit.low, 3), high: number(fit.high, 3) })"
-            />
-            <Kpi
-                :label="t('Error vs naive merge')"
-                :value="`−${percent(fit.validation.improvement)}`"
-                :hint="t('on :days held-out days', { days: number(fit.validation.test_days) })"
-            />
-            <Kpi
-                :label="t('Daily error')"
-                :value="number(fit.validation.mae, 1)"
-                :hint="t('naive merge: :naive cell-days', { naive: number(fit.validation.naive_mae, 1) })"
-            />
-            <Kpi
-                :label="t('Correlation on held-out days')"
-                :value="r(fit.validation.correlation)"
-                :hint="t('overlap :from → :to', { from: fit.validation.overlap_from, to: fit.validation.overlap_to })"
-            />
+        <BulletinCard class="mt-6" :slug="area.slug" :week="week" />
+
+        <div class="mt-10 grid gap-10 lg:grid-cols-2">
+            <section v-if="season">
+                <h2 class="text-lg font-semibold">{{ t('Fire season') }}</h2>
+                <SeasonStrip class="mt-2" :season="season" />
+            </section>
+            <section>
+                <h2 class="text-lg font-semibold">{{ t('Compare any dates') }}</h2>
+                <p class="text-sm text-muted-foreground">
+                    {{ t('Pick a period: it is set against the same dates in every other year since 2000.') }}
+                </p>
+                <ComparePanel class="mt-3" :slug="area.slug" />
+            </section>
         </div>
-
-        <section v-if="season" class="mt-8">
-            <h2 class="text-lg font-semibold">{{ t('Fire season') }}</h2>
-            <SeasonStrip class="mt-2" :season="season" />
-        </section>
-
-        <section class="mt-8">
-            <h2 class="text-lg font-semibold">{{ t('Compare any dates') }}</h2>
-            <p class="text-sm text-muted-foreground">{{ t('Pick a period: it is set against the same dates in every other year since 2000.') }}</p>
-            <ComparePanel class="mt-3" :slug="area.slug" />
-        </section>
 
         <section class="mt-8">
             <h2 class="text-lg font-semibold">{{ t('Fire calendar') }}</h2>
