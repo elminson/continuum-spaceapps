@@ -239,5 +239,6 @@
     "rank :rank of :of years": "puesto :rank de :of años",
     "Some of these days have no data yet; showing the same dates in other years.": "Algunos de estos días aún no tienen datos; se muestran las mismas fechas en otros años.",
     "Each bar is the same dates in one year, on the MODIS scale. The line is the median.": "Cada barra son las mismas fechas en un año, en la escala MODIS. La línea es la mediana.",
-    "NASA satellite image of :date": "Imagen satelital de la NASA del :date"
+    "NASA satellite image of :date": "Imagen satelital de la NASA del :date",
+    "Weeks far above the same week in every other year (median and MAD, MODIS scale).": "Semanas muy por encima de la misma semana en todos los demás años (mediana y MAD, escala MODIS)."
 }
