@@ -8,6 +8,7 @@ use App\Models\Area;
 use App\Models\AreaFit;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -102,6 +103,24 @@ class PagesTest extends TestCase
         foreach (['slides/continuum-slides.pdf', 'videos/continuum-demo-en.mp4', 'videos/continuum-local-es.mp4', 'videos/continuum-demo-en.jpg'] as $file) {
             $this->assertFileExists(public_path($file));
         }
+    }
+
+    public function test_bulletin_falls_back_to_the_template_when_the_model_invents_a_number(): void
+    {
+        config()->set('services.bulletin.url', 'https://llm.test');
+        Http::fake(['llm.test/*' => Http::response(['message' => ['content' => 'It was 99 times normal.']])]);
+
+        $this->getJson('/api/areas/cuba/bulletin?week=2026-08-17&locale=en')->assertOk()
+            ->assertJsonPath('data.source', 'template')
+            ->assertJsonPath('data.facts.week.times_normal', 21.4);
+    }
+
+    public function test_bulletin_uses_the_model_text_when_every_number_is_a_fact(): void
+    {
+        config()->set('services.bulletin.url', 'https://llm.test');
+        Http::fake(['llm.test/*' => Http::response(['message' => ['content' => 'Cuba was 21.4 times normal in the week of August 17, 2026.']])]);
+
+        $this->getJson('/api/areas/cuba/bulletin?week=2026-08-17&locale=en')->assertOk()->assertJsonPath('data.source', 'ai');
     }
 
     public function test_every_ready_made_place_fits_inside_an_area(): void

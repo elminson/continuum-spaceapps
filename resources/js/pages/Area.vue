@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BulletinCard from '@/components/fire/BulletinCard.vue';
 import CalendarHeatmap from '@/components/fire/CalendarHeatmap.vue';
 import ComparePanel from '@/components/fire/ComparePanel.vue';
 import Kpi from '@/components/fire/Kpi.vue';
@@ -88,6 +89,8 @@ const shown = computed(() => sorted.value.slice((page.value - 1) * PER_PAGE, pag
             <WeekMap :week="week" :days="30" :bbox="area.bbox" :times="alerts.find((a) => a.week_start === week)?.times ?? null" />
             <p class="mt-2 text-xs text-muted-foreground">{{ t('Click a week under Unusual weeks to map it here.') }}</p>
         </section>
+
+        <BulletinCard class="mt-4" :slug="area.slug" :week="week" />
 
         <div v-if="fit?.validation" class="mt-6 grid gap-3 sm:grid-cols-4">
             <Kpi

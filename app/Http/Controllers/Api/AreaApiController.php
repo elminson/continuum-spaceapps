@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Fire\Bulletin;
 use App\Fire\CompareDates;
 use App\Fire\Explorer;
 use App\Fire\Insights;
@@ -66,6 +67,16 @@ class AreaApiController extends Controller
         }
 
         return response()->json(['area' => $area->slug, 'data' => $insights->compare($area, $data['from'], $data['to'])]);
+    }
+
+    /** Plain-language bulletin: ?week=YYYY-MM-DD (an unusual week) or the last 30 days; ?locale=en|es */
+    public function bulletin(Request $request, Area $area, Bulletin $bulletin): JsonResponse
+    {
+        $week = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->query('week')) ? (string) $request->query('week') : null;
+        $locale = $request->query('locale') === 'es' ? 'es' : 'en';
+        $result = $bulletin->for($area, $week, $locale);
+
+        return response()->json(['area' => $area->slug, 'week' => $week, 'locale' => $locale, 'data' => $result]);
     }
 
     public function alerts(Area $area, Insights $insights): JsonResponse

@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    // Self-hosted model that writes the plain-language fire bulletin (Ollama API).
+    'bulletin' => [
+        'url' => env('OLLAMA_URL'),
+        'key' => env('OLLAMA_API_KEY'),
+        'model' => env('BULLETIN_MODEL', 'gemma4:26b-a4b'),
+        'timeout' => (int) env('BULLETIN_TIMEOUT', 60),
+    ],
+
 ];

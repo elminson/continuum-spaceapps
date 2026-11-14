@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Fire\Bulletin;
 use App\Fire\DataStatus;
 use App\Fire\Explorer;
 use App\Fire\Insights;
@@ -15,7 +16,7 @@ class WarmCommand extends Command
 
     protected $description = 'Precompute the series, retirement tests and totals so no visitor waits for them';
 
-    public function handle(Insights $insights, Explorer $explorer, DataStatus $status): int
+    public function handle(Insights $insights, Explorer $explorer, DataStatus $status, Bulletin $bulletin): int
     {
         $this->components->task('Data status', fn () => $status->refresh());
 
@@ -25,6 +26,18 @@ class WarmCommand extends Command
                 $insights->monthly($area, Sensors::VIIRS);
                 $insights->retirement($area, null);
                 $insights->season($area);
+            });
+        }
+
+        // Bulletins for the focus area: its strongest week and the last 30 days, in both languages.
+        $focus = Area::query()->where('slug', Area::FOCUS)->first();
+        if ($focus) {
+            $this->components->task('Bulletins', function () use ($bulletin, $focus) {
+                $top = $focus->alerts()->orderByDesc('score')->first()?->week_start?->toDateString();
+                foreach (['en', 'es'] as $locale) {
+                    $bulletin->for($focus, $top, $locale);
+                    $bulletin->for($focus, null, $locale);
+                }
             });
         }
 

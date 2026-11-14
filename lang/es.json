@@ -311,5 +311,11 @@
     "Example: :area": "Ejemplo: :area",
     "On the :days days both sensors flew since 2012:": "En los :days días en que volaron ambos sensores desde 2012:",
     "So VIIRS sees about :x times more fire cells here. On days without MODIS, VIIRS × r gives a MODIS-scale value; before 2012, MODIS ÷ r gives a VIIRS-scale value.": "Así que VIIRS ve unas :x veces más celdas con fuego aquí. En días sin MODIS, VIIRS × r da un valor en escala MODIS; antes de 2012, MODIS ÷ r da un valor en escala VIIRS.",
-    "Each calendar month gets its own r when it has at least 20 shared days; otherwise the all-year r is used.": "Cada mes tiene su propia r cuando cuenta con al menos 20 días comunes; si no, se usa la r de todo el año."
+    "Each calendar month gets its own r when it has at least 20 shared days; otherwise the all-year r is used.": "Cada mes tiene su propia r cuando cuenta con al menos 20 días comunes; si no, se usa la r de todo el año.",
+    "Fire bulletin": "Boletín de fuego",
+    "Copy": "Copiar",
+    "Copied": "Copiado",
+    "Writing the bulletin from the numbers…": "Escribiendo el boletín a partir de los números…",
+    "Written by AI (:model) from the numbers on this page; every figure is checked against the data.": "Escrito por IA (:model) a partir de los números de esta página; cada cifra se verifica con los datos.",
+    "Written from a fixed template with the numbers on this page.": "Escrito con una plantilla fija y los números de esta página."
 }
