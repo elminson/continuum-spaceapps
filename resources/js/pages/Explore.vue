@@ -4,6 +4,7 @@ import FireLegend from '@/components/fire/FireLegend.vue';
 import Kpi from '@/components/fire/Kpi.vue';
 import Loading from '@/components/fire/Loading.vue';
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
+import Pager from '@/components/fire/Pager.vue';
 import type { AlertRow, Fit, Month } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { COLORS, date, number, percent, r, t } from '@/lib/i18n';
@@ -42,6 +43,11 @@ const loading = ref(false);
 const week = ref<string | null>(null);
 const cells = ref<number | null>(null);
 const loadingCells = ref(false);
+const PER_PAGE = 15;
+const page = ref(1);
+const allAlerts = computed(() => result.value?.alerts ?? []);
+const pages = computed(() => Math.max(1, Math.ceil(allAlerts.value.length / PER_PAGE)));
+const shown = computed(() => allAlerts.value.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE));
 
 async function showWeek(start: string | null) {
     week.value = start;
@@ -94,6 +100,7 @@ async function analyze(openWeek?: string | null) {
     }
 
     result.value = body.data;
+    page.value = 1;
     await showWeek(openWeek ?? body.data.alerts?.[0]?.week_start ?? null);
 }
 
@@ -243,7 +250,7 @@ onBeforeUnmount(() => map?.remove());
                 <h2 class="text-lg font-semibold">{{ t('Unusual weeks') }}</h2>
                 <ul v-if="result.alerts?.length" class="mt-3 divide-y rounded-lg border text-sm">
                     <li
-                        v-for="a in result.alerts"
+                        v-for="a in shown"
                         :key="a.week_start"
                         class="flex cursor-pointer justify-between px-4 py-2 tabular-nums hover:bg-muted/50"
                         :class="{ 'bg-muted': a.week_start === week }"
@@ -254,6 +261,7 @@ onBeforeUnmount(() => map?.remove());
                     </li>
                 </ul>
                 <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks.') }}</p>
+                <Pager :page="page" :pages="pages" :total="allAlerts.length" :per-page="PER_PAGE" @go="(p) => (page = p)" />
                 <button class="mt-2 text-sm text-muted-foreground hover:text-foreground" @click="showWeek(null)">
                     {{ t('Show the last 30 days on the map') }}
                 </button>

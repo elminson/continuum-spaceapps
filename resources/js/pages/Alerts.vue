@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import AlertList from '@/components/fire/AlertList.vue';
+import Pager from '@/components/fire/Pager.vue';
 import type { AlertRow } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { number, t } from '@/lib/i18n';
 import { maplibregl, nasaMap } from '@/lib/map';
 import { Head, router } from '@inertiajs/vue3';
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 type Source = { slug: string; name: string; bbox: number[]; kind: 'area' | 'place'; counts: Record<'extreme' | 'high' | 'elevated', number> };
 
@@ -37,16 +38,6 @@ function goTo(page: number) {
     filter({}, page);
     document.getElementById('flagged')?.scrollIntoView({ behavior: 'smooth' });
 }
-
-/** Page numbers with gaps: 1 … 4 5 6 … 12 */
-const pageLinks = computed(() => {
-    const out: (number | '…')[] = [];
-    for (let p = 1; p <= props.pages; p++) {
-        if (p === 1 || p === props.pages || Math.abs(p - props.page) <= 1) out.push(p);
-        else if (out[out.length - 1] !== '…') out.push('…');
-    }
-    return out;
-});
 
 function drawMarkers() {
     markers.forEach((m) => m.remove());
@@ -198,35 +189,7 @@ onBeforeUnmount(() => map?.remove());
             <h2 class="text-lg font-semibold">{{ t(':n flagged weeks', { n: number(total) }) }}</h2>
             <AlertList v-if="alerts.length" class="mt-3" :alerts="alerts" />
             <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks match these filters.') }}</p>
-            <nav v-if="pages > 1" class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm" :aria-label="t('Pages')">
-                <span class="text-muted-foreground">{{
-                    t(':from–:to of :total', {
-                        from: number((page - 1) * perPage + 1),
-                        to: number(Math.min(page * perPage, total)),
-                        total: number(total),
-                    })
-                }}</span>
-                <div class="flex items-center gap-1">
-                    <button class="rounded-md border px-2.5 py-1 disabled:opacity-40" :disabled="page === 1" @click="goTo(page - 1)">
-                        ← {{ t('Previous') }}
-                    </button>
-                    <template v-for="(p, i) in pageLinks" :key="i">
-                        <span v-if="p === '…'" class="px-1 text-muted-foreground">…</span>
-                        <button
-                            v-else
-                            class="min-w-8 rounded-md border px-2 py-1 tabular-nums"
-                            :class="p === page ? 'bg-foreground text-background' : 'hover:bg-muted'"
-                            :aria-current="p === page ? 'page' : undefined"
-                            @click="goTo(p)"
-                        >
-                            {{ p }}
-                        </button>
-                    </template>
-                    <button class="rounded-md border px-2.5 py-1 disabled:opacity-40" :disabled="page === pages" @click="goTo(page + 1)">
-                        {{ t('Next') }} →
-                    </button>
-                </div>
-            </nav>
+            <Pager :page="page" :pages="pages" :total="total" :per-page="perPage" @go="goTo" />
         </section>
     </SiteLayout>
 </template>

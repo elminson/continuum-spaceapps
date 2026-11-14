@@ -124,7 +124,7 @@ class PageController extends Controller
             'scale' => $scale,
             'monthly' => $insights->monthly($area, $scale),
             'fit' => $insights->fit($area),
-            'alerts' => $insights->alerts($area),
+            'alerts' => $insights->alerts($area, 500),
             'week' => preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->query('week')) ? $request->query('week') : null,
         ]);
     }

@@ -2,13 +2,14 @@
 import CalendarHeatmap from '@/components/fire/CalendarHeatmap.vue';
 import Kpi from '@/components/fire/Kpi.vue';
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
+import Pager from '@/components/fire/Pager.vue';
 import RetirementPanel from '@/components/fire/RetirementPanel.vue';
 import WeekMap from '@/components/fire/WeekMap.vue';
 import type { AlertRow, Fit, Month } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { date, number, percent, r, t } from '@/lib/i18n';
 import { Head, Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
     area: { slug: string; name: string; bbox: number[]; processed_at: string | null };
@@ -20,6 +21,10 @@ const props = defineProps<{
 }>();
 
 const week = ref<string | null>(props.week ?? props.alerts[0]?.week_start ?? null);
+const PER_PAGE = 15;
+const page = ref(1);
+const pages = computed(() => Math.max(1, Math.ceil(props.alerts.length / PER_PAGE)));
+const shown = computed(() => props.alerts.slice((page.value - 1) * PER_PAGE, page.value * PER_PAGE));
 </script>
 
 <template>
@@ -101,7 +106,7 @@ const week = ref<string | null>(props.week ?? props.alerts[0]?.week_start ?? nul
                 </thead>
                 <tbody class="divide-y">
                     <tr
-                        v-for="a in alerts"
+                        v-for="a in shown"
                         :key="a.week_start"
                         class="cursor-pointer tabular-nums hover:bg-muted/50"
                         :class="{ 'bg-muted': a.week_start === week }"
@@ -116,6 +121,7 @@ const week = ref<string | null>(props.week ?? props.alerts[0]?.week_start ?? nul
                 </tbody>
             </table>
             <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks.') }}</p>
+            <Pager :page="page" :pages="pages" :total="alerts.length" :per-page="PER_PAGE" @go="(p) => (page = p)" />
             <WeekMap v-if="week" class="mt-4" :week="week" :bbox="area.bbox" />
         </section>
 
