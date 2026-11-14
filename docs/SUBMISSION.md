@@ -34,6 +34,17 @@ Code: https://github.com/elminson/continuum-spaceapps
 
 The Explore page analyses any box inside the four areas instantly, with ready-made places such as the Dominican Republic, Haiti, Santo Domingo, Santiago and Puerto Rico. Everything works without an account; signing in only saves boxes. The interface is in English and Spanish, and new NASA data arrives every hour.
 
+**Questions it answers** (each shown live on the home page, with a link to the proof):
+- Was this week unusual? Dominican Republic, week of 27 April 2015: 11.5 times the same week in a normal year.
+- When is the fire season, and are we in it now? Dominican Republic: March to April, peak in March, 44% of a typical year's fire.
+- Was this period worse than usual? Cuba, 10–31 August 2026: the highest of 26 years for those dates.
+- Where did it burn? Every burning 1 km cell over NASA's satellite image of that day.
+- Can I trust the numbers? −89% error vs a naive merge on 1,352 held-out days.
+- What happens when MODIS shuts down? Rebuilt from VIIRS alone, the monthly record keeps its shape.
+- Can our own system use it? Open JSON API and CSV.
+
+**How it relates to NASA FIRMS.** FIRMS tells you where fire is; Continuum tells you whether it is unusual. It is built on FIRMS: it turns the pixels of two different sensors into one comparable 26-year record, which FIRMS does not provide.
+
 **How it works.** The disagreement between MODIS and VIIRS is three problems, each handled separately:
 
 1. Pixel size: a MODIS pixel is about 1 km, a VIIRS pixel 375 m, so one fire front is one MODIS pixel but several VIIRS pixels. Continuum counts 1 km grid cells with fire per day (cell-days) instead of pixels. VIIRS averages 2.4 pixels per cell; MODIS 1.1.
