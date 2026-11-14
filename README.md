@@ -2,7 +2,7 @@
 
 **One fire calendar from 26 years of NASA satellites.** NASA Space Apps Challenge 2026 · *Harmonization of MODIS and VIIRS Hot Spots* · Team Continuum (Elminson & Miguel, Santo Domingo, Dominican Republic).
 
-Live: https://spaceapps.techspark.dev
+Live: https://continuum.isotherm.app
 
 ## The problem
 

@@ -28,6 +28,7 @@ export function nasaMap(container: HTMLElement, bounds: [number, number, number,
     });
 
     map.on('load', () => map.resize());
+    new ResizeObserver(() => map.resize()).observe(container);
 
     return map;
 }

@@ -24,7 +24,7 @@ export function number(value: number | null | undefined, digits = 0): string {
 }
 
 export function r(value: number | null | undefined): string {
-    return value === null || value === undefined ? '—' : `r ${value.toFixed(2)}`;
+    return value === null || value === undefined ? '—' : `r ${value.toFixed(3)}`;
 }
 
 export function percent(value: number | null | undefined, digits = 0): string {
