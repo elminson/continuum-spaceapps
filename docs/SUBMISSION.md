@@ -8,7 +8,7 @@ Continuum
 
 ## High-Level Project Summary
 
-Continuum answers one question for fire and land managers: was this fire unusual, compared with what? NASA has watched fires with MODIS since 2000 and with VIIRS since 2012, but VIIRS sees several times more fire, so a naive merge makes 2012 look like the start of a fire boom. Continuum puts every NASA FIRMS detection on one 1 km grid, merges each sensor's satellites, and fits a monthly MODIS/VIIRS ratio on the days both flew. Tested on 1,352 held-out days per area, it cuts the error of a naive merge by 83–90%. The result is one 26-year fire calendar on either sensor's scale, with fire seasons, unusual weeks, date comparisons, maps and open data. It flagged Cuba's August 2026 wildfires at 24.5 times a normal week. Because NASA plans to shut MODIS down around January 2027, Continuum also tests the future: rebuilt from VIIRS alone, the record keeps its shape (monthly r 0.93–0.996).
+Continuum answers one question for fire and land managers: was this fire unusual, compared with what? NASA has watched fires with MODIS since 2000 and with VIIRS since 2012, but VIIRS sees several times more fire, so a naive merge makes 2012 look like the start of a fire boom. Continuum puts every NASA FIRMS detection on one 1 km grid, merges each sensor's satellites, and fits a monthly MODIS/VIIRS ratio on the days both flew. Tested on 1,352 held-out days per area, it cuts the error of a naive merge by 83–90%. The result is one 26-year fire calendar on either sensor's scale, built first for the Dominican Republic (error −89%; its most unusual week, 27 April 2015, was 11.5 times normal), with fire seasons, unusual weeks, date comparisons, maps and open data. It flagged Cuba's August 2026 wildfires at 24.5 times a normal week. Because NASA plans to shut MODIS down around January 2027, Continuum also tests the future: rebuilt from VIIRS alone, the record keeps its shape (monthly r 0.93–0.996).
 
 ## Link to Project Demo
 
@@ -22,7 +22,7 @@ Code: https://github.com/elminson/continuum-spaceapps
 
 ## Detailed Project Description
 
-**What it does.** Continuum is a web app with a 26-year (November 2000 → today) harmonized fire record for four areas: Hispaniola (Dominican Republic and Haiti), Cuba, the Gran Chaco (Argentina, Paraguay, Bolivia) and the Cerrado and Amazon arc of deforestation (Brazil). For each area it shows:
+**What it does.** Continuum is a web app with a 26-year (November 2000 → today) harmonized fire record, focused on the **Dominican Republic**, plus Hispaniola (Dominican Republic and Haiti), Cuba, the Gran Chaco (Argentina, Paraguay, Bolivia) and the Cerrado and Amazon arc of deforestation (Brazil) to show the method holds in very different fire regimes. For each area it shows:
 
 - a month-by-year fire calendar and the two sensors next to the harmonized record, on the MODIS or the VIIRS scale;
 - the fire season (start, peak, end, its share of the year, and whether we are in it now);
@@ -43,6 +43,7 @@ The ratio is fitted on three of every four overlap days and tested on the fourth
 
 | Area | MODIS ÷ VIIRS | Held-out days | Error vs naive merge | Correlation |
 | --- | --- | --- | --- | --- |
+| **Dominican Republic** | 0.135 | 1,352 | −89% | r 0.726 |
 | Hispaniola | 0.129 | 1,352 | −90% | r 0.727 |
 | Cuba | 0.232 | 1,352 | −85% | r 0.853 |
 | Gran Chaco | 0.345 | 1,352 | −86% | r 0.942 |
@@ -52,7 +53,7 @@ A sensor's own observations are always used when it flew; converted values are m
 
 **When MODIS retires.** NASA plans to stop Aqua MODIS around August–September 2026 and Terra MODIS around January 2027. Continuum simulates it: pick the year MODIS "stops", fit the ratio only on earlier days, rebuild every later month from VIIRS alone and compare with the real MODIS record. With MODIS switched off on 1 January 2024: daily error 81–89% below a naive switch, monthly correlation 0.93–0.996, and totals within −0.4% to +25% depending on the area.
 
-**Benefits.** Fire managers can compare years across the 2012 sensor change, so a busy season reads as a busy season, not as a new satellite. Responders get early warning: the week of 17 August 2026 in Cuba was 24.5 times a normal week, and 10–31 August 2026 was the highest of 26 years for those dates. Land managers get each area's fire season, and scientists get validated numbers with uncertainty and open data.
+**Benefits.** Fire managers can compare years across the 2012 sensor change, so a busy season reads as a busy season, not as a new satellite. Responders get early warning: the week of 17 August 2026 in Cuba was 24.5 times a normal week, and 10–31 August 2026 was the highest of 26 years for those dates. Land managers get each area's fire season (Dominican Republic: March–April, peak in March), and scientists get validated numbers with uncertainty and open data.
 
 **What we hope to achieve.** A free, open fire calendar that any agency in the Caribbean and Latin America can point at its own territory, starting with the Dominican Republic and Haiti, and that keeps working on VIIRS alone after MODIS ends.
 

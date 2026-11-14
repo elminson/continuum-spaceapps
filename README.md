@@ -19,7 +19,7 @@ NASA has watched fires from space with MODIS since 2000 (1 km pixels) and with V
 - **When MODIS retires.** Pick a year: the ratio is fitted on earlier days only, later months are rebuilt from VIIRS alone and checked against the real MODIS record.
 - English and Spanish, CSV downloads, public JSON API. New NASA FIRMS data every hour.
 
-Areas: Hispaniola (Dominican Republic and Haiti), Cuba, Gran Chaco, Cerrado & Amazon arc.
+Areas: **Dominican Republic** (the focus), Hispaniola (Dominican Republic and Haiti), Cuba, Gran Chaco, Cerrado & Amazon arc.
 
 ## How this repo was built
 
