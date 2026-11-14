@@ -2,22 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Area;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $areas = [
+            ['hispaniola', 'Hispaniola (Dominican Republic · Haiti)', 'La Española (República Dominicana · Haití)', -74.884, 16.868, -65.417, 22.628],
+            ['cuba', 'Cuba', 'Cuba', -84.587, 18.709, -74.213, 24.934],
+            ['gran-chaco', 'Gran Chaco (Argentina · Paraguay · Bolivia)', 'Gran Chaco (Argentina · Paraguay · Bolivia)', -70, -35, -55, -15],
+            ['cerrado', 'Cerrado & Amazon arc of deforestation (Brazil)', 'Cerrado y arco de deforestación amazónico (Brasil)', -65, -18, -42, -2],
+        ];
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        foreach ($areas as [$slug, $name, $nameEs, $west, $south, $east, $north]) {
+            Area::query()->updateOrCreate(['slug' => $slug], compact('name', 'west', 'south', 'east', 'north') + ['name_es' => $nameEs]);
+        }
     }
 }
