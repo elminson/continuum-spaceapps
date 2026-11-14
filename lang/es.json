@@ -89,5 +89,7 @@
     "The box is empty.": "El recuadro está vacío.",
     "Keep the box under 8° on each side.": "Mantén el recuadro por debajo de 8° por lado.",
     "Draw the box inside one of the four areas.": "Dibuja el recuadro dentro de una de las cuatro áreas.",
-    "bbox=west,south,east,north": "bbox=oeste,sur,este,norte"
+    "bbox=west,south,east,north": "bbox=oeste,sur,este,norte",
+    "Ready to open": "Listos para abrir",
+    "Or start a box in": "O empieza un recuadro en"
 }

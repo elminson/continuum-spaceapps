@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Fire\Explorer;
 use App\Models\Alert;
 use App\Models\Area;
 use App\Models\AreaFit;
@@ -53,6 +54,15 @@ class PagesTest extends TestCase
             ->where('translations.Areas', 'Áreas'));
     }
 
+    public function test_every_ready_made_place_fits_inside_an_area(): void
+    {
+        $this->seed();
+
+        foreach (Explorer::PLACES as $slug => [$name, $nameEs, $bbox]) {
+            $this->assertNull(Explorer::reject($bbox), $slug);
+        }
+    }
+
     public function test_public_api_and_csv(): void
     {
         $this->getJson('/api/areas')->assertOk()->assertJsonPath('data.0.slug', 'cuba');
@@ -61,7 +71,7 @@ class PagesTest extends TestCase
         $this->getJson('/api/week?bbox=-80,20,-79,21&week=2026-08-19')->assertOk()->assertJsonPath('week', '2026-08-17');
         $this->getJson('/api/explore?bbox=-80,20,-79,21')->assertOk()->assertJsonPath('data.available', false);
         $this->getJson('/api/explore?bbox=10,10,11,11')->assertStatus(422)->assertJsonPath('message', 'Draw the box inside one of the four areas.');
-        $this->get('/explore')->assertOk()->assertInertia(fn (Assert $page) => $page->component('Explore')->where('areas.0.slug', 'cuba'));
+        $this->get('/explore')->assertOk()->assertInertia(fn (Assert $page) => $page->component('Explore')->where('areas.0.slug', 'cuba')->where('places.0.slug', 'dominican-republic'));
         $this->getJson('/api/areas/cuba/week?week=2026-08-19')->assertOk()->assertJsonPath('week', '2026-08-17')->assertJsonPath('type', 'FeatureCollection');
         $this->getJson('/api/areas/cuba/retirement')->assertOk()->assertJsonPath('data.available', false);
         $this->get('/api/areas/cuba/monthly.csv')->assertOk()->assertHeader('content-type', 'text/csv; charset=UTF-8');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Fire\Explorer;
 use App\Fire\Insights;
 use App\Fire\Sensors;
 use App\Http\Middleware\SetLocale;
@@ -42,6 +43,7 @@ class PageController extends Controller
     {
         return Inertia::render('Explore', [
             'areas' => Area::query()->orderBy('id')->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'bbox' => [$a->west, $a->south, $a->east, $a->north]])->all(),
+            'places' => Explorer::places(),
         ]);
     }
 

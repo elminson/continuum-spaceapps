@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Fire\Explorer;
 use App\Fire\Insights;
 use App\Fire\Sensors;
 use App\Models\Area;
@@ -14,7 +15,7 @@ class WarmCommand extends Command
 
     protected $description = 'Precompute the series, retirement tests and totals so no visitor waits for them';
 
-    public function handle(Insights $insights): int
+    public function handle(Insights $insights, Explorer $explorer): int
     {
         cache()->put('detections:count', (int) DB::table('detections')->count(), now()->addHour());
 
@@ -24,6 +25,10 @@ class WarmCommand extends Command
                 $insights->monthly($area, Sensors::VIIRS);
                 $insights->retirement($area, null);
             });
+        }
+
+        foreach (Explorer::PLACES as $slug => [$name, $nameEs, $bbox]) {
+            $this->components->task($name, fn () => $explorer->analyze($bbox));
         }
 
         return self::SUCCESS;

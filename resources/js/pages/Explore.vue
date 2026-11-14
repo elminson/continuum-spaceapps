@@ -10,7 +10,9 @@ import { maplibregl, nasaMap } from '@/lib/map';
 import { Head } from '@inertiajs/vue3';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-const props = defineProps<{ areas: { slug: string; name: string; bbox: number[] }[] }>();
+type Place = { slug: string; name: string; bbox: number[] };
+
+const props = defineProps<{ areas: Place[]; places: Place[] }>();
 
 type Result = { available: boolean; bbox: number[]; fit?: Fit; monthly?: Month[]; alerts?: AlertRow[] };
 
@@ -62,6 +64,13 @@ async function analyze() {
 
     result.value = body.data;
     week.value = body.data.alerts?.[0]?.week_start ?? null;
+}
+
+function go(place: Place) {
+    box.value = [...place.bbox];
+    map?.fitBounds([place.bbox[0], place.bbox[1], place.bbox[2], place.bbox[3]], { padding: 40 });
+    draw();
+    analyze();
 }
 
 function pick(area: { bbox: number[] }) {
@@ -117,7 +126,13 @@ onBeforeUnmount(() => map?.remove());
             }}
         </p>
 
-        <div class="mt-4 flex flex-wrap gap-2 text-sm">
+        <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+            <span class="text-muted-foreground">{{ t('Ready to open') }}</span>
+            <button v-for="p in places" :key="p.slug" class="rounded-md border px-2 py-1 hover:bg-muted" @click="go(p)">{{ p.name }}</button>
+        </div>
+
+        <div class="mt-2 flex flex-wrap items-center gap-2 text-sm">
+            <span class="text-muted-foreground">{{ t('Or start a box in') }}</span>
             <button v-for="a in areas" :key="a.slug" class="rounded-md border px-2 py-1 hover:bg-muted" @click="pick(a)">{{ a.name }}</button>
         </div>
 
