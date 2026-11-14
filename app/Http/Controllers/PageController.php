@@ -71,7 +71,7 @@ class PageController extends Controller
             ->sortByDesc($sort === 'strongest' ? 'score' : 'week_start')
             ->values();
 
-        $perPage = 25;
+        $perPage = 15;
         $pages = max(1, (int) ceil($list->count() / $perPage));
         $page = min($pages, max(1, $request->integer('page', 1)));
 

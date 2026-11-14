@@ -4,8 +4,9 @@ export function t(key: string, params: Record<string, string | number> = {}): st
     const translations = (usePage().props.translations ?? {}) as Record<string, string>;
     let text = translations[key] ?? key;
 
-    for (const [name, value] of Object.entries(params)) {
-        text = text.replaceAll(`:${name}`, String(value));
+    // Longest names first, so :to never eats the start of :total.
+    for (const name of Object.keys(params).sort((a, b) => b.length - a.length)) {
+        text = text.replaceAll(`:${name}`, String(params[name]));
     }
 
     return text;
