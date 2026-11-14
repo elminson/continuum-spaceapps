@@ -62,7 +62,7 @@ class PagesTest extends TestCase
             $this->get($url)->assertOk()->assertInertia(fn (Assert $page) => $page->component($component));
         }
 
-        $this->get('/')->assertInertia(fn (Assert $page) => $page->where('places.0.slug', 'dominican-republic')->has('status.detections'));
+        $this->get('/')->assertInertia(fn (Assert $page) => $page->where('places.0.slug', 'dominican-republic')->has('status.detections')->has('answers'));
     }
 
     public function test_signed_in_users_save_and_delete_their_boxes(): void

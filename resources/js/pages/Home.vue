@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AlertList from '@/components/fire/AlertList.vue';
+import QuestionsAnswered, { type Answers } from '@/components/fire/QuestionsAnswered.vue';
 import Spark from '@/components/fire/Spark.vue';
 import type { AlertRow, Place, Status } from '@/components/fire/types';
 import WeekMap from '@/components/fire/WeekMap.vue';
@@ -13,6 +14,7 @@ const props = defineProps<{
     status: Status;
     places: Place[];
     topAlerts: AlertRow[];
+    answers: Answers | null;
 }>();
 
 const place = ref<Place>(props.places[0]);
@@ -74,6 +76,8 @@ const viirs = computed(() => props.status.instruments.find((i) => i.instrument =
                 </select>
             </template>
         </WeekMap>
+
+        <QuestionsAnswered v-if="answers" class="mt-10" :answers="answers" />
 
         <dl class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div>

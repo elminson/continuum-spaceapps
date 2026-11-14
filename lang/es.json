@@ -317,5 +317,22 @@
     "Copied": "Copiado",
     "Writing the bulletin from the numbers…": "Escribiendo el boletín a partir de los números…",
     "Written by AI (:model) from the numbers on this page; every figure is checked against the data.": "Escrito por IA (:model) a partir de los números de esta página; cada cifra se verifica con los datos.",
-    "Written from a fixed template with the numbers on this page.": "Escrito con una plantilla fija y los números de esta página."
+    "Written from a fixed template with the numbers on this page.": "Escrito con una plantilla fija y los números de esta página.",
+    "Questions Continuum answers": "Preguntas que Continuum responde",
+    "Was this week unusual?": "¿Fue inusual esta semana?",
+    "Dominican Republic, week of :date: :times times the same week in a normal year.": "República Dominicana, semana del :date: :times veces la misma semana en un año normal.",
+    "When is the fire season, and are we in it now?": "¿Cuándo es la temporada de fuego y estamos en ella?",
+    "Peak in :peak, :share of a typical year’s fire. :now": "Pico en :peak, :share del fuego de un año típico. :now",
+    "Was this period worse than usual?": "¿Fue este período peor de lo normal?",
+    "Cuba, :from to :to: rank :rank of :of years for those dates.": "Cuba, del :from al :to: puesto :rank de :of años en esas fechas.",
+    "Where did it burn?": "¿Dónde ardió?",
+    "1 km": "1 km",
+    "Every burning 1 km cell on NASA’s satellite image of that day, for any week since 2000.": "Cada celda de 1 km con fuego sobre la imagen satelital de la NASA de ese día, para cualquier semana desde 2000.",
+    "Can I trust the numbers?": "¿Puedo confiar en los números?",
+    "Error vs a naive merge, tested on :days days the fit never saw (:r).": "Error frente a la mezcla ingenua, probado en :days días que el ajuste nunca vio (:r).",
+    "What happens when MODIS shuts down?": "¿Qué pasa cuando se apague MODIS?",
+    "Switched off in :year, rebuilt from VIIRS alone: the monthly record keeps its shape.": "Apagado en :year y reconstruido solo con VIIRS: el registro mensual mantiene su forma.",
+    "Can our own system use it?": "¿Puede usarlo nuestro propio sistema?",
+    "Open API and downloads for every number on this site, no key needed.": "API abierta y descargas de cada número de este sitio, sin clave.",
+    "See it": "Verlo"
 }

@@ -203,7 +203,7 @@ const shown = computed(() => sorted.value.slice((page.value - 1) * PER_PAGE, pag
             <Pager :page="page" :pages="pages" :total="alerts.length" :per-page="PER_PAGE" @go="(p) => (page = p)" />
         </section>
 
-        <section class="mt-8">
+        <section id="retire" class="mt-8 scroll-mt-6">
             <h2 class="text-lg font-semibold">{{ t('When MODIS retires') }}</h2>
             <p class="max-w-3xl text-sm text-muted-foreground">
                 {{

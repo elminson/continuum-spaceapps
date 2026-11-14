@@ -26,7 +26,37 @@ class PageController extends Controller
             'status' => $status->summary(),
             'places' => Explorer::places(),
             'topAlerts' => $this->topAlerts(5),
+            'answers' => $this->answers($insights),
         ]);
+    }
+
+    /**
+     * Live facts behind the "Questions Continuum answers" block on the home page.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function answers(Insights $insights): ?array
+    {
+        $dr = Area::query()->where('slug', Area::FOCUS)->first();
+        $cuba = Area::query()->where('slug', 'cuba')->first();
+
+        if (! $dr) {
+            return null;
+        }
+
+        $top = $dr->alerts()->orderByDesc('score')->first();
+        $fit = $insights->fit($dr);
+        $season = $insights->season($dr);
+        $retire = $insights->retirement($dr, null);
+        $cubaCompare = $cuba ? $insights->compare($cuba, '2026-08-10', '2026-08-31') : null;
+
+        return [
+            'week' => $top ? Insights::alert($top) : null,
+            'season' => $season ? ['start' => $season['start'], 'peak' => $season['peak'], 'end' => $season['end'], 'share' => $season['share'], 'in_season' => $season['in_season']] : null,
+            'compare' => $cubaCompare ? ['from' => $cubaCompare['from'], 'to' => $cubaCompare['to'], 'times' => $cubaCompare['times'], 'rank' => $cubaCompare['rank'], 'of' => $cubaCompare['of']] : null,
+            'trust' => $fit['validation'] ?? null,
+            'retire' => $retire && ($retire['available'] ?? false) ? ['year' => $retire['year'], 'improvement' => $retire['improvement'], 'monthly_r' => $retire['monthly_r']] : null,
+        ];
     }
 
     public function areas(Insights $insights): Response
