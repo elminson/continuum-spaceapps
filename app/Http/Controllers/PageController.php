@@ -71,14 +71,21 @@ class PageController extends Controller
             ->sortByDesc($sort === 'strongest' ? 'score' : 'week_start')
             ->values();
 
+        $perPage = 25;
+        $pages = max(1, (int) ceil($list->count() / $perPage));
+        $page = min($pages, max(1, $request->integer('page', 1)));
+
         return Inertia::render('Alerts', [
             'filters' => ['area' => $selected, 'severity' => $severity, 'sort' => $sort],
+            'page' => $page,
+            'pages' => $pages,
+            'perPage' => $perPage,
             'sources' => array_values(array_map(fn ($s) => [
                 'slug' => $s['slug'], 'name' => $s['name'], 'bbox' => $s['bbox'], 'kind' => $s['kind'],
                 'counts' => array_combine($severities, array_map(fn ($sev) => count(array_filter($s['alerts'], fn ($a) => $a['severity'] === $sev)), $severities)),
             ], $sources)),
             'total' => $list->count(),
-            'alerts' => $list->take(100)->all(),
+            'alerts' => $list->forPage($page, $perPage)->values()->all(),
         ]);
     }
 

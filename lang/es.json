@@ -190,5 +190,9 @@
     "colour = worst week · number = flagged weeks": "color = peor semana · número = semanas marcadas",
     ":n flagged weeks": ":n semanas marcadas",
     "No unusual weeks match these filters.": "Ninguna semana inusual coincide con estos filtros.",
-    "Showing the first :n.": "Se muestran las primeras :n."
+    "Showing the first :n.": "Se muestran las primeras :n.",
+    "Pages": "Páginas",
+    ":from–:to of :total": ":from–:to de :total",
+    "Previous": "Anterior",
+    "Next": "Siguiente"
 }

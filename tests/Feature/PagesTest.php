@@ -91,6 +91,7 @@ class PagesTest extends TestCase
             ->where('alerts.0.href', '/areas/cuba?week=2026-08-17')
             ->where('sources.0.counts.extreme', 1));
 
+        $this->get('/alerts?page=9')->assertInertia(fn (Assert $page) => $page->where('page', 1)->where('pages', 1)->where('perPage', 25));
         $this->get('/alerts?area=cuba&severity=high')->assertInertia(fn (Assert $page) => $page->where('total', 0));
         $this->get('/alerts?area=nowhere')->assertInertia(fn (Assert $page) => $page->where('filters.area', ''));
         $this->get('/alerts?area=dominican-republic')->assertOk()->assertInertia(fn (Assert $page) => $page->where('filters.area', 'dominican-republic'));

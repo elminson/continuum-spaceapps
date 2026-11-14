@@ -5,7 +5,7 @@ import SiteLayout from '@/layouts/SiteLayout.vue';
 import { number, t } from '@/lib/i18n';
 import { maplibregl, nasaMap } from '@/lib/map';
 import { Head, router } from '@inertiajs/vue3';
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 type Source = { slug: string; name: string; bbox: number[]; kind: 'area' | 'place'; counts: Record<'extreme' | 'high' | 'elevated', number> };
 
@@ -14,6 +14,9 @@ const props = defineProps<{
     sources: Source[];
     total: number;
     alerts: AlertRow[];
+    page: number;
+    pages: number;
+    perPage: number;
 }>();
 
 const SEVERITY_COLORS = { extreme: '#dc2626', high: '#f97316', elevated: '#eab308', none: '#64748b' };
@@ -25,10 +28,25 @@ const worst = (s: Source) => (s.counts.extreme ? 'extreme' : s.counts.high ? 'hi
 const flagged = (s: Source) => s.counts.extreme + s.counts.high + s.counts.elevated;
 const totals = (sev: 'extreme' | 'high' | 'elevated') => props.sources.filter((s) => s.kind === 'area').reduce((n, s) => n + s.counts[sev], 0);
 
-function filter(changes: Partial<typeof props.filters>) {
-    const next = { ...props.filters, ...changes };
+function filter(changes: Partial<typeof props.filters>, page = 1) {
+    const next = { ...props.filters, ...changes, page: page > 1 ? page : null };
     router.get('/alerts', Object.fromEntries(Object.entries(next).filter(([, v]) => v)), { preserveScroll: true, preserveState: true });
 }
+
+function goTo(page: number) {
+    filter({}, page);
+    document.getElementById('flagged')?.scrollIntoView({ behavior: 'smooth' });
+}
+
+/** Page numbers with gaps: 1 … 4 5 6 … 12 */
+const pageLinks = computed(() => {
+    const out: (number | '…')[] = [];
+    for (let p = 1; p <= props.pages; p++) {
+        if (p === 1 || p === props.pages || Math.abs(p - props.page) <= 1) out.push(p);
+        else if (out[out.length - 1] !== '…') out.push('…');
+    }
+    return out;
+});
 
 function drawMarkers() {
     markers.forEach((m) => m.remove());
@@ -176,11 +194,39 @@ onBeforeUnmount(() => map?.remove());
             </div>
         </section>
 
-        <section class="mt-6">
+        <section id="flagged" class="mt-6 scroll-mt-4">
             <h2 class="text-lg font-semibold">{{ t(':n flagged weeks', { n: number(total) }) }}</h2>
             <AlertList v-if="alerts.length" class="mt-3" :alerts="alerts" />
             <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks match these filters.') }}</p>
-            <p v-if="total > alerts.length" class="mt-2 text-xs text-muted-foreground">{{ t('Showing the first :n.', { n: alerts.length }) }}</p>
+            <nav v-if="pages > 1" class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm" :aria-label="t('Pages')">
+                <span class="text-muted-foreground">{{
+                    t(':from–:to of :total', {
+                        from: number((page - 1) * perPage + 1),
+                        to: number(Math.min(page * perPage, total)),
+                        total: number(total),
+                    })
+                }}</span>
+                <div class="flex items-center gap-1">
+                    <button class="rounded-md border px-2.5 py-1 disabled:opacity-40" :disabled="page === 1" @click="goTo(page - 1)">
+                        ← {{ t('Previous') }}
+                    </button>
+                    <template v-for="(p, i) in pageLinks" :key="i">
+                        <span v-if="p === '…'" class="px-1 text-muted-foreground">…</span>
+                        <button
+                            v-else
+                            class="min-w-8 rounded-md border px-2 py-1 tabular-nums"
+                            :class="p === page ? 'bg-foreground text-background' : 'hover:bg-muted'"
+                            :aria-current="p === page ? 'page' : undefined"
+                            @click="goTo(p)"
+                        >
+                            {{ p }}
+                        </button>
+                    </template>
+                    <button class="rounded-md border px-2.5 py-1 disabled:opacity-40" :disabled="page === pages" @click="goTo(page + 1)">
+                        {{ t('Next') }} →
+                    </button>
+                </div>
+            </nav>
         </section>
     </SiteLayout>
 </template>
