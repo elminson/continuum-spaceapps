@@ -144,9 +144,12 @@ class PageController extends Controller
         ]);
     }
 
-    public function method(): Response
+    public function method(DataStatus $status, Insights $insights): Response
     {
-        return Inertia::render('Method');
+        return Inertia::render('Method', [
+            'status' => $status->summary(),
+            'evidence' => Area::query()->orderBy('id')->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'fit' => $insights->fit($a)])->all(),
+        ]);
     }
 
     public function locale(string $locale): RedirectResponse
