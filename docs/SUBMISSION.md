@@ -13,6 +13,7 @@ Continuum answers one question for fire and land managers: was this fire unusual
 ## Link to Project Demo
 
 `<YouTube link to the 30-second video>`
+Slides (7): https://github.com/elminson/continuum-spaceapps/blob/main/docs/presentation/continuum-slides.pdf
 
 ## Link to Final Project
 
