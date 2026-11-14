@@ -68,21 +68,27 @@ const active = (href: string) => (href === '/' ? page.url === '/' : page.url.sta
                 <Link v-else href="/logout" method="post" as="button" class="flex items-center gap-2 rounded-md px-3 py-2 text-left hover:bg-muted">
                     <LogOut class="size-4" /> {{ t('Sign out (:name)', { name: user.name }) }}
                 </Link>
-                <div class="flex gap-1 px-3 pt-2">
-                    <a href="/locale/en" :class="locale() === 'en' ? 'font-semibold text-foreground' : ''">EN</a>
-                    <span>·</span>
-                    <a href="/locale/es" :class="locale() === 'es' ? 'font-semibold text-foreground' : ''">ES</a>
-                </div>
             </div>
         </aside>
 
         <div class="min-w-0 flex-1">
-            <div class="flex justify-end gap-1 px-4 pt-3 text-sm text-muted-foreground lg:hidden">
-                <a href="/locale/en" :class="locale() === 'en' ? 'font-semibold text-foreground' : ''">EN</a>
-                <span>·</span>
-                <a href="/locale/es" :class="locale() === 'es' ? 'font-semibold text-foreground' : ''">ES</a>
+            <div class="flex justify-end px-4 pt-4 lg:px-8">
+                <div class="inline-flex rounded-md border p-0.5 text-sm" role="group" aria-label="Language">
+                    <a
+                        v-for="[code, name] in [
+                            ['en', 'English'],
+                            ['es', 'Español'],
+                        ]"
+                        :key="code"
+                        :href="`/locale/${code}`"
+                        :aria-current="locale() === code ? 'true' : undefined"
+                        class="rounded px-3 py-1"
+                        :class="locale() === code ? 'bg-foreground text-background' : 'text-muted-foreground hover:text-foreground'"
+                        >{{ name }}</a
+                    >
+                </div>
             </div>
-            <main class="mx-auto max-w-6xl px-4 py-6 lg:px-8 lg:py-8">
+            <main class="mx-auto max-w-6xl px-4 pb-6 pt-2 lg:px-8 lg:pb-8">
                 <slot />
             </main>
             <footer class="border-t">
