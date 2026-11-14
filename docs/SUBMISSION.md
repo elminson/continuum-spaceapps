@@ -28,6 +28,7 @@ Code: https://github.com/elminson/continuum-spaceapps
 - the fire season (start, peak, end, its share of the year, and whether we are in it now);
 - any date range compared with the same dates in every other year (value, typical value, times normal, rank);
 - unusual weeks: each week against the same week in every other year, with a map of the 1 km cells that burned and NASA's satellite image of that day;
+- a short fire bulletin in plain language (English and Spanish), written by an AI model from the computed facts and checked number by number;
 - a test of the end of MODIS (below);
 - CSV downloads and a public JSON API.
 
@@ -70,6 +71,8 @@ Yes. Tools and purpose:
 - **Claude Code (Anthropic)**, a coding assistant: helped write, test and review the Laravel and Vue code, and draft the README, method text, Spanish translations and this submission. Commits it helped write carry a `Co-Authored-By: Claude` line in the public git history.
 - **Microsoft Edge neural text-to-speech voices**: the narration of the demo videos. This is stated on screen, in the video descriptions and in the file metadata.
 
+- **Gemma 4 (Google, open model, self-hosted with Ollama)**, inside the app: writes the short plain-language **fire bulletin** on each area page (English and Spanish) from facts the code computes (times normal, rank among the same week in other years, where in the area, the fire season). Every number in its text is checked against those facts; if any number does not match, the app shows a fixed template instead. The bulletin is labelled as AI-written. https://ai.google.dev/gemma · https://ollama.com
+
 No AI was used to generate data, numbers or images. Every chart and map shows NASA data processed by the app's own code. No NASA logos or branding were generated or modified.
 
 ## Space Agency Data
@@ -82,6 +85,7 @@ No AI was used to generate data, numbers or images. Every chart and map shows NA
 ## References
 
 - Claude Code (Anthropic): https://www.anthropic.com/claude-code
+- Gemma 4 (Google, open model): https://ai.google.dev/gemma · Ollama: https://ollama.com
 - Microsoft Edge text-to-speech voices: https://learn.microsoft.com/azure/ai-services/speech-service/language-support
 - Laravel (MIT): https://laravel.com
 - Inertia.js (MIT): https://inertiajs.com
