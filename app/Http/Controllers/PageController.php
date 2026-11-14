@@ -38,6 +38,13 @@ class PageController extends Controller
         ]);
     }
 
+    public function explore(): Response
+    {
+        return Inertia::render('Explore', [
+            'areas' => Area::query()->orderBy('id')->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'bbox' => [$a->west, $a->south, $a->east, $a->north]])->all(),
+        ]);
+    }
+
     public function method(): Response
     {
         return Inertia::render('Method');

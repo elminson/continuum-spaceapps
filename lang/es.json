@@ -78,5 +78,16 @@
     ":n cells with fire": ":n celdas con fuego",
     "both sensors": "ambos sensores",
     "VIIRS only": "solo VIIRS",
-    "MODIS only": "solo MODIS"
+    "MODIS only": "solo MODIS",
+    "Explore": "Explorar",
+    "Explore any box": "Explora cualquier recuadro",
+    "Click two corners on the map inside a dashed area, or start from an area below. Continuum fits and tests its own MODIS/VIIRS ratio for that box and builds its 26-year calendar. No login needed.": "Haz clic en dos esquinas del mapa dentro de un área punteada, o empieza desde un área de abajo. Continuum ajusta y prueba su propia razón MODIS/VIIRS para ese recuadro y construye su calendario de 26 años. Sin iniciar sesión.",
+    "No box yet": "Aún no hay recuadro",
+    "Analyzing…": "Analizando…",
+    "Analyze this box": "Analizar este recuadro",
+    "Too little fire in this box to fit the two sensors. Try a larger box.": "Hay muy poco fuego en este recuadro para ajustar los dos sensores. Prueba uno más grande.",
+    "The box is empty.": "El recuadro está vacío.",
+    "Keep the box under 8° on each side.": "Mantén el recuadro por debajo de 8° por lado.",
+    "Draw the box inside one of the four areas.": "Dibuja el recuadro dentro de una de las cuatro áreas.",
+    "bbox=west,south,east,north": "bbox=oeste,sur,este,norte"
 }

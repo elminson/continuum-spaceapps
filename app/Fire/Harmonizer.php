@@ -23,10 +23,20 @@ class Harmonizer
             ->mapWithKeys(fn (AreaFit $fit) => [$fit->month => ['ratio' => $fit->ratio, 'low' => $fit->ratio_low, 'high' => $fit->ratio_high, 'days' => $fit->days]])
             ->all();
 
+        return self::apply($this->record->for($area), $fits, $scale);
+    }
+
+    /**
+     * @param  array<string, array{modis: ?int, viirs: ?int}>  $days
+     * @param  array<int, array{ratio: float, low: float, high: float, days: int}>  $fits
+     * @return list<array{date: string, modis: ?int, viirs: ?int, value: ?float, low: ?float, high: ?float, estimated: bool}>
+     */
+    public static function apply(array $days, array $fits, string $scale): array
+    {
         $series = [];
 
-        foreach ($this->record->for($area) as $date => $day) {
-            $series[] = ['date' => $date, 'modis' => $day['modis'], 'viirs' => $day['viirs'], ...self::convert($day, $fits, (int) substr($date, 5, 2), $scale)];
+        foreach ($days as $date => $day) {
+            $series[] = ['date' => (string) $date, 'modis' => $day['modis'], 'viirs' => $day['viirs'], ...self::convert($day, $fits, (int) substr((string) $date, 5, 2), $scale)];
         }
 
         return $series;
@@ -68,9 +78,18 @@ class Harmonizer
      */
     public function monthly(Area $area, string $scale = Sensors::MODIS): array
     {
+        return self::toMonths($this->daily($area, $scale));
+    }
+
+    /**
+     * @param  list<array{date: string, modis: ?int, viirs: ?int, value: ?float, low: ?float, high: ?float, estimated: bool}>  $daily
+     * @return list<array{month: string, modis: ?int, viirs: ?int, value: ?float, low: ?float, high: ?float, estimated: bool}>
+     */
+    public static function toMonths(array $daily): array
+    {
         $months = [];
 
-        foreach ($this->daily($area, $scale) as $day) {
+        foreach ($daily as $day) {
             $key = substr($day['date'], 0, 7);
             $m = $months[$key] ?? ['month' => $key, 'modis' => null, 'viirs' => null, 'value' => null, 'low' => null, 'high' => null, 'estimated' => false];
 

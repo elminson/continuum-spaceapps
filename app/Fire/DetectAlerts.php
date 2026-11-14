@@ -22,7 +22,26 @@ class DetectAlerts
 
     public function __invoke(Area $area): int
     {
-        $weeks = $this->weeks($area);
+        $alerts = array_map(fn (array $a) => ['area_id' => $area->id, ...$a, 'created_at' => now(), 'updated_at' => now()], self::find($this->harmonizer->daily($area, Sensors::MODIS)));
+
+        DB::transaction(function () use ($area, $alerts): void {
+            Alert::query()->where('area_id', $area->id)->delete();
+
+            foreach (array_chunk($alerts, 500) as $chunk) {
+                Alert::query()->insert($chunk);
+            }
+        });
+
+        return count($alerts);
+    }
+
+    /**
+     * @param  list<array{date: string, value: ?float}>  $daily  harmonized MODIS-scale days
+     * @return list<array{week_start: string, observed: float, typical: float, spread: float, score: float, severity: string}>
+     */
+    public static function find(array $daily): array
+    {
+        $weeks = self::weeks($daily);
         $byWeekOfYear = [];
 
         foreach ($weeks as $start => $value) {
@@ -44,41 +63,31 @@ class DetectAlerts
 
             if ($score >= self::MIN_SCORE && $observed >= self::MIN_CELL_DAYS && $observed >= 2 * $typical) {
                 $alerts[] = [
-                    'area_id' => $area->id,
-                    'week_start' => $start,
+                    'week_start' => (string) $start,
                     'observed' => round($observed, 1),
                     'typical' => round($typical, 1),
                     'spread' => round($spread, 2),
                     'score' => round($score, 2),
                     'severity' => $score >= 8 ? 'extreme' : ($score >= 5 ? 'high' : 'elevated'),
-                    'created_at' => now(),
-                    'updated_at' => now(),
                 ];
             }
         }
 
-        DB::transaction(function () use ($area, $alerts): void {
-            Alert::query()->where('area_id', $area->id)->delete();
-
-            foreach (array_chunk($alerts, 500) as $chunk) {
-                Alert::query()->insert($chunk);
-            }
-        });
-
-        return count($alerts);
+        return $alerts;
     }
 
     /**
-     * Complete weeks (Monday start, all 7 days with data) on the MODIS scale.
+     * Complete weeks (Monday start, all 7 days with data).
      *
+     * @param  list<array{date: string, value: ?float}>  $daily
      * @return array<string, float>
      */
-    public function weeks(Area $area): array
+    public static function weeks(array $daily): array
     {
         $weeks = [];
         $days = [];
 
-        foreach ($this->harmonizer->daily($area, Sensors::MODIS) as $day) {
+        foreach ($daily as $day) {
             if ($day['value'] === null) {
                 continue;
             }

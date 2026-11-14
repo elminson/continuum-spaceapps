@@ -4,13 +4,13 @@ import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
-const props = defineProps<{ slug: string; week: string; bbox: number[] }>();
+const props = defineProps<{ week: string; bbox: number[] }>();
 const el = ref<HTMLDivElement | null>(null);
 const cells = ref<number | null>(null);
 let map: maplibregl.Map | null = null;
 
 async function load() {
-    const data = await (await fetch(`/api/areas/${props.slug}/week?week=${props.week}`)).json();
+    const data = await (await fetch(`/api/week?bbox=${props.bbox.join(',')}&week=${props.week}`)).json();
     cells.value = data.features.length;
     (map?.getSource('cells') as maplibregl.GeoJSONSource | undefined)?.setData(data);
 }
@@ -55,7 +55,13 @@ onMounted(() => {
     });
 });
 
-watch(() => props.week, load);
+watch(
+    () => [props.week, props.bbox.join(',')],
+    () => {
+        map?.fitBounds([props.bbox[0], props.bbox[1], props.bbox[2], props.bbox[3]], { duration: 0 });
+        load();
+    },
+);
 onBeforeUnmount(() => map?.remove());
 </script>
 

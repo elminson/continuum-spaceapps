@@ -13,6 +13,7 @@ import { Link } from '@inertiajs/vue3';
                 </Link>
                 <nav class="flex gap-4 text-sm text-muted-foreground">
                     <Link href="/" class="hover:text-foreground">{{ t('Areas') }}</Link>
+                    <Link href="/explore" class="hover:text-foreground">{{ t('Explore') }}</Link>
                     <Link href="/method" class="hover:text-foreground">{{ t('Method') }}</Link>
                 </nav>
                 <div class="ml-auto flex gap-1 text-sm">

@@ -115,7 +115,7 @@ const week = ref<string | null>(props.alerts[0]?.week_start ?? null);
                 </tbody>
             </table>
             <p v-else class="mt-3 text-sm text-muted-foreground">{{ t('No unusual weeks.') }}</p>
-            <WeekMap v-if="week" class="mt-4" :slug="area.slug" :week="week" :bbox="area.bbox" />
+            <WeekMap v-if="week" class="mt-4" :week="week" :bbox="area.bbox" />
         </section>
 
         <section class="mt-8">

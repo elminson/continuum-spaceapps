@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Fire;
 
+use App\Fire\Explorer;
 use App\Fire\FirmsFeed;
 use App\Fire\Harmonizer;
 use App\Fire\Pipeline;
@@ -114,6 +115,21 @@ class PipelineTest extends TestCase
         $this->assertSame(0.0, (float) $result['total_error']);
         $this->assertSame(1.0, (float) $result['improvement']);
         $this->assertSame(366, $result['test_days']);
+    }
+
+    public function test_explores_a_smaller_box_inside_an_area_with_its_own_fit(): void
+    {
+        $this->seedFires('2014-01-01', '2015-12-31');
+        app(Pipeline::class)->run('2014-01-01', '2015-12-31');
+
+        $result = app(Explorer::class)->analyze([-71.0, 18.0, -70.5, 18.5]);
+
+        $this->assertTrue($result['available']);
+        $this->assertEqualsWithDelta(0.25, $result['fit']['ratio'], 1e-9);
+        $this->assertEquals(1, $result['fit']['validation']['improvement']);
+        $this->assertCount(24, $result['monthly']);
+        $this->assertNull(Explorer::reject([-71.0, 18.0, -70.5, 18.5]));
+        $this->assertSame('Draw the box inside one of the four areas.', Explorer::reject([-72.0, 18.0, -70.5, 18.5]));
     }
 
     public function test_imports_firms_csv_rows_inside_an_area_once(): void

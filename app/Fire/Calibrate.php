@@ -28,29 +28,7 @@ class Calibrate
             return ['status' => 'not enough overlap', 'days' => count($pairs)];
         }
 
-        $train = $test = [];
-
-        foreach ($pairs as $i => $pair) {
-            (($i + 1) % self::HOLDOUT_EVERY === 0) ? $test[] = $pair : $train[] = $pair;
-        }
-
-        $trainFit = self::fit($train);
-        $predicted = array_map(fn (array $p) => $p['viirs'] * self::factor($trainFit, $p['month'])['ratio'], $test);
-        $observed = array_column($test, 'modis');
-        $naive = array_column($test, 'viirs');
-        $mae = Stats::meanAbsoluteError($predicted, $observed);
-        $naiveMae = Stats::meanAbsoluteError($naive, $observed);
-
-        $validation = [
-            'train_days' => count($train),
-            'test_days' => count($test),
-            'mae' => round($mae, 2),
-            'naive_mae' => round($naiveMae, 2),
-            'improvement' => $naiveMae > 0 ? round(1 - $mae / $naiveMae, 4) : 0.0,
-            'correlation' => round(Stats::correlation($predicted, $observed), 4),
-            'overlap_from' => $pairs[0]['date'],
-            'overlap_to' => $pairs[count($pairs) - 1]['date'],
-        ];
+        $validation = self::validate($pairs);
 
         $final = self::fit($pairs);
 
@@ -71,6 +49,38 @@ class Calibrate
         });
 
         return $validation;
+    }
+
+    /**
+     * Fit on three of every four overlap days, score on the fourth.
+     *
+     * @param  list<array{date: string, month: int, modis: int, viirs: int}>  $pairs
+     * @return array<string, mixed>
+     */
+    public static function validate(array $pairs): array
+    {
+        $train = $test = [];
+
+        foreach ($pairs as $i => $pair) {
+            (($i + 1) % self::HOLDOUT_EVERY === 0) ? $test[] = $pair : $train[] = $pair;
+        }
+
+        $trainFit = self::fit($train);
+        $predicted = array_map(fn (array $p) => $p['viirs'] * self::factor($trainFit, $p['month'])['ratio'], $test);
+        $observed = array_column($test, 'modis');
+        $mae = Stats::meanAbsoluteError($predicted, $observed);
+        $naiveMae = Stats::meanAbsoluteError(array_column($test, 'viirs'), $observed);
+
+        return [
+            'train_days' => count($train),
+            'test_days' => count($test),
+            'mae' => round($mae, 2),
+            'naive_mae' => round($naiveMae, 2),
+            'improvement' => $naiveMae > 0 ? round(1 - $mae / $naiveMae, 4) : 0.0,
+            'correlation' => round(Stats::correlation($predicted, $observed), 4),
+            'overlap_from' => $pairs[0]['date'],
+            'overlap_to' => $pairs[count($pairs) - 1]['date'],
+        ];
     }
 
     /**

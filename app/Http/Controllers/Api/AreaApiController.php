@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Fire\Explorer;
 use App\Fire\Insights;
 use App\Fire\Sensors;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AreaApiController extends Controller
@@ -59,8 +60,44 @@ class AreaApiController extends Controller
     /** GeoJSON of the ~1 km cells with fire in the area during one week (both sensors). */
     public function week(Request $request, Area $area): JsonResponse
     {
-        $from = CarbonImmutable::parse((string) $request->query('week', now()->startOfWeek()->toDateString()))->startOfWeek();
-        [$south, $north, $west, $east] = $area->cellBounds();
+        return $this->cells($area->cellBounds(), (string) $request->query('week', ''));
+    }
+
+    /** The same for any box: ?bbox=west,south,east,north&week=YYYY-MM-DD */
+    public function boxWeek(Request $request): JsonResponse
+    {
+        $bbox = self::bbox($request);
+        abort_if($bbox === null, 422, 'bbox=west,south,east,north');
+
+        return $this->cells([(int) floor($bbox[1] * 100), (int) ceil($bbox[3] * 100), (int) floor($bbox[0] * 100), (int) ceil($bbox[2] * 100)], (string) $request->query('week', ''));
+    }
+
+    /** Instant analysis of a box inside the areas: ?bbox=west,south,east,north */
+    public function explore(Request $request, Explorer $explorer): JsonResponse
+    {
+        $bbox = self::bbox($request);
+        $problem = $bbox === null ? 'bbox=west,south,east,north' : Explorer::reject($bbox);
+
+        if ($problem !== null) {
+            return response()->json(['message' => $problem], 422);
+        }
+
+        return response()->json(['data' => $explorer->analyze($bbox)]);
+    }
+
+    /** @return array{0: float, 1: float, 2: float, 3: float}|null */
+    public static function bbox(Request $request): ?array
+    {
+        $parts = explode(',', (string) $request->query('bbox', ''));
+
+        return count($parts) === 4 && array_filter($parts, 'is_numeric') === $parts ? array_map('floatval', $parts) : null;
+    }
+
+    /** @param  array{0: int, 1: int, 2: int, 3: int}  $bounds */
+    private function cells(array $bounds, string $week): JsonResponse
+    {
+        [$south, $north, $west, $east] = $bounds;
+        $from = CarbonImmutable::parse($week ?: now()->toDateString())->startOfWeek();
 
         $cells = DB::select(<<<'SQL'
             select cell_lat, cell_lon, string_agg(distinct instrument, ',') as instruments, sum(detections) as detections, round(sum(frp_sum)::numeric, 1) as frp
