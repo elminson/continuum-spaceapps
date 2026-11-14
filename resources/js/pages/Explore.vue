@@ -5,10 +5,9 @@ import MonthlyChart from '@/components/fire/MonthlyChart.vue';
 import type { AlertRow, Fit, Month } from '@/components/fire/types';
 import WeekMap from '@/components/fire/WeekMap.vue';
 import SiteLayout from '@/layouts/SiteLayout.vue';
-import { COLORS, date, number, percent, t } from '@/lib/i18n';
+import { COLORS, date, number, percent, r, t } from '@/lib/i18n';
+import { maplibregl, nasaMap } from '@/lib/map';
 import { Head } from '@inertiajs/vue3';
-import * as maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 const props = defineProps<{ areas: { slug: string; name: string; bbox: number[] }[] }>();
@@ -77,26 +76,7 @@ function pick(area: { bbox: number[] }) {
 }
 
 onMounted(() => {
-    map = new maplibregl.Map({
-        container: el.value!,
-        bounds: [-85, -36, -40, 26],
-        attributionControl: { compact: true },
-        style: {
-            version: 8,
-            sources: {
-                gibs: {
-                    type: 'raster',
-                    tiles: [
-                        'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg',
-                    ],
-                    tileSize: 256,
-                    maxzoom: 8,
-                    attribution: 'NASA GIBS · Blue Marble',
-                },
-            },
-            layers: [{ id: 'gibs', type: 'raster', source: 'gibs' }],
-        },
-    });
+    map = nasaMap(el.value!, [-85, -36, -40, 26]);
 
     map.on('load', () => {
         map!.addSource('areas', { type: 'geojson', data: { type: 'FeatureCollection', features: props.areas.map((a) => rect(a.bbox)) } });
@@ -174,7 +154,7 @@ onBeforeUnmount(() => map?.remove());
                     :value="number(result.fit.validation.mae, 1)"
                     :hint="t('naive merge: :naive cell-days', { naive: number(result.fit.validation.naive_mae, 1) })"
                 />
-                <Kpi :label="t('Correlation on held-out days')" :value="`r ${number(result.fit.validation.correlation, 2)}`" />
+                <Kpi :label="t('Correlation on held-out days')" :value="r(result.fit.validation.correlation)" />
             </div>
 
             <section class="mt-8">

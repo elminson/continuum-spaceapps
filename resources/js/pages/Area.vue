@@ -6,7 +6,7 @@ import RetirementPanel from '@/components/fire/RetirementPanel.vue';
 import WeekMap from '@/components/fire/WeekMap.vue';
 import type { AlertRow, Fit, Month } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
-import { date, number, percent, t } from '@/lib/i18n';
+import { date, number, percent, r, t } from '@/lib/i18n';
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -62,7 +62,7 @@ const week = ref<string | null>(props.alerts[0]?.week_start ?? null);
             />
             <Kpi
                 :label="t('Correlation on held-out days')"
-                :value="`r ${number(fit.validation.correlation, 2)}`"
+                :value="r(fit.validation.correlation)"
                 :hint="t('overlap :from → :to', { from: fit.validation.overlap_from, to: fit.validation.overlap_to })"
             />
         </div>

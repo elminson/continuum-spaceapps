@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { COLORS, number, percent, t } from '@/lib/i18n';
+import { COLORS, number, percent, r, t } from '@/lib/i18n';
 import * as echarts from 'echarts';
 import { computed, onMounted, ref } from 'vue';
 import VChart from 'vue-echarts';
@@ -130,7 +130,7 @@ const total = computed(() => {
                 :value="`−${percent(result.improvement)}`"
                 :hint="t(':test unseen days, fitted on :train earlier days', { test: number(result.test_days), train: number(result.train_days) })"
             />
-            <Kpi :label="t('Monthly correlation')" :value="`r ${number(result.monthly_r, 2)}`" :hint="t('VIIRS-only estimate vs real MODIS')" />
+            <Kpi :label="t('Monthly correlation')" :value="r(result.monthly_r)" :hint="t('VIIRS-only estimate vs real MODIS')" />
         </div>
         <VChart :option="option" autoresize class="h-72 w-full" />
     </div>

@@ -23,6 +23,10 @@ export function number(value: number | null | undefined, digits = 0): string {
     return new Intl.NumberFormat(locale() === 'es' ? 'es-DO' : 'en-US', { maximumFractionDigits: digits }).format(value);
 }
 
+export function r(value: number | null | undefined): string {
+    return value === null || value === undefined ? '—' : `r ${value.toFixed(2)}`;
+}
+
 export function percent(value: number | null | undefined, digits = 0): string {
     return value === null || value === undefined ? '—' : `${(value * 100).toFixed(digits)}%`;
 }

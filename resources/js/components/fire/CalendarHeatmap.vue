@@ -24,7 +24,7 @@ const option = computed(() => {
 
     return {
         animation: false,
-        grid: { left: 48, right: 16, top: 8, bottom: 64 },
+        grid: { left: 48, right: 72, top: 8, bottom: 32 },
         tooltip: {
             formatter: (p: { data: number[] }) =>
                 `${monthNames.value[p.data[0]]} ${years.value[p.data[1]]}: <b>${number(p.data[2])}</b> ${t('cell-days')}`,
@@ -46,5 +46,5 @@ const option = computed(() => {
 </script>
 
 <template>
-    <VChart :option="option" autoresize class="w-full" :style="{ height: `${Math.max(300, years.length * 18 + 80)}px` }" />
+    <VChart :option="option" autoresize class="w-full" :style="{ height: `${Math.max(300, years.length * 18 + 48)}px` }" />
 </template>

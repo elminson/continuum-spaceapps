@@ -19,7 +19,7 @@ class PageController extends Controller
     {
         return Inertia::render('Home', [
             'areas' => Area::query()->orderBy('id')->get()->map(fn (Area $area) => $insights->card($area))->all(),
-            'detections' => cache()->remember('detections:count', now()->addHour(), fn () => (int) DB::table('detections')->count()),
+            'detections' => cache()->remember('detections:count', now()->addHours(2), fn () => (int) DB::table('detections')->count()),
             'topAlerts' => Alert::query()->with('area')->orderByDesc('score')->limit(5)->get()
                 ->map(fn (Alert $a) => [...Insights::alert($a), 'area' => $a->area->label(), 'slug' => $a->area->slug])->all(),
         ]);

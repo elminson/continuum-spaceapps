@@ -28,6 +28,7 @@ class IngestCommand extends Command
 
         if ($from) {
             $pipeline->run($from, now()->toDateString());
+            $this->call('fire:warm');
         }
 
         return self::SUCCESS;

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { COLORS, date, number, t } from '@/lib/i18n';
-import * as maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import { maplibregl, nasaMap } from '@/lib/map';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{ week: string; bbox: number[] }>();
@@ -16,26 +15,7 @@ async function load() {
 }
 
 onMounted(() => {
-    map = new maplibregl.Map({
-        container: el.value!,
-        bounds: [props.bbox[0], props.bbox[1], props.bbox[2], props.bbox[3]],
-        attributionControl: { compact: true },
-        style: {
-            version: 8,
-            sources: {
-                gibs: {
-                    type: 'raster',
-                    tiles: [
-                        'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg',
-                    ],
-                    tileSize: 256,
-                    maxzoom: 8,
-                    attribution: 'NASA GIBS · Blue Marble',
-                },
-            },
-            layers: [{ id: 'gibs', type: 'raster', source: 'gibs' }],
-        },
-    });
+    map = nasaMap(el.value!, [props.bbox[0], props.bbox[1], props.bbox[2], props.bbox[3]]);
 
     map.on('load', () => {
         map!.addSource('cells', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
