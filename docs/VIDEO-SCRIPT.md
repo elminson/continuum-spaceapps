@@ -64,6 +64,54 @@ Recorded 15 November 2026, 27.8 s. Story: two satellites disagree → one grid, 
 | ai | AI explains the numbers. Statistics decide them. | AI explains the numbers. Statistics decide them. |
 | card:outro | Continuum. | continuum-spaceapps.isotherm.app |
 
-## YouTube description (both)
+## YouTube title and description
 
-Continuum, NASA Space Apps Challenge 2026, Harmonization of MODIS and VIIRS Hot Spots. Team Continuum (Elminson and Miguel), Santo Domingo, Dominican Republic. Live: https://continuum-spaceapps.isotherm.app · Code: https://github.com/elminson/continuum-spaceapps · Data: NASA FIRMS, NASA POWER, NASA GIBS. Narration: AI-generated voice (Microsoft neural text-to-speech). All screens are real recordings of the app.
+Upload both as **Unlisted** or Public (not Private, or the judges cannot open them). Set the language of the English video to English and of the Spanish one to Spanish; upload `docs/video/*.srt` if you want captions as a track.
+
+### English demo (30 s)
+
+Title:
+
+```
+Continuum: was this fire unusual? NASA MODIS + VIIRS on one 26-year scale (Space Apps 2026)
+```
+
+Description:
+
+```
+Continuum puts 26 years of NASA fire detections (MODIS since 2000, VIIRS since 2012) on one 1 km grid and one scale, so any week can be compared with the same week in every other year. Tested on 1,352 held-out days per area, it cuts the error of a naive merge by 83–90%. It flags unusual weeks, forecasts next week from NASA POWER weather, and emails you when a zone you draw turns unusual.
+
+NASA Space Apps Challenge 2026, challenge "Harmonization of MODIS and VIIRS Hot Spots". Team Continuum (Elminson and Miguel), Santo Domingo, Dominican Republic.
+
+Live app: https://continuum-spaceapps.isotherm.app
+For judges: https://continuum-spaceapps.isotherm.app/judges
+Code: https://github.com/elminson/continuum-spaceapps
+Data: NASA FIRMS, NASA POWER, NASA GIBS.
+
+Narration: AI-generated voice (Microsoft neural text-to-speech). All screens are real recordings of the app. Built with Claude Code as a coding assistant.
+```
+
+### Spanish explanation (4:23, English subtitles)
+
+Title:
+
+```
+Continuum: ¿fue inusual este fuego? 26 años de datos NASA MODIS y VIIRS en una sola escala (Space Apps 2026)
+```
+
+Description:
+
+```
+Continuum pone 26 años de detecciones de fuego de la NASA (MODIS desde 2000, VIIRS desde 2012) en una sola cuadrícula de 1 km y una sola escala, para comparar cualquier semana con la misma semana de todos los demás años. Probado en 1,352 días reservados por área, reduce el error de una unión ingenua entre 83 y 90%. Marca semanas inusuales, pronostica la próxima semana con el clima de NASA POWER y envía un correo cuando una zona dibujada se vuelve inusual. Al final responde las tres preguntas del evaluador: cómo se logra el 89%, comparado con qué, y qué decisión sirve y quién la toma.
+
+NASA Space Apps Challenge 2026, reto "Harmonization of MODIS and VIIRS Hot Spots". Equipo Continuum (Elminson y Miguel), Santo Domingo, República Dominicana. Subtítulos en inglés.
+
+App: https://continuum-spaceapps.isotherm.app
+Para jueces: https://continuum-spaceapps.isotherm.app/judges
+Código: https://github.com/elminson/continuum-spaceapps
+Datos: NASA FIRMS, NASA POWER, NASA GIBS.
+
+Narración: voz generada por IA (voz neural de Microsoft, es-DO). Todas las pantallas son grabaciones reales de la app. Hecho con Claude Code como asistente de programación.
+```
+
+Tags (both): wildfire, NASA FIRMS, MODIS, VIIRS, Space Apps 2026, Dominican Republic, República Dominicana, incendios forestales, harmonization, early warning
