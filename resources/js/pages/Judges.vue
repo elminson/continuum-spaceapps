@@ -122,6 +122,17 @@ const asks = computed(() => [
         ],
     },
     {
+        ask: 'Historical comparisons, including anomalies against multi-year averages.',
+        does: t(
+            'Anomaly detection by robust statistics: each week against the median and MAD of the same week in every other year, each date range ranked among 26 years. AI then writes the situation reading and the bulletins from those numbers, never choosing them.',
+        ),
+        proof: '',
+        links: [
+            ['/alerts', t('Unusual periods')],
+            ['/alerts#reading', t('Situation reading')],
+        ],
+    },
+    {
         ask: 'Enable early warning for emergency responders.',
         does: t(
             'Fire alerts by email for any drawn zone: every day the last complete week is scored against the same week in every other year, one email per flagged week, a test alert on demand, and SMS coming soon. The decision rule and the scheduled jobs are written on the page.',
@@ -156,7 +167,7 @@ const criteria = computed(() => [
         name: 'Creativity',
         asks: 'Original, or a meaningful improvement on existing ideas.',
         does: t(
-            'Cell-days instead of pixel counts, a monthly ratio with a bootstrap interval, a held-out test against the naive merge, weeks scored against the same week in other years, a MODIS retirement simulation, and an AI bulletin that cannot invent a number.',
+            'Cell-days instead of pixel counts, a monthly ratio with a bootstrap interval, a held-out test against the naive merge, weeks scored against the same week in other years, a MODIS retirement simulation, and AI that explains without deciding: anomalies are detected by robust statistics, then a bulletin per area and a situation reading across areas are written from those numbers only, each figure checked.',
         ),
         links: [['/how-it-works', t('How it works')]],
     },

@@ -487,7 +487,6 @@
     "Fire managers can finally compare years across the 2012 sensor change. Built first for the Dominican Republic and Haiti, proven on Cuba, the Gran Chaco and the Cerrado, and free for any agency to point at its own territory.": "Los gestores de fuego por fin pueden comparar años a través del cambio de sensor de 2012. Hecho primero para República Dominicana y Haití, probado en Cuba, el Gran Chaco y el Cerrado, y gratis para que cualquier agencia lo apunte a su territorio.",
     "Creativity": "Creatividad",
     "Original, or a meaningful improvement on existing ideas.": "Original, o una mejora significativa de ideas existentes.",
-    "Cell-days instead of pixel counts, a monthly ratio with a bootstrap interval, a held-out test against the naive merge, weeks scored against the same week in other years, a MODIS retirement simulation, and an AI bulletin that cannot invent a number.": "Celdas-día en vez de conteo de píxeles, una razón mensual con intervalo bootstrap, una prueba con días reservados frente a la fusión ingenua, semanas evaluadas frente a la misma semana de otros años, una simulación del retiro de MODIS y un boletín de IA que no puede inventar un número.",
     "Validity": "Validez",
     "Scientifically sound, technically feasible, usable.": "Científicamente sólido, técnicamente viable, usable.",
     "Relevance": "Relevancia",
@@ -577,5 +576,12 @@
     "Sample alert queued for :email. It arrives within a minute.": "Alerta de muestra encolada para :email. Llega en menos de un minuto.",
     "See what an alert looks like": "Mira cómo se ve una alerta",
     "We email you the strongest week ever recorded in the Dominican Republic, marked as a test. Up to 5 a day per address.": "Te enviamos por correo la semana más fuerte registrada en República Dominicana, marcada como prueba. Hasta 5 al día por dirección.",
-    "Send me a sample alert": "Enviarme una alerta de muestra"
+    "Send me a sample alert": "Enviarme una alerta de muestra",
+    "Reading of the current situation": "Lectura de la situación actual",
+    "Anomalies are detected by statistics (median and MAD); this reading is written by AI (:model) from those numbers only, each one checked.": "Las anomalías las detecta la estadística (mediana y MAD); esta lectura la escribe la IA (:model) solo a partir de esos números, cada uno verificado.",
+    "Anomalies are detected by statistics (median and MAD); this reading comes from a fixed template with those numbers.": "Las anomalías las detecta la estadística (mediana y MAD); esta lectura sale de una plantilla fija con esos números.",
+    "Historical comparisons, including anomalies against multi-year averages.": "Comparaciones históricas, incluidas anomalías frente a promedios multianuales.",
+    "Anomaly detection by robust statistics: each week against the median and MAD of the same week in every other year, each date range ranked among 26 years. AI then writes the situation reading and the bulletins from those numbers, never choosing them.": "Detección de anomalías con estadística robusta: cada semana frente a la mediana y la MAD de la misma semana de todos los demás años, cada rango de fechas clasificado entre 26 años. Luego la IA escribe la lectura de situación y los boletines a partir de esos números, sin elegirlos nunca.",
+    "Situation reading": "Lectura de situación",
+    "Cell-days instead of pixel counts, a monthly ratio with a bootstrap interval, a held-out test against the naive merge, weeks scored against the same week in other years, a MODIS retirement simulation, and AI that explains without deciding: anomalies are detected by robust statistics, then a bulletin per area and a situation reading across areas are written from those numbers only, each figure checked.": "Celdas-día en vez de conteo de píxeles, una razón mensual con intervalo bootstrap, una prueba con días reservados frente a la fusión ingenua, semanas evaluadas frente a la misma semana de otros años, una simulación del retiro de MODIS y una IA que explica sin decidir: las anomalías las detecta la estadística robusta y luego un boletín por área y una lectura de situación entre áreas se escriben solo a partir de esos números, cada cifra verificada."
 }

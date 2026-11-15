@@ -7,6 +7,7 @@ use App\Fire\DataStatus;
 use App\Fire\Explorer;
 use App\Fire\Insights;
 use App\Fire\Sensors;
+use App\Fire\Situation;
 use App\Models\Area;
 use Illuminate\Console\Command;
 
@@ -16,7 +17,7 @@ class WarmCommand extends Command
 
     protected $description = 'Precompute the series, retirement tests and totals so no visitor waits for them';
 
-    public function handle(Insights $insights, Explorer $explorer, DataStatus $status, Bulletin $bulletin): int
+    public function handle(Insights $insights, Explorer $explorer, DataStatus $status, Bulletin $bulletin, Situation $situation): int
     {
         $this->components->task('Data status', fn () => $status->refresh());
 
@@ -40,6 +41,12 @@ class WarmCommand extends Command
                 }
             });
         }
+
+        $this->components->task('Situation reading', function () use ($situation) {
+            foreach (['en', 'es'] as $locale) {
+                $situation->for($locale);
+            }
+        });
 
         foreach (Explorer::PLACES as $slug => [$name, $nameEs, $bbox]) {
             $this->components->task($name, fn () => $explorer->analyze($bbox));

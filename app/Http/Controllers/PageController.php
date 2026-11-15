@@ -10,6 +10,7 @@ use App\Fire\Explorer;
 use App\Fire\FirmsFeed;
 use App\Fire\Insights;
 use App\Fire\Sensors;
+use App\Fire\Situation;
 use App\Http\Controllers\Api\AreaApiController;
 use App\Http\Middleware\SetLocale;
 use App\Models\Alert;
@@ -72,7 +73,7 @@ class PageController extends Controller
         ]);
     }
 
-    public function alerts(Request $request): Response
+    public function alerts(Request $request, Situation $situation): Response
     {
         $severities = ['extreme', 'high', 'elevated'];
         $severity = in_array($request->query('severity'), $severities, true) ? $request->query('severity') : null;
@@ -123,6 +124,7 @@ class PageController extends Controller
             ], $sources)),
             'total' => $list->count(),
             'alerts' => $list->forPage($page, $perPage)->values()->all(),
+            'situation' => $situation->ready(app()->getLocale()),
         ]);
     }
 

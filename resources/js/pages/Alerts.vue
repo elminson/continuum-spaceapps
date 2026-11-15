@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AlertList from '@/components/fire/AlertList.vue';
 import Pager from '@/components/fire/Pager.vue';
+import SituationCard from '@/components/fire/SituationCard.vue';
 import type { AlertRow } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { number, t } from '@/lib/i18n';
@@ -12,6 +13,7 @@ type Source = { slug: string; name: string; bbox: number[]; kind: 'area' | 'plac
 
 const props = defineProps<{
     filters: { area: string; severity: string | null; sort: 'recent' | 'strongest' };
+    situation: { text: string; source: 'ai' | 'template'; model: string | null };
     sources: Source[];
     total: number;
     alerts: AlertRow[];
@@ -117,6 +119,8 @@ onBeforeUnmount(() => map?.remove());
                 )
             }}
         </p>
+
+        <SituationCard id="reading" class="mt-5 scroll-mt-6" :text="situation.text" :source="situation.source" :model="situation.model" />
 
         <div class="mt-4 flex flex-wrap gap-2 text-sm">
             <select

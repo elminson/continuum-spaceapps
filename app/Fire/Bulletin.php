@@ -148,16 +148,26 @@ class Bulletin
 
     private function write(array $facts, string $locale): ?string
     {
+        $system = 'You write a short fire bulletin for a fire agency, in '.$facts['language'].'. Write two or three plain sentences. '
+            .'Use only the facts given, and copy numbers exactly as written in the facts. Do not add any other number, date, percentage or claim. '
+            .'Say "times normal" with the number, mention where in the area the fire was if given, and whether it was inside the usual fire season. '
+            .'Calm, factual tone: no exclamation marks, no advice, no hype, no headings, no lists.';
+
+        return self::ask($system, $facts);
+    }
+
+    /**
+     * One call to the self-hosted model: a system prompt and the facts as JSON. Null on any failure or an over-long answer.
+     *
+     * @param  array<string, mixed>  $facts
+     */
+    public static function ask(string $system, array $facts, int $maxLength = 700): ?string
+    {
         $url = config('services.bulletin.url');
 
         if (! $url) {
             return null;
         }
-
-        $system = 'You write a short fire bulletin for a fire agency, in '.$facts['language'].'. Write two or three plain sentences. '
-            .'Use only the facts given, and copy numbers exactly as written in the facts. Do not add any other number, date, percentage or claim. '
-            .'Say "times normal" with the number, mention where in the area the fire was if given, and whether it was inside the usual fire season. '
-            .'Calm, factual tone: no exclamation marks, no advice, no hype, no headings, no lists.';
 
         try {
             $response = Http::timeout(config('services.bulletin.timeout'))
@@ -179,7 +189,7 @@ class Bulletin
 
         $text = trim((string) ($response['message']['content'] ?? ''));
 
-        return $text !== '' && mb_strlen($text) <= 700 ? $text : null;
+        return $text !== '' && mb_strlen($text) <= $maxLength ? $text : null;
     }
 
     /** Every number written must be one of the facts' numbers (ignoring thousands separators and decimal style). */
