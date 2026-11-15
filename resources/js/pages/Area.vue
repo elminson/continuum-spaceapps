@@ -4,6 +4,7 @@ import CalendarHeatmap from '@/components/fire/CalendarHeatmap.vue';
 import ComparePanel from '@/components/fire/ComparePanel.vue';
 import ForecastCard, { type ForecastData } from '@/components/fire/ForecastCard.vue';
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
+import OutlookButton from '@/components/fire/OutlookButton.vue';
 import Pager from '@/components/fire/Pager.vue';
 import RetirementPanel from '@/components/fire/RetirementPanel.vue';
 import SeasonStrip, { type Season } from '@/components/fire/SeasonStrip.vue';
@@ -71,7 +72,8 @@ const shown = computed(() => sorted.value.slice((page.value - 1) * PER_PAGE, pag
                 <Link href="/" class="text-sm text-muted-foreground hover:text-foreground">← {{ t('Areas') }}</Link>
                 <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ area.name }}</h1>
             </div>
-            <div class="flex items-center gap-2 text-sm">
+            <div class="flex flex-wrap items-center gap-2 text-sm">
+                <OutlookButton v-if="forecast" :forecast="forecast" :href="`/areas/${area.slug}#outlook`" class="mr-2" />
                 <span class="text-muted-foreground">{{ t('Scale') }}</span>
                 <Link
                     v-for="s in ['modis', 'viirs']"

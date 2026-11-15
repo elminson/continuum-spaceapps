@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import AlertList from '@/components/fire/AlertList.vue';
+import type { ForecastData } from '@/components/fire/ForecastCard.vue';
+import OutlookButton from '@/components/fire/OutlookButton.vue';
 import QuestionsAnswered, { type Answers } from '@/components/fire/QuestionsAnswered.vue';
 import Spark from '@/components/fire/Spark.vue';
 import type { AlertRow, Place, Status } from '@/components/fire/types';
@@ -10,6 +12,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
+    outlook: ForecastData | null;
     areas: { slug: string; name: string; spark: (number | null)[]; improvement: number | null; latest_alert: AlertRow | null }[];
     status: Status;
     places: Place[];
@@ -41,6 +44,7 @@ const viirs = computed(() => props.status.instruments.find((i) => i.instrument =
                 <Link href="/explore?place=dominican-republic" class="rounded-md bg-foreground px-3 py-2 text-background">{{
                     t('Explore the Dominican Republic')
                 }}</Link>
+                <OutlookButton v-if="outlook" :forecast="outlook" href="/areas/dominican-republic#outlook" />
                 <Link href="/how-it-works" class="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">{{
                     t('How it works')
                 }}</Link>

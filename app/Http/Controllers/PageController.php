@@ -35,6 +35,7 @@ class PageController extends Controller
             'places' => Explorer::places(),
             'topAlerts' => $this->topAlerts(5),
             'answers' => $this->answers($insights),
+            'outlook' => ($focus = Area::query()->where('slug', Area::FOCUS)->first()) ? $insights->forecastReady($focus) : null,
         ]);
     }
 
