@@ -46,6 +46,24 @@ class Bulletin
         return $result;
     }
 
+    /**
+     * The cached bulletin, or the template, without waiting on the model.
+     *
+     * @return array{text: string, source: string, model: ?string, facts: array<string, mixed>}
+     */
+    public function ready(Area $area, ?string $week, string $locale): array
+    {
+        $key = "bulletin:{$area->id}:".($week ?? 'latest').":{$locale}:".($area->processed_at?->timestamp ?? 0);
+
+        if ($cached = Cache::get($key)) {
+            return $cached;
+        }
+
+        $facts = $this->facts($area, $week, $locale);
+
+        return ['text' => self::template($facts, $locale), 'source' => 'template', 'model' => null, 'facts' => $facts];
+    }
+
     /** @return array<string, mixed> */
     public function facts(Area $area, ?string $week, string $locale): array
     {

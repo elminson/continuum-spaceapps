@@ -154,7 +154,7 @@ class PageController extends Controller
                 'places' => count(Explorer::PLACES),
                 'feeds' => count(FirmsFeed::FEEDS),
             ],
-            'bulletin' => $focus && $top ? $bulletin->for($focus, $top->week_start->toDateString(), app()->getLocale()) : null,
+            'bulletin' => $focus && $top ? $bulletin->ready($focus, $top->week_start->toDateString(), app()->getLocale()) : null,
         ]);
     }
 
