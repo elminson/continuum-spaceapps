@@ -27,6 +27,10 @@ function applyPhoto() {
 let map: maplibregl.Map | null = null;
 
 const period = computed<Period>(() => (props.week ? { week: props.week } : { days: props.days ?? 30 }));
+const csvHref = computed(
+    () =>
+        `/api/week?bbox=${props.bbox.map((v) => v.toFixed(2)).join(',')}&${'week' in period.value ? `week=${period.value.week}` : `days=${period.value.days}`}&format=csv`,
+);
 const label = computed(() => (props.week ? t('Week of :date', { date: date(props.week) }) : t('Last :n days', { n: props.days ?? 30 })));
 
 async function load() {
@@ -136,7 +140,10 @@ onBeforeUnmount(() => {
                     <span class="text-4xl font-semibold text-orange-500">×{{ number(times, 1) }}</span>
                     <span class="text-neutral-300">{{ t('normal') }}</span>
                 </div>
-                <div class="mt-1 text-sm text-neutral-300">{{ t(':n cells with fire', { n: number(cells) }) }}</div>
+                <div class="mt-1 flex items-baseline justify-between gap-3 text-sm text-neutral-300">
+                    <span>{{ t(':n cells with fire', { n: number(cells) }) }}</span>
+                    <a v-if="cells" :href="csvHref" class="text-xs underline-offset-4 hover:underline">{{ t('Download CSV') }}</a>
+                </div>
             </template>
             <label class="mt-3 flex cursor-pointer items-center gap-2 border-t border-neutral-700 pt-3 text-xs text-neutral-300">
                 <input v-model="photo" type="checkbox" class="size-3.5 accent-orange-600" />

@@ -90,13 +90,13 @@ class AreaApiController extends Controller
     }
 
     /** GeoJSON of the ~1 km cells with fire in the area during one week (both sensors). */
-    public function week(Request $request, Area $area): JsonResponse
+    public function week(Request $request, Area $area): JsonResponse|StreamedResponse
     {
         return $this->cells($area->cellBounds(), $request);
     }
 
     /** The same for any box: ?bbox=west,south,east,north&week=YYYY-MM-DD */
-    public function boxWeek(Request $request): JsonResponse
+    public function boxWeek(Request $request): JsonResponse|StreamedResponse
     {
         $bbox = self::bbox($request);
         abort_if($bbox === null, 422, 'bbox=west,south,east,north');
@@ -130,7 +130,7 @@ class AreaApiController extends Controller
      *
      * @param  array{0: int, 1: int, 2: int, 3: int}  $bounds
      */
-    private function cells(array $bounds, Request $request): JsonResponse
+    private function cells(array $bounds, Request $request): JsonResponse|StreamedResponse
     {
         [$south, $north, $west, $east] = $bounds;
         $days = min(31, max(1, $request->integer('days')));
@@ -150,6 +150,20 @@ class AreaApiController extends Controller
             group by cell_lat, cell_lon
             limit 20000
             SQL, [$from->toDateString(), $from->toDateString(), $to->toDateString(), $south, $north, $west, $east]);
+
+        if ($request->query('format') === 'csv') {
+            return response()->streamDownload(function () use ($cells, $from, $to) {
+                $out = fopen('php://output', 'w');
+                fwrite($out, "# Continuum · 1 km cells with fire, {$from->toDateString()} to {$to->toDateString()} · source NASA FIRMS (MODIS C6.1, VIIRS 375 m)\n");
+                fputcsv($out, ['latitude', 'longitude', 'first_day', 'sensors', 'detections', 'frp_mw']);
+
+                foreach ($cells as $c) {
+                    fputcsv($out, [($c->cell_lat + 0.5) / 100, ($c->cell_lon + 0.5) / 100, $from->addDays((int) $c->day)->toDateString(), $c->instruments, (int) $c->detections, (float) $c->frp]);
+                }
+
+                fclose($out);
+            }, "continuum-fires-{$from->toDateString()}-{$to->toDateString()}.csv", ['Content-Type' => 'text/csv']);
+        }
 
         return response()->json([
             'type' => 'FeatureCollection',

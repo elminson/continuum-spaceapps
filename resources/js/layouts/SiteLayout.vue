@@ -3,6 +3,7 @@ import { useAppearance } from '@/composables/useAppearance';
 import { locale, t } from '@/lib/i18n';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
+    Award,
     BellRing,
     BookOpen,
     Code,
@@ -39,6 +40,7 @@ const nav = [
     { href: '/method', label: 'Method', icon: BookOpen },
     { href: '/how-it-works', label: 'How it works', icon: Cpu },
     { href: '/api-docs', label: 'API', icon: Code },
+    { href: '/judges', label: 'For judges', icon: Award },
 ];
 
 const active = (href: string) => (href === '/' ? page.url === '/' : page.url.startsWith(href));

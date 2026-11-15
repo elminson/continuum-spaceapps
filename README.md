@@ -2,7 +2,7 @@
 
 **One fire calendar from 26 years of NASA satellites.** NASA Space Apps Challenge 2026 · *Harmonization of MODIS and VIIRS Hot Spots* · Team Continuum (Elminson & Miguel, Santo Domingo, Dominican Republic).
 
-Live: https://continuum-spaceapps.isotherm.app · Code: https://github.com/elminson/continuum-spaceapps
+Live: https://continuum-spaceapps.isotherm.app · Code: https://github.com/elminson/continuum-spaceapps · For judges: https://continuum-spaceapps.isotherm.app/judges
 
 Videos (YouTube): [30-second demo, English](https://youtu.be/LJ6uETwGb_0) · [2:50 explanation, Spanish with English subtitles](https://youtu.be/Sbg-dRMqPS8) · Slides: [7-slide deck (PDF)](docs/presentation/continuum-slides.pdf). Narration is an AI-generated voice.
 

@@ -124,14 +124,14 @@ const shown = computed(() => sorted.value.slice((page.value - 1) * PER_PAGE, pag
             </div>
         </dl>
 
-        <BulletinCard class="mt-6" :slug="area.slug" :week="week" />
+        <BulletinCard id="bulletin" class="mt-6 scroll-mt-6" :slug="area.slug" :week="week" />
 
         <div class="mt-10 grid gap-10 lg:grid-cols-2">
-            <section v-if="season">
+            <section v-if="season" id="season" class="scroll-mt-6">
                 <h2 class="text-lg font-semibold">{{ t('Fire season') }}</h2>
                 <SeasonStrip class="mt-2" :season="season" />
             </section>
-            <section>
+            <section id="compare" class="scroll-mt-6">
                 <h2 class="text-lg font-semibold">{{ t('Compare any dates') }}</h2>
                 <p class="text-sm text-muted-foreground">
                     {{ t('Pick a period: it is set against the same dates in every other year since 2000.') }}

@@ -19,6 +19,7 @@ Slides (7): https://github.com/elminson/continuum-spaceapps/blob/main/docs/prese
 ## Link to Final Project
 
 https://continuum-spaceapps.isotherm.app (no login needed)
+For judges, every ask of the challenge and each criterion mapped to its proof: https://continuum-spaceapps.isotherm.app/judges
 Code: https://github.com/elminson/continuum-spaceapps
 
 ## Detailed Project Description
@@ -70,7 +71,7 @@ A sensor's own observations are always used when it flew; converted values are m
 
 **What we hope to achieve.** A free, open fire calendar that any agency in the Caribbean and Latin America can point at its own territory, starting with the Dominican Republic and Haiti, and that keeps working on VIIRS alone after MODIS ends.
 
-**Tools.** PHP 8.4, Laravel 12, Inertia with Vue 3 and TypeScript, Tailwind CSS, PostgreSQL, Apache ECharts, MapLibre GL JS, PHPUnit (38 automated tests). Hosted on one Linux server; GitHub → Spinnr deploys; the scheduler pulls NASA FIRMS every hour.
+**Tools.** PHP 8.4, Laravel 12, Inertia with Vue 3 and TypeScript, Tailwind CSS, PostgreSQL, Apache ECharts, MapLibre GL JS, PHPUnit (46 automated tests). Hosted on one Linux server; GitHub → Spinnr deploys; the scheduler pulls NASA FIRMS every hour.
 
 **Factors considered.** Accessibility: no login, English and Spanish, works on phones. Cost: one small server and only free, open data. Honesty: every number has its test, its limits are on the Method page, and estimated values are marked.
 

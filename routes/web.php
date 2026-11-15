@@ -13,6 +13,7 @@ Route::get('alerts', [PageController::class, 'alerts'])->name('alerts');
 Route::get('data', [PageController::class, 'data'])->name('data');
 Route::get('how-it-works', [PageController::class, 'howItWorks'])->name('how-it-works');
 Route::get('api-docs', [PageController::class, 'apiDocs'])->name('api-docs');
+Route::get('judges', [PageController::class, 'judges'])->name('judges');
 
 Route::middleware('auth')->group(function () {
     Route::post('boxes', [SavedBoxController::class, 'store'])->name('boxes.store');

@@ -184,6 +184,18 @@ class PageController extends Controller
         ]);
     }
 
+    public function judges(DataStatus $status, Insights $insights): Response
+    {
+        $focus = Area::query()->where('slug', Area::FOCUS)->first();
+        $top = $focus?->alerts()->orderByDesc('score')->first();
+
+        return Inertia::render('Judges', [
+            'status' => $status->summary(),
+            'focus' => $focus ? ['slug' => $focus->slug, 'name' => $focus->label(), 'fit' => $insights->fit($focus), 'top' => $top ? Insights::alert($top) : null] : null,
+            'counts' => ['areas' => Area::query()->count(), 'alerts' => Alert::query()->count(), 'places' => count(Explorer::PLACES)],
+        ]);
+    }
+
     public function apiDocs(): Response
     {
         return Inertia::render('ApiDocs');

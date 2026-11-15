@@ -58,7 +58,7 @@ class PagesTest extends TestCase
 
     public function test_menu_pages_render_without_login(): void
     {
-        foreach (['/areas' => 'Areas', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/login' => 'auth/Login'] as $url => $component) {
+        foreach (['/areas' => 'Areas', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/judges' => 'Judges', '/login' => 'auth/Login'] as $url => $component) {
             $this->get($url)->assertOk()->assertInertia(fn (Assert $page) => $page->component($component));
         }
 
@@ -148,5 +148,14 @@ class PagesTest extends TestCase
         $this->getJson('/api/areas/cuba/compare?from=2024-01-01&to=2026-01-01')->assertStatus(422);
         $this->getJson('/api/areas/cuba/retirement')->assertOk()->assertJsonPath('data.available', false);
         $this->get('/api/areas/cuba/monthly.csv')->assertOk()->assertHeader('content-type', 'text/csv; charset=UTF-8');
+    }
+
+    public function test_week_cells_download_as_csv(): void
+    {
+        $response = $this->get('/api/week?bbox=-72.01,17.47,-68.32,19.93&days=30&format=csv')
+            ->assertOk()
+            ->assertHeader('content-type', 'text/csv; charset=UTF-8');
+
+        $this->assertStringContainsString('latitude,longitude,first_day,sensors,detections,frp_mw', $response->streamedContent());
     }
 }
