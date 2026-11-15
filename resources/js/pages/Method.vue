@@ -32,6 +32,7 @@ const toc = [
     ['products', 'Fire season, unusual weeks and date comparisons'],
     ['retirement', 'When MODIS retires'],
     ['limits', 'Data and limits'],
+    ['forecast', 'Next: forecasting'],
 ] as const;
 
 const VIDEOS = {
@@ -401,6 +402,66 @@ const resources = computed(() => [
                             )
                         }}
                         <Link href="/api-docs" class="underline underline-offset-4">API</Link>.
+                    </p>
+                </section>
+
+                <section
+                    id="forecast"
+                    class="scroll-mt-6 rounded-md border border-orange-300/60 bg-orange-50/60 p-5 dark:border-orange-900 dark:bg-orange-950/20"
+                >
+                    <p class="text-sm font-medium text-orange-700 dark:text-orange-400">{{ t('Next step') }}</p>
+                    <h2 class="mt-1 text-xl font-semibold tracking-tight">8 · {{ t('Forecasting the next week, with NASA data only') }}</h2>
+                    <p class="mt-3 text-sm text-muted-foreground">
+                        {{
+                            t(
+                                'The challenge asks to anticipate critical periods. Fire counts alone cannot do it, because they do not contain the reason for next week\u2019s fire; the drivers do, and NASA publishes all of them for free. The harmonized record built here is the missing piece: a consistent weekly target since 2000 to train and test against.',
+                            )
+                        }}
+                    </p>
+                    <div class="mt-4 grid gap-4 text-sm sm:grid-cols-2">
+                        <div>
+                            <div class="font-medium">{{ t('Target') }}</div>
+                            <p class="text-muted-foreground">
+                                {{ t('Burning 1 km cell-days per area and week, on the MODIS scale, from this record (2000 → today).') }}
+                            </p>
+                        </div>
+                        <div>
+                            <div class="font-medium">{{ t('Drivers (NASA, free)') }}</div>
+                            <p class="text-muted-foreground">
+                                {{
+                                    t(
+                                        'NASA POWER daily weather (temperature, humidity, wind, rain since 1981); GPM IMERG rainfall; SMAP soil moisture; MODIS/VIIRS vegetation indices for fuel amount and dryness.',
+                                    )
+                                }}
+                            </p>
+                        </div>
+                        <div>
+                            <div class="font-medium">{{ t('Model') }}</div>
+                            <p class="text-muted-foreground">
+                                {{
+                                    t(
+                                        'Per area: the last 1–4 weeks of fire, the same-week median of other years, 2–4 weeks of weather and rain deficit, the month. Gradient boosting, with ridge regression as the simple reference.',
+                                    )
+                                }}
+                            </p>
+                        </div>
+                        <div>
+                            <div class="font-medium">{{ t('Validation, before anything is shown') }}</div>
+                            <p class="text-muted-foreground">
+                                {{
+                                    t(
+                                        'Rolling-origin test 2013 → 2026 against the climatology-plus-persistence baseline: error and correlation, published next to the forecast like the −89% test is today.',
+                                    )
+                                }}
+                            </p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm">
+                        {{
+                            t(
+                                'Output on each area page: “Next week: expected ×1.8 of normal (range ×1.2–2.6)”, with its skill score, feeding the same email alerts. Statistics and the model decide; AI explains, as everywhere else on this site.',
+                            )
+                        }}
                     </p>
                 </section>
             </div>
