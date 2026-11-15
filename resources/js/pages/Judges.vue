@@ -154,7 +154,7 @@ const criteria = computed(() => [
         asks: 'Scientifically sound, technically feasible, usable.',
         does: fit.value?.validation
             ? t(
-                  'Every number has its test: −:p daily error vs a naive merge on :n held-out days (r :r) for the Dominican Republic; estimated values are marked with their interval; 46 automated tests; live and public, no login.',
+                  'Every number has its test: −:p daily error vs a naive merge on :n held-out days (:r) for the Dominican Republic; estimated values are marked with their interval; 46 automated tests; live and public, no login.',
                   { p: percent(fit.value.validation.improvement), n: number(fit.value.validation.test_days), r: r(fit.value.validation.correlation) },
               )
             : '',

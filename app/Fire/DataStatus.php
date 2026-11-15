@@ -3,6 +3,7 @@
 namespace App\Fire;
 
 use App\Models\Area;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -63,7 +64,7 @@ class DataStatus
     {
         return [
             'last_ingest' => Cache::get(self::LAST_INGEST),
-            'processed_at' => Area::query()->max('processed_at'),
+            'processed_at' => ($at = Area::query()->max('processed_at')) ? CarbonImmutable::parse($at)->toIso8601String() : null,
         ];
     }
 }
