@@ -14,6 +14,12 @@ defineProps<{ areas: Place[]; places: Place[]; boxes: Place[]; mine: Subscriptio
 const page = usePage();
 const status = computed(() => (page.props.flash as { status?: string } | undefined)?.status);
 
+const sample = useForm({ email: '' });
+
+function sendSample() {
+    sample.post('/alerts/sample', { preserveScroll: true, onSuccess: () => sample.reset() });
+}
+
 const form = useForm<{ name: string; email: string; phone: string; bbox: number[] | null }>({ name: '', email: '', phone: '', bbox: null });
 
 function submit() {
@@ -63,6 +69,23 @@ const steps = [
         >
             {{ status }}
         </p>
+
+        <form
+            class="mt-6 flex flex-wrap items-end gap-2 rounded-md border border-orange-300/60 bg-orange-50/60 p-4 text-sm dark:border-orange-900 dark:bg-orange-950/20"
+            @submit.prevent="sendSample"
+        >
+            <div class="mr-auto">
+                <p class="font-medium">{{ t('See what an alert looks like') }}</p>
+                <p class="text-muted-foreground">
+                    {{ t('We email you the strongest week ever recorded in the Dominican Republic, marked as a test. Up to 5 a day per address.') }}
+                </p>
+            </div>
+            <input v-model="sample.email" type="email" required :placeholder="t('Email')" class="rounded-md border bg-background px-2 py-1.5" />
+            <button class="rounded-md bg-foreground px-3 py-1.5 text-background disabled:opacity-40" :disabled="sample.processing">
+                {{ sample.processing ? t('Sending…') : t('Send me a sample alert') }}
+            </button>
+            <p v-if="sample.errors.email" class="w-full text-red-600">{{ sample.errors.email }}</p>
+        </form>
 
         <form class="mt-6" @submit.prevent="submit">
             <BoxPicker v-model="form.bbox" :areas="areas" :places="places" :boxes="boxes" />

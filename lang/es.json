@@ -570,5 +570,12 @@
     "Request this zone": "Solicitar esta zona",
     "Get an email when a week in this box is unusual": "Recibe un correo cuando una semana de este recuadro sea inusual",
     "No account needed. Phone alerts are coming soon.": "Sin cuenta. Las alertas al teléfono llegan próximamente.",
-    "Alert me": "Avisarme"
+    "Alert me": "Avisarme",
+    "That is 5 test alerts today for this zone; the limit resets tomorrow.": "Ya son 5 alertas de prueba hoy para esta zona; el límite se reinicia mañana.",
+    "That is 5 sample alerts today for :email; the limit resets tomorrow.": "Ya son 5 alertas de muestra hoy para :email; el límite se reinicia mañana.",
+    "Sample alert queued. This server has no mailer yet, so it is written to the mail log instead of sent.": "Alerta de muestra encolada. Este servidor aún no tiene servicio de correo, así que se escribe en el registro de correo en vez de enviarse.",
+    "Sample alert queued for :email. It arrives within a minute.": "Alerta de muestra encolada para :email. Llega en menos de un minuto.",
+    "See what an alert looks like": "Mira cómo se ve una alerta",
+    "We email you the strongest week ever recorded in the Dominican Republic, marked as a test. Up to 5 a day per address.": "Te enviamos por correo la semana más fuerte registrada en República Dominicana, marcada como prueba. Hasta 5 al día por dirección.",
+    "Send me a sample alert": "Enviarme una alerta de muestra"
 }

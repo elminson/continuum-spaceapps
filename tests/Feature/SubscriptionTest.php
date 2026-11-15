@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Fire\Explorer;
 use App\Jobs\SendFireAlert;
 use App\Mail\FireAlertMail;
+use App\Models\Alert;
 use App\Models\AlertSubscription;
 use App\Models\Area;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -81,5 +82,21 @@ class SubscriptionTest extends TestCase
                 && str_contains($html, 'bbox=-70.8,18.2,-70.3,18.6&week=2015-04-27');
         });
         $this->assertSame('2015-04-27', $s->fresh()->last_alert_week->toDateString());
+    }
+
+    public function test_anyone_can_get_a_sample_alert_five_times_a_day(): void
+    {
+        Queue::fake();
+        $area = Area::query()->where('slug', 'test')->first();
+        $area->update(['slug' => Area::FOCUS]);
+        Alert::query()->create(['area_id' => $area->id, 'week_start' => '2015-04-27', 'observed' => 229, 'typical' => 20, 'spread' => 5, 'score' => 41.8, 'severity' => 'extreme']);
+
+        for ($i = 0; $i < 5; $i++) {
+            $this->post('/alerts/sample', ['email' => 'judge@example.com'])->assertSessionHas('status', fn (string $s) => str_contains($s, 'queued'));
+        }
+        $this->post('/alerts/sample', ['email' => 'judge@example.com'])->assertSessionHas('status', fn (string $s) => str_contains($s, 'limit resets tomorrow'));
+
+        Queue::assertPushed(SendFireAlert::class, 5);
+        Queue::assertPushed(SendFireAlert::class, fn (SendFireAlert $job) => $job->test && $job->subscription->email === 'judge@example.com' && ! $job->subscription->exists);
     }
 }
