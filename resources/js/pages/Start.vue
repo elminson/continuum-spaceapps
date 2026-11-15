@@ -38,10 +38,12 @@ const more = [
     <Head :title="t('Was this fire unusual?')" />
     <SiteLayout>
         <div class="relative overflow-hidden rounded-md bg-neutral-950">
-            <WeekMap :bbox="bbox" :week="week" :times="times" height="h-[40rem]" :chrome="false" />
-            <div class="pointer-events-none absolute inset-0 bg-neutral-950/35" />
-            <div class="pointer-events-none absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-neutral-950 via-neutral-950/70 to-transparent" />
-            <div class="absolute inset-x-0 bottom-0 p-6 text-neutral-100 md:p-10">
+            <WeekMap :bbox="bbox" :week="week" :times="times" height="h-64 md:h-[40rem]" :chrome="false" />
+            <div class="pointer-events-none absolute inset-0 hidden bg-neutral-950/35 md:block" />
+            <div
+                class="pointer-events-none absolute inset-x-0 bottom-0 hidden h-3/4 bg-gradient-to-t from-neutral-950 via-neutral-950/70 to-transparent md:block"
+            />
+            <div class="p-6 text-neutral-100 md:absolute md:inset-x-0 md:bottom-0 md:p-10">
                 <p class="text-sm text-orange-400">
                     {{ t(':area · :n times a normal week, April 2015', { area: focusName, n: number(times ?? 0, 1) }) }}
                 </p>
