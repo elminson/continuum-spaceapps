@@ -19,8 +19,8 @@ const cards = [
         href: '/questions#baseline',
     },
     {
-        q: 'Who uses it, and how does it help?',
-        a: 'On Monday the forest-fire unit sets the week’s readiness from the outlook and the bulletin; COEs get an email when their territory turns unusual.',
+        q: 'What decision does it serve, and who takes it?',
+        a: 'Three immediate ones: raise the readiness level and move brigades on Monday; dispatch to the flagged zone within 24 hours of the alert; suspend burn permits today when the season runs above normal.',
         href: '/questions#who',
     },
 ];
