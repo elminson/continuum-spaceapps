@@ -599,5 +599,17 @@
     "Output on each area page: “Next week: expected ×1.8 of normal (range ×1.2–2.6)”, with its skill score, feeding the same email alerts. Statistics and the model decide; AI explains, as everywhere else on this site.": "Salida en cada página de área: “Próxima semana: se espera ×1,8 de lo normal (rango ×1,2–2,6)”, con su puntaje de destreza, alimentando las mismas alertas por correo. La estadística y el modelo deciden; la IA explica, como en todo este sitio.",
     "Anticipate critical periods.": "Anticipar los períodos críticos.",
     "Today: the fire season of each area and the weekly anomaly alerts. Next: a one-week forecast per area trained on this harmonized record with NASA POWER weather, GPM rainfall, SMAP soil moisture and MODIS/VIIRS vegetation, validated against a climatology baseline before it is shown. The plan is written out on the Method page.": "Hoy: la temporada de fuego de cada área y las alertas semanales de anomalías. Siguiente: un pronóstico a una semana por área entrenado con este registro armonizado y el clima de NASA POWER, la lluvia de GPM, la humedad del suelo de SMAP y la vegetación MODIS/VIIRS, validado frente a una línea base climatológica antes de mostrarse. El plan está escrito en la página Método.",
-    "Forecasting plan": "Plan de pronóstico"
+    "Forecasting plan": "Plan de pronóstico",
+    "My areas": "Mis áreas",
+    "Boxes you saved and zones with alerts. Open one to analyze it again.": "Recuadros que guardaste y zonas con alertas. Abre uno para analizarlo de nuevo.",
+    "Sign in to keep your own boxes and alert zones here.": "Inicia sesión para guardar aquí tus recuadros y zonas con alertas.",
+    "Create a new area": "Crear un área nueva",
+    "Sign in": "Iniciar sesión",
+    "Delete this area?": "¿Eliminar esta área?",
+    "Alerts": "Alertas",
+    "No saved areas yet. Draw one in Explore and save it.": "Aún no hay áreas guardadas. Dibuja una en Explorar y guárdala.",
+    "Zones with alerts": "Zonas con alertas",
+    "On": "Activadas",
+    "Off": "Desactivadas",
+    "Manage": "Gestionar"
 }

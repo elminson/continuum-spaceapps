@@ -14,6 +14,7 @@ use App\Fire\Situation;
 use App\Http\Controllers\Api\AreaApiController;
 use App\Http\Middleware\SetLocale;
 use App\Models\Alert;
+use App\Models\AlertSubscription;
 use App\Models\Area;
 use App\Models\AreaFit;
 use App\Models\IngestRun;
@@ -66,10 +67,14 @@ class PageController extends Controller
         ];
     }
 
-    public function areas(Insights $insights): Response
+    public function areas(Request $request, Insights $insights): Response
     {
+        $user = $request->user();
+
         return Inertia::render('Areas', [
             'areas' => Area::query()->ordered()->get()->map(fn (Area $area) => [...$insights->card($area), 'bbox' => [$area->west, $area->south, $area->east, $area->north], 'fit' => $insights->fit($area)])->all(),
+            'mine' => $user?->savedBoxes()->latest()->get()->map(fn (SavedBox $b) => $b->toPlace())->all() ?? [],
+            'zones' => $user ? AlertSubscription::query()->where('user_id', $user->id)->latest()->get()->map->toArray()->all() : [],
         ]);
     }
 
