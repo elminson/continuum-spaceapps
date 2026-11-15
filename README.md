@@ -29,7 +29,6 @@ Areas: **Dominican Republic** (the focus), Hispaniola (Dominican Republic and Ha
 ## How this repo was built
 
 - **All code in this repo was written during the event (14–15 November 2026),** starting from the Laravel Vue starter kit (first commit).
-- **An earlier prototype exists** at https://github.com/elminson/continuum (September 2026). This repo is a new build made during Space Apps; no code was copied from it.
 - **Data:** the raw NASA FIRMS detections for the four areas (21.2 million) were downloaded before the event, when we chose the challenge. All processing of that data is done by the code in this repo; new data arrives every hour from the FIRMS feeds.
 - **AI use:** written with Claude Code (Anthropic) as a coding assistant; commits carry a `Co-Authored-By: Claude` line. Inside the app, Claude (Anthropic API) and Gemma 4 (self-hosted) write the bulletins from checked numbers; see `/ai`.
 

@@ -85,7 +85,7 @@ A sensor's own observations are always used when it flew; converted values are m
 
 **Factors considered.** Accessibility: no login, English and Spanish, works on phones. Cost: one small server and only free, open data. Honesty: every number has its test, its limits are on the Method page, and estimated values are marked.
 
-**How it was built.** All code was written during the event (14–15 November 2026), starting from the Laravel starter kit; the git history shows it. The raw NASA FIRMS detections for the four areas were downloaded before the event, which the Santiago organizers allow. An earlier prototype exists (github.com/elminson/continuum, September 2026); no code was copied from it, and the logo is reused from it.
+**How it was built.** All code was written during the event (14–15 November 2026), starting from the Laravel starter kit; the git history shows it. The raw NASA FIRMS detections for the four areas were downloaded before the event, which the Santiago organizers allow.
 
 ## Use of Artificial Intelligence (AI)
 
