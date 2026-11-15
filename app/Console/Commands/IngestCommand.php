@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Fire\DataStatus;
 use App\Fire\FirmsFeed;
 use App\Fire\Pipeline;
+use App\Models\IngestRun;
 use Illuminate\Console\Command;
 
 class IngestCommand extends Command
@@ -19,12 +20,16 @@ class IngestCommand extends Command
         $feeds = [];
 
         foreach (FirmsFeed::FEEDS as $name => $url) {
+            $run = IngestRun::start($name);
+
             try {
                 $result = $feed->pull($url);
+                $run->done($result);
                 $this->line("{$name}: {$result['read']} read, {$result['kept']} in areas, {$result['inserted']} new");
                 $feeds[] = ['feed' => $name, 'ok' => true] + $result;
                 $from = $result['from'] && (! $from || $result['from'] < $from) ? $result['from'] : $from;
             } catch (\Throwable $e) {
+                $run->failed($e->getMessage());
                 $this->error("{$name}: {$e->getMessage()}");
                 $feeds[] = ['feed' => $name, 'ok' => false, 'error' => str($e->getMessage())->limit(160)->toString()];
             }

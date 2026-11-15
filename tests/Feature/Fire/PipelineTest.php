@@ -10,9 +10,11 @@ use App\Fire\RetirementTest;
 use App\Models\Alert;
 use App\Models\Area;
 use App\Models\AreaFit;
+use App\Models\IngestRun;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class PipelineTest extends TestCase
@@ -145,5 +147,24 @@ class PipelineTest extends TestCase
         $this->assertSame(0, $again['inserted']);
         $this->assertSame('viirs', DB::table('detections')->value('instrument'));
         $this->assertSame('2026-11-14 05:12:00', DB::table('detections')->value('acquired_at'));
+    }
+
+    public function test_records_every_feed_pull_as_an_ingest_run(): void
+    {
+        $outside = "latitude,longitude,brightness,scan,track,acq_date,acq_time,satellite,instrument,confidence,version,bright_t31,frp,daynight\n"
+            ."40.0,10.0,330.1,1,1,2026-11-14,0512,Terra,MODIS,80,6.1NRT,290,3.2,N\n";
+        Http::fake([
+            FirmsFeed::FEEDS['modis'] => Http::response($outside),
+            FirmsFeed::FEEDS['noaa20'] => Http::response('down', 503),
+            FirmsFeed::FEEDS['noaa21'] => Http::response($outside),
+        ]);
+
+        $this->artisan('fire:ingest')->assertSuccessful();
+
+        $this->assertSame(['done', 'failed', 'done'], IngestRun::query()->orderBy('id')->pluck('status')->all());
+        $this->assertSame(1, IngestRun::query()->where('feed', 'modis')->value('read'));
+        $this->assertStringContainsString('503', (string) IngestRun::query()->where('feed', 'noaa20')->value('error'));
+
+        $this->get('/data?status=failed')->assertInertia(fn ($page) => $page->component('Data')->where('total', 1)->where('runs.0.feed', 'noaa20'));
     }
 }

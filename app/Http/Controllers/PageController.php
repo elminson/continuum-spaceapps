@@ -14,6 +14,7 @@ use App\Http\Middleware\SetLocale;
 use App\Models\Alert;
 use App\Models\Area;
 use App\Models\AreaFit;
+use App\Models\IngestRun;
 use App\Models\SavedBox;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -124,12 +125,37 @@ class PageController extends Controller
         ]);
     }
 
-    public function data(DataStatus $status): Response
+    public function data(Request $request, DataStatus $status): Response
     {
+        $feed = in_array($request->query('feed'), array_keys(FirmsFeed::FEEDS), true) ? $request->query('feed') : '';
+        $state = in_array($request->query('status'), [IngestRun::DONE, IngestRun::FAILED], true) ? $request->query('status') : '';
+
+        $runs = IngestRun::query()
+            ->when($feed, fn ($q) => $q->where('feed', $feed))
+            ->when($state, fn ($q) => $q->where('status', $state))
+            ->orderByDesc('started_at');
+
+        $perPage = 25;
+        $total = (clone $runs)->count();
+        $pages = max(1, (int) ceil($total / $perPage));
+        $page = min($pages, max(1, $request->integer('page', 1)));
+
         return Inertia::render('Data', [
             'status' => $status->summary(),
             'freshness' => $status->freshness(),
             'feeds' => FirmsFeed::FEEDS,
+            'filters' => ['feed' => $feed, 'status' => $state],
+            'totals' => cache()->remember('ingest:totals', now()->addMinute(), fn () => [
+                'runs' => IngestRun::query()->where('status', IngestRun::DONE)->count(),
+                'failed' => IngestRun::query()->where('status', IngestRun::FAILED)->count(),
+                'inserted' => (int) IngestRun::query()->sum('inserted'),
+                'since' => IngestRun::query()->min('started_at'),
+            ]),
+            'runs' => $runs->forPage($page, $perPage)->get()->map(fn (IngestRun $r) => $r->row())->all(),
+            'page' => $page,
+            'pages' => $pages,
+            'perPage' => $perPage,
+            'total' => $total,
         ]);
     }
 
