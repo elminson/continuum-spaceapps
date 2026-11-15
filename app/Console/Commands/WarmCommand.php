@@ -44,6 +44,9 @@ class WarmCommand extends Command
             });
         }
 
+        // Warming runs in the background, so give the model the time a page never would.
+        config(['services.bulletin.timeout' => 180]);
+
         $this->components->task('Situation reading', function () use ($situation) {
             foreach (['en', 'es'] as $locale) {
                 $situation->for($locale);

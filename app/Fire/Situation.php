@@ -27,7 +27,7 @@ class Situation
         }
 
         $facts = $this->facts($locale);
-        $written = Bulletin::ask(self::prompt($facts), $facts);
+        $written = Bulletin::ask(self::prompt($facts), $facts, 900);
 
         if ($written !== null && Bulletin::onlyKnownNumbers($written, $facts)) {
             $result = ['text' => $written, 'source' => 'ai', 'model' => config('services.bulletin.model'), 'facts' => $facts];
@@ -70,11 +70,13 @@ class Situation
                     'in_fire_season' => isset($base['season']) ? ($this->insights->season($area)['season'] ?? null ? in_array($a->week_start->month, $this->insights->season($area)['season'], true) : null) : null,
                 ])->all();
 
+            $last = $base['last_30_days'] ?? null;
+
             $areas[] = [
                 'area' => $area->label(),
-                'season' => $base['season'] ?? null,
-                'last_30_days' => $base['last_30_days'] ?? null,
-                'unusual_weeks_last_60_days' => $weeks,
+                'in_fire_season_now' => $last['in_fire_season'] ?? null,
+                'last_30_days' => $last ? ['burning_cell_days' => $last['burning_cell_days'], 'times_normal' => $last['times_normal'], 'rank' => $last['rank'], 'years_compared' => $last['years_compared']] : null,
+                'unusual_weeks_last_60_days' => array_slice($weeks, 0, 4),
             ];
         }
 
@@ -83,6 +85,7 @@ class Situation
             'today' => CarbonImmutable::today()->locale($locale)->isoFormat($locale === 'es' ? 'D [de] MMMM [de] YYYY' : 'MMMM D, YYYY'),
             'unit' => $locale === 'es' ? 'celdas-día de 1 km con fuego' : 'burning 1 km cell-days',
             'how_a_week_is_flagged' => 'at least 3 deviations above the median of the same week in every other year since 2000, and at least twice it',
+            'answer_length' => 'three to five sentences, under 90 words',
             'areas' => $areas,
         ];
     }
@@ -110,7 +113,7 @@ class Situation
             foreach ($a['unusual_weeks_last_60_days'] as $w) {
                 $flagged[] = ['area' => $a['area'], 'times' => $w['times_normal'] ?? 0, 'starts' => $w['starts']];
             }
-            if ($a['last_30_days']['in_fire_season'] ?? false) {
+            if ($a['in_fire_season_now'] ?? false) {
                 $inSeason[] = $a['area'];
             }
             if ($a['unusual_weeks_last_60_days'] === []) {
