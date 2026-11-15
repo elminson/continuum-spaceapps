@@ -9,11 +9,11 @@ Both use an AI voice (ElevenLabs). Say so on screen ("Narración: voz generada p
 
 ## Local video (up to 4:30, Spanish)
 
-Recorded 15 November 2026 from the live site; each row is one narrated line and the screen shown. `card:` rows are designed cards instead of page screenshots: the three steps and the test reveal one by one, the worked cell (28 April 2015: MODIS 9, VIIRS 121, naive merge off by 112, Continuum 15 off by 6) builds row by row, and the closing block answers the two questions we are always asked (compared with what; who uses it and what they decide) with the three immediate decisions and how impact is measured. Total 4:16.
+Recorded 15 November 2026 from the live site; each row is one narrated line and the screen shown. `card:` rows are designed cards instead of page screenshots: the three steps and the test reveal one by one, the worked cell (28 April 2015: MODIS 9, VIIRS 121, naive merge off by 112, Continuum 15 off by 6) builds row by row, and the closing block answers the two questions we are always asked (compared with what; who uses it and what they decide) with the three immediate decisions and how impact is measured. Total 3:57.
 
 | Screen | Narration (ES) | Subtitle (EN) |
 | --- | --- | --- |
-| card:intro | Somos Elminson y Miguel, del equipo Continuum, de Santo Domingo. | We are Elminson and Miguel, team Continuum, from Santo Domingo. |
+| card:intro | Somos Elminson y Miguel, del equipo Continuum. | We are Elminson and Miguel, team Continuum. |
 | card:intro | Elegimos el reto de armonizar los focos de calor de MODIS y VIIRS. | Our challenge: harmonizing MODIS and VIIRS hot spots. |
 | home | Nuestra pregunta es simple: ¿fue inusual este fuego, comparado con qué? | Our question is simple: was this fire unusual, compared with what? |
 | sensors | La NASA vigila incendios con MODIS desde el año 2000, y con VIIRS desde 2012. | NASA has watched fires with MODIS since 2000, and with VIIRS since 2012. |
@@ -90,7 +90,7 @@ Data: NASA FIRMS, NASA POWER, NASA GIBS.
 Narration: AI-generated voice (ElevenLabs). All screens are real recordings of the app. Built with Claude Code as a coding assistant.
 ```
 
-### Spanish explanation (4:16, English subtitles)
+### Spanish explanation (3:57, English subtitles)
 
 Title:
 
