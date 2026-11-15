@@ -59,6 +59,8 @@ class Situation
     {
         $since = CarbonImmutable::today()->subDays(self::WINDOW_DAYS);
         $areas = [];
+        $previous = app()->getLocale();
+        app()->setLocale($locale);
 
         foreach (Area::query()->ordered()->get() as $area) {
             $base = $this->bulletin->facts($area, null, $locale);
@@ -80,6 +82,8 @@ class Situation
             ];
         }
 
+        app()->setLocale($previous);
+
         return [
             'language' => $locale === 'es' ? 'Spanish' : 'English',
             'today' => CarbonImmutable::today()->locale($locale)->isoFormat($locale === 'es' ? 'D [de] MMMM [de] YYYY' : 'MMMM D, YYYY'),
@@ -96,7 +100,7 @@ class Situation
         return 'You are a fire analyst writing a short situation reading for fire managers, in '.$facts['language'].'. '
             .'Write three to five plain sentences: which areas deserve attention now and why, whether their unusual weeks fall inside or outside the usual fire season, and which areas are quiet. '
             .'Use only the facts given and copy numbers exactly as written; do not add any other number, date, percentage or claim. '
-            .'The statistics already decided which weeks are unusual; you only explain. '
+            .'The statistics already decided which weeks are unusual; you only explain. An area with no unusual week is "quiet" or "within its normal range", never "without fire". Use the area names exactly as given. '
             .'Calm, factual tone: no exclamation marks, no advice beyond watching an area, no headings, no lists.';
     }
 
