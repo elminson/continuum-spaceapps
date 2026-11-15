@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Fire\Bulletin;
+use App\Fire\Calibrate;
+use App\Fire\DailyRecord;
 use App\Fire\DataStatus;
 use App\Fire\Explorer;
 use App\Fire\FirmsFeed;
@@ -10,6 +13,7 @@ use App\Fire\Sensors;
 use App\Http\Middleware\SetLocale;
 use App\Models\Alert;
 use App\Models\Area;
+use App\Models\AreaFit;
 use App\Models\SavedBox;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -129,12 +133,28 @@ class PageController extends Controller
         ]);
     }
 
-    public function howItWorks(DataStatus $status, Insights $insights): Response
+    public function howItWorks(DataStatus $status, Insights $insights, DailyRecord $record, Bulletin $bulletin): Response
     {
+        $focus = Area::query()->where('slug', Area::FOCUS)->first();
+        $top = $focus?->alerts()->orderByDesc('score')->first();
+
         return Inertia::render('HowItWorks', [
             'status' => $status->summary(),
             'evidence' => Area::query()->ordered()->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'fit' => $insights->fit($a)])->all(),
-            'hispaniola' => Area::query()->where('slug', Area::FOCUS)->first(['west', 'south', 'east', 'north'])?->only('west', 'south', 'east', 'north'),
+            'hispaniola' => $focus?->only('west', 'south', 'east', 'north'),
+            'focusName' => $focus?->label(),
+            'pairs' => $focus ? cache()->remember('how:pairs:'.$focus->id.':'.($focus->processed_at?->timestamp ?? 0), now()->addDay(), fn () => array_map(
+                fn ($p) => [$p['viirs'], $p['modis']],
+                Calibrate::overlap($record->for($focus)),
+            )) : [],
+            'counts' => [
+                'areas' => Area::query()->count(),
+                'fits' => AreaFit::query()->count(),
+                'alerts' => Alert::query()->count(),
+                'places' => count(Explorer::PLACES),
+                'feeds' => count(FirmsFeed::FEEDS),
+            ],
+            'bulletin' => $focus && $top ? $bulletin->for($focus, $top->week_start->toDateString(), app()->getLocale()) : null,
         ]);
     }
 
