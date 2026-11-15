@@ -80,10 +80,18 @@ const steps = [
                     {{ t('We email you the strongest week ever recorded in the Dominican Republic, marked as a test. Up to 5 a day per address.') }}
                 </p>
             </div>
-            <input v-model="sample.email" type="email" required :placeholder="t('Email')" class="rounded-md border bg-background px-2 py-1.5" />
-            <button class="rounded-md bg-foreground px-3 py-1.5 text-background disabled:opacity-40" :disabled="sample.processing">
-                {{ sample.processing ? t('Sending…') : t('Send me a sample alert') }}
-            </button>
+            <div class="flex w-full flex-wrap gap-2 sm:w-auto">
+                <input
+                    v-model="sample.email"
+                    type="email"
+                    required
+                    :placeholder="t('Email')"
+                    class="w-full rounded-md border bg-background px-3 sm:w-72"
+                />
+                <button class="rounded-md bg-foreground px-3 py-2 text-background disabled:opacity-40" :disabled="sample.processing">
+                    {{ sample.processing ? t('Sending…') : t('Send me a sample alert') }}
+                </button>
+            </div>
             <p v-if="sample.errors.email" class="w-full text-red-600">{{ sample.errors.email }}</p>
         </form>
 

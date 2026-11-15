@@ -4,7 +4,8 @@
 
 body,
 html {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 @layer base {
@@ -87,5 +88,13 @@ html {
 
     body {
         @apply bg-background text-foreground;
+    }
+
+    /* Text fields and selects: a border you can see, one height, an ember focus ring. */
+    input:where([type='text'], [type='email'], [type='tel'], [type='password'], [type='search'], [type='number'], [type='url'], :not([type])),
+    select,
+    textarea {
+        @apply min-h-10 border-neutral-400/80 placeholder:text-neutral-500 dark:border-neutral-600 dark:placeholder:text-neutral-400;
+        @apply focus:border-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-600/25;
     }
 }
