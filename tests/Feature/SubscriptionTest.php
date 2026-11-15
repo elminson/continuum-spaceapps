@@ -97,6 +97,6 @@ class SubscriptionTest extends TestCase
         $this->post('/alerts/sample', ['email' => 'judge@example.com'])->assertSessionHas('status', fn (string $s) => str_contains($s, 'limit resets tomorrow'));
 
         Queue::assertPushed(SendFireAlert::class, 5);
-        Queue::assertPushed(SendFireAlert::class, fn (SendFireAlert $job) => $job->test && $job->subscription->email === 'judge@example.com' && ! $job->subscription->exists);
+        Queue::assertPushed(SendFireAlert::class, fn (SendFireAlert $job) => $job->test && $job->target()->email === 'judge@example.com' && ! $job->target()->exists);
     }
 }
