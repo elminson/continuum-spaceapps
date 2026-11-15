@@ -152,6 +152,7 @@ class PageController extends Controller
             'status' => $status->summary(),
             'freshness' => $status->freshness(),
             'feeds' => FirmsFeed::FEEDS,
+            'weather' => Area::query()->ordered()->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'days' => DB::table('weather_days')->where('area_id', $a->id)->count(), 'through' => DB::table('weather_days')->where('area_id', $a->id)->whereNotNull('t2m')->max('day')])->all(),
             'filters' => ['feed' => $feed, 'status' => $state],
             'totals' => cache()->remember('ingest:totals', now()->addMinute(), fn () => [
                 'runs' => IngestRun::query()->where('status', IngestRun::DONE)->count(),
