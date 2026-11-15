@@ -27,7 +27,7 @@ const years = computed(() => Math.floor(props.status.record_days / 365.25));
 
 const resources = [
     { href: 'https://youtu.be/ZkYbmGTxsQQ', label: '30-second demo (English)', icon: PlayCircle },
-    { href: 'https://youtu.be/D-HypfIguYk', label: 'Full explanation (Spanish, English subtitles, 3:57)', icon: PlayCircle },
+    { href: 'https://youtu.be/2qLaag9OLKY', label: 'Full explanation (Spanish, English subtitles, 3:57)', icon: PlayCircle },
     { href: '/slides/continuum-slides.pdf', label: '7-slide deck (PDF)', icon: FileText },
     { href: 'https://github.com/elminson/continuum-spaceapps', label: 'Code on GitHub', icon: Github },
     { href: 'https://www.spaceappschallenge.org/2026/find-a-team/continuum1/', label: 'NASA team page', icon: ArrowUpRight },
