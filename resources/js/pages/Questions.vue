@@ -31,6 +31,15 @@ const questions: { q: string; a: string; links: [string, string][] }[] = [
         ],
     },
     {
+        q: 'Who uses it, and for what?',
+        a: 'The priority job is one weekly decision. The forest-fire unit of the Ministry of Environment opens the Dominican Republic page on Monday: the next-week outlook, the bulletin and where last week burned, against 26 years of the same week, and sets the readiness of the week and where brigades go. A provincial COE or a municipal brigade draws its territory once and gets an email when a week there turns unusual. Planners, journalists and researchers compare any dates with every other year and download the cells and the record to document an event with a baseline. The same pages serve Haiti, Cuba and the two South American areas.',
+        links: [
+            ['/', 'Who uses it'],
+            ['/areas/dominican-republic', 'The Monday page'],
+            ['/alerts/subscribe', 'Fire alerts'],
+        ],
+    },
+    {
         q: 'Compared with what?',
         a: 'Every number on the site names its baseline. The −89% compares our harmonized daily value with the naive merge, which is what you get by taking the VIIRS count as if it were MODIS on the same held-out days. "Times normal" and the ranks compare a week or a date range with the median of the same dates in every other year since 2000 (the spread is the median absolute deviation). The forecast is scored against two baselines: the same-week climatology and persistence, last week repeated. The retirement test compares a record rebuilt from VIIRS alone with the real MODIS record of the same months. In all four cases the comparison is made on data the method did not use to fit itself.',
         links: [

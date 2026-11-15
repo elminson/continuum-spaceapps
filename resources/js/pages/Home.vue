@@ -5,6 +5,7 @@ import OutlookButton from '@/components/fire/OutlookButton.vue';
 import QuestionsAnswered, { type Answers } from '@/components/fire/QuestionsAnswered.vue';
 import Spark from '@/components/fire/Spark.vue';
 import type { AlertRow, Place, Status } from '@/components/fire/types';
+import UseCases from '@/components/fire/UseCases.vue';
 import WeekMap from '@/components/fire/WeekMap.vue';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { date, dateRange, number, percent, t } from '@/lib/i18n';
@@ -82,6 +83,8 @@ const viirs = computed(() => props.status.instruments.find((i) => i.instrument =
         </WeekMap>
 
         <QuestionsAnswered v-if="answers" class="mt-10" :answers="answers" />
+
+        <UseCases class="mt-12" />
 
         <dl class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div>
