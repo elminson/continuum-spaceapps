@@ -149,12 +149,10 @@ onBeforeUnmount(() => {
                     <span class="text-4xl font-semibold text-orange-500">×{{ number(times, 1) }}</span>
                     <span class="text-neutral-300">{{ t('normal') }}</span>
                 </div>
-                <div class="mt-1 flex items-baseline justify-between gap-3 text-sm text-neutral-300">
-                    <span>{{ t(':n cells with fire', { n: number(cells) }) }}</span>
-                    <span v-if="cells" class="flex gap-3 text-xs">
-                        <a :href="csvHref" class="underline-offset-4 hover:underline">{{ t('Download CSV') }}</a>
-                        <button class="underline-offset-4 hover:underline" @click="downloadImage">{{ t('Download image') }}</button>
-                    </span>
+                <div class="mt-1 text-sm text-neutral-300">{{ t(':n cells with fire', { n: number(cells) }) }}</div>
+                <div v-if="cells" class="mt-2 flex gap-4 text-xs text-neutral-300">
+                    <a :href="csvHref" class="underline-offset-4 hover:underline">{{ t('Download CSV') }}</a>
+                    <button class="underline-offset-4 hover:underline" @click="downloadImage">{{ t('Download image') }}</button>
                 </div>
             </template>
             <label class="mt-3 flex cursor-pointer items-center gap-2 border-t border-neutral-700 pt-3 text-xs text-neutral-300">
