@@ -111,7 +111,7 @@ const stages = computed(() => [
         title: t('Write it in plain words'),
         code: 'Bulletin',
         body: t(
-            'A self-hosted open model turns the computed facts into a two-line bulletin in Spanish or English. Any number it writes that is not a fact sends it back to a template.',
+            'Claude or a self-hosted open model turns the computed facts into a two-line bulletin in Spanish or English. Any number it writes that is not a fact sends it back to a template.',
         ),
         num: '0',
         unit: t('invented numbers shown'),
@@ -343,7 +343,7 @@ const running = [
             <p class="mt-2 max-w-3xl text-muted-foreground">
                 {{
                     t(
-                        'The statistics decide whether a week is unusual. A self-hosted open model only turns those facts into two plain sentences, and its text is checked number by number before anyone sees it.',
+                        'The statistics decide whether a week is unusual. The model (Claude, or Gemma 4 on our own server) only turns those facts into two plain sentences, and its text is checked number by number before anyone sees it.',
                     )
                 }}
             </p>
