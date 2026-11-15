@@ -239,6 +239,11 @@ class PageController extends Controller
         ]);
     }
 
+    public function media(): Response
+    {
+        return Inertia::render('Media');
+    }
+
     public function start(): Response
     {
         $focus = Area::query()->where('slug', Area::FOCUS)->first();

@@ -10,6 +10,7 @@ import {
     Code,
     Compass,
     Cpu,
+    Film,
     Database,
     ExternalLink,
     Flame,
@@ -49,6 +50,7 @@ const nav = [
     { href: '/how-it-works', label: 'How it works', icon: Cpu },
     { href: '/api-docs', label: 'API', icon: Code },
     { href: '/judges', label: 'For judges', icon: Award },
+    { href: '/media', label: 'Media', icon: Film },
 ];
 
 const active = (href: string) => (href === '/' ? page.url === '/' : page.url.startsWith(href));

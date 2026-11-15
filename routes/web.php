@@ -17,6 +17,7 @@ Route::get('data', [PageController::class, 'data'])->name('data');
 Route::get('how-it-works', [PageController::class, 'howItWorks'])->name('how-it-works');
 Route::get('api-docs', [PageController::class, 'apiDocs'])->name('api-docs');
 Route::get('judges', [PageController::class, 'judges'])->name('judges');
+Route::get('media', [PageController::class, 'media'])->name('media');
 Route::get('ai', [PageController::class, 'ai'])->name('ai');
 Route::get('questions', [PageController::class, 'questions'])->name('questions');
 Route::get('alerts/subscribe', [SubscriptionController::class, 'create'])->name('subscriptions.create');
