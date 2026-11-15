@@ -3,7 +3,7 @@ import WeekMap from '@/components/fire/WeekMap.vue';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { number, t } from '@/lib/i18n';
 import { Head, Link } from '@inertiajs/vue3';
-import { ArrowRight } from 'lucide-vue-next';
+import { ArrowRight, PlayCircle } from 'lucide-vue-next';
 
 defineProps<{ bbox: number[]; week: string | null; times: number | null; focusName: string }>();
 
@@ -31,6 +31,11 @@ const more = [
     ['/judges', 'For judges'],
     ['/ai', 'AI analysis'],
     ['/questions', 'All questions'],
+];
+
+const videos = [
+    ['https://youtu.be/ZkYbmGTxsQQ', '30-second demo (English)'],
+    ['https://youtu.be/2qLaag9OLKY', 'Full explanation (Spanish, English subtitles, 3:57)'],
 ];
 </script>
 
@@ -79,6 +84,15 @@ const more = [
                 :href="href"
                 class="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
                 >{{ t(label) }} →</Link
+            >
+            <a
+                v-for="[href, label] in videos"
+                :key="href"
+                :href="href"
+                target="_blank"
+                rel="noopener"
+                class="inline-flex items-center gap-1.5 text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                ><PlayCircle class="size-4" />{{ t(label) }}</a
             >
         </nav>
     </SiteLayout>
