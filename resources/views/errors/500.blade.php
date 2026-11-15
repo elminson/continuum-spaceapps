@@ -1,0 +1,2 @@
+@php($es = in_array(request()->cookie('locale') ?: request()->getPreferredLanguage(['en', 'es']), ['es'], true))
+@include('errors.layout', ['code' => '500', 'title' => $es ? 'Algo falló de nuestro lado' : 'Something broke on our side', 'body' => $es ? 'No se pudo construir la página. Los datos están a salvo; inténtalo en un minuto o abre el mapa en vivo.' : 'The page could not be built. The data is safe; try again in a minute or open the live map.'])

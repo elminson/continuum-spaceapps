@@ -1,0 +1,2 @@
+@php($es = in_array(request()->cookie('locale') ?: request()->getPreferredLanguage(['en', 'es']), ['es'], true))
+@include('errors.layout', ['code' => '429', 'title' => $es ? 'Demasiadas solicitudes' : 'Too many requests', 'body' => $es ? 'La API pública permite 120 solicitudes por minuto. Espera un momento y vuelve a intentar.' : 'The public API allows 120 requests per minute. Wait a moment and try again.'])

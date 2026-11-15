@@ -159,4 +159,11 @@ class PagesTest extends TestCase
 
         $this->assertStringContainsString('latitude,longitude,first_day,sensors,detections,frp_mw', $response->streamedContent());
     }
+
+    public function test_first_visit_follows_the_browser_language_and_errors_are_branded(): void
+    {
+        $this->withHeaders(['Accept-Language' => 'es-DO,es;q=0.9,en;q=0.5'])->get('/resume')->assertInertia(fn (Assert $page) => $page->where('locale', 'es'));
+        $this->withHeaders(['Accept-Language' => 'fr-FR,fr;q=0.9'])->get('/resume')->assertInertia(fn (Assert $page) => $page->where('locale', 'en'));
+        $this->withHeaders(['Accept-Language' => 'es'])->get('/no-such-page')->assertNotFound()->assertSee('Página no encontrada')->assertSee('Continuum');
+    }
 }

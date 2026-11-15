@@ -1,0 +1,2 @@
+@php($es = in_array(request()->cookie('locale') ?: request()->getPreferredLanguage(['en', 'es']), ['es'], true))
+@include('errors.layout', ['code' => '404', 'title' => $es ? 'Página no encontrada' : 'Page not found', 'body' => $es ? 'Esa dirección no existe en Continuum. Las áreas, las preguntas y la página del jurado están a un clic.' : 'That address does not exist on Continuum. The areas, the questions and the judges page are one click away.'])

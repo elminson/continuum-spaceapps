@@ -1,0 +1,2 @@
+@php($es = in_array(request()->cookie('locale') ?: request()->getPreferredLanguage(['en', 'es']), ['es'], true))
+@include('errors.layout', ['code' => '503', 'title' => $es ? 'Volvemos en un momento' : 'Back in a moment', 'body' => $es ? 'Continuum se está actualizando. Corre la actualización horaria de datos de la NASA o un despliegue; inténtalo en breve.' : 'Continuum is updating. The hourly NASA data refresh or a deploy is running; try again shortly.'])
