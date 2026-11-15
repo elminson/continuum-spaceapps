@@ -1,6 +1,8 @@
 # NASA Space Apps submission
 
-Paste each block into the matching field of the team page (spaceappschallenge.org → My Team → Project → Edit). Everything is in English, as the judges read in English. Numbers below are live from https://continuum-spaceapps.isotherm.app on 14 November 2026.
+Paste each block into the matching field of the team page (spaceappschallenge.org → My Team → Project → Edit). Everything is in English, as the judges read in English. Numbers below are live from https://continuum-spaceapps.isotherm.app on 15 November 2026.
+
+> **For the browser assistant filling the form:** each `##` heading below is one field of the NASA project page; paste the text under it verbatim into that field. Two links must be the latest YouTube uploads (see "Link to Project Demo"); if a newer link is given in the chat, use it instead. After every field is filled, click **Submit for Judging** only when the team owner confirms.
 
 ## Project Name
 
@@ -12,8 +14,8 @@ Continuum answers one question for fire and land managers: was this fire unusual
 
 ## Link to Project Demo
 
-https://youtu.be/LJ6uETwGb_0 (30 seconds, English)
-Explanation in Spanish with English subtitles (2:50): https://youtu.be/Sbg-dRMqPS8
+https://youtu.be/LJ6uETwGb_0 (30 seconds, English) — re-recorded on 15 November with the forecast, alerts and AI scenes; replace with the new upload link when available
+Explanation in Spanish with English subtitles (3:50): https://youtu.be/Sbg-dRMqPS8 — re-recorded on 15 November; replace with the new upload link when available
 Slides (7): https://github.com/elminson/continuum-spaceapps/blob/main/docs/presentation/continuum-slides.pdf
 
 ## Link to Final Project
@@ -36,7 +38,8 @@ Code: https://github.com/elminson/continuum-spaceapps
 - a one-week **forecast** per area: ridge regression on this harmonized record and NASA POWER weather (temperature, humidity, rain, wind), validated year by year 2013→2026 on 722 held-out weeks per area: one week ahead, 19–31% less error than the same-week climatology, 6–22% less than persistence, r 0.71–0.89 (two weeks ahead, used when the current week has already begun: 13–19% and r 0.67–0.87); shown with its skill on every area page;
 - a test of the end of MODIS (below);
 - an **AI analysis** page gathering the situation reading across areas and every area's bulletins, each written by Claude (Anthropic API) or Gemma 4 (self-hosted) from computed facts, number-checked and labelled;
-- CSV downloads and a public JSON API.
+- CSV downloads and a public JSON API;
+- a start page that answers the three questions reviewers asked first (how the 89% is achieved, compared with what, which decision it serves and who takes it), a Questions page with a live worked example of one 1 km cell through the four steps, and a judges page that maps every line of the challenge brief and the five criteria to its proof.
 
 The Explore page analyses any box inside the areas instantly (drag to draw), lets anyone request a zone outside them (loaded from the NASA FIRMS archive with `fire:area` and `fire:import`), with ready-made places such as the Dominican Republic, Haiti, Santo Domingo, Santiago and Puerto Rico. Everything works without an account; signing in only saves boxes. The interface is in English and Spanish, and new NASA data arrives every hour.
 
@@ -74,11 +77,11 @@ A sensor's own observations are always used when it flew; converted values are m
 
 **When MODIS retires.** NASA plans to stop Aqua MODIS around August–September 2026 and Terra MODIS around January 2027. Continuum simulates it: pick the year MODIS "stops", fit the ratio only on earlier days, rebuild every later month from VIIRS alone and compare with the real MODIS record. With MODIS switched off on 1 January 2024: daily error 81–89% below a naive switch, monthly correlation 0.93–0.996, and totals within −0.4% to +25% depending on the area.
 
-**Benefits, and who executes them.** The priority job is one weekly decision: the forest-fire unit of the Dominican Republic's Ministry of Environment opens the Dominican Republic page on Monday morning, reads the next-week outlook, the bulletin and where last week burned against 26 years of the same week, and sets the readiness level and the placement of brigades with a measured number. Provincial emergency operations (COE) and municipal brigades draw their territory once and receive one email when a week there turns unusual. Planners, journalists and researchers compare any dates with every other year and download the burning cells and the record to document an event with a defensible baseline. Fire managers can compare years across the 2012 sensor change, so a busy season reads as a busy season, not as a new satellite; the week of 17 August 2026 in Cuba was 24.5 times a normal week, and 10–31 August 2026 was the highest of 26 years for those dates. Scientists get validated numbers with uncertainty and open data.
+**Benefits, and who executes them.** Continuum is built for three immediate decisions, each with its trigger: (1) raise the week's readiness level and move brigades on Monday when the next-week outlook is at ×2 of normal or more; (2) dispatch to the flagged zone within 24 hours of the alert email; (3) suspend burn permits and issue a public warning today when the fire season is on and the current week runs above normal. The priority job is one weekly decision: the forest-fire unit of the Dominican Republic's Ministry of Environment opens the Dominican Republic page on Monday morning, reads the next-week outlook, the bulletin and where last week burned against 26 years of the same week, and sets the readiness level and the placement of brigades with a measured number. Provincial emergency operations (COE) and municipal brigades draw their territory once and receive one email when a week there turns unusual. Planners, journalists and researchers compare any dates with every other year and download the burning cells and the record to document an event with a defensible baseline. Fire managers can compare years across the 2012 sensor change, so a busy season reads as a busy season, not as a new satellite; the week of 17 August 2026 in Cuba was 24.5 times a normal week, and 10–31 August 2026 was the highest of 26 years for those dates. Scientists get validated numbers with uncertainty and open data.
 
 **What we hope to achieve.** A free, open fire calendar that any agency in the Caribbean and Latin America can point at its own territory, starting with the Dominican Republic and Haiti, and that keeps working on VIIRS alone after MODIS ends.
 
-**Tools.** PHP 8.4, Laravel 12, Inertia with Vue 3 and TypeScript, Tailwind CSS, PostgreSQL, Apache ECharts, MapLibre GL JS, PHPUnit (58 automated tests). Hosted on one Linux server; GitHub → Spinnr deploys; the scheduler pulls NASA FIRMS every hour.
+**Tools.** PHP 8.4, Laravel 12, Inertia with Vue 3 and TypeScript, Tailwind CSS, PostgreSQL, Apache ECharts, MapLibre GL JS, PHPUnit (59 automated tests). Hosted on one Linux server; GitHub → Spinnr deploys; the scheduler pulls NASA FIRMS every hour.
 
 **Factors considered.** Accessibility: no login, English and Spanish, works on phones. Cost: one small server and only free, open data. Honesty: every number has its test, its limits are on the Method page, and estimated values are marked.
 
