@@ -9,7 +9,7 @@ Both use an AI voice. Say so on screen ("Narración: voz generada por IA / AI-ge
 
 ## Local video (up to 4:30, Spanish)
 
-Recorded 15 November 2026 from the live site; each row is one narrated line and the screen shown (`card:` rows are title cards). New since the first cut: the next-week outlook (Dominican Republic and Cerrado), fire alerts by email, the AI page, and a closing scene over the judges page naming the five criteria with one proof each.
+Recorded 15 November 2026 from the live site; each row is one narrated line and the screen shown (`card:` rows are title cards). New since the first cut: the next-week outlook (Dominican Republic and Cerrado), fire alerts by email, the AI page, and a closing block that answers the assessor's three questions (how the 89% is achieved, compared with what, who uses it and what they decide) over the start, pipeline, evidence and decisions screens, then one line on measurable impact. Total 4:23.
 
 | Screen | Narration (ES) | Subtitle (EN) |
 | --- | --- | --- |
@@ -42,8 +42,11 @@ Recorded 15 November 2026 from the live site; each row is one narrated line and 
 | retire | Apagamos MODIS en 2024, reconstruimos solo con VIIRS, y comparamos con el registro real. La forma se mantiene, con correlación mensual de cero coma noventa y uno. | We switch MODIS off in 2024, rebuild from VIIRS alone and compare with the real record. It keeps its shape, with monthly correlation 0.91. |
 | data | Todo usa datos abiertos de la NASA, FIRMS y GIBS, actualizados cada hora. | Everything runs on NASA open data, FIRMS and GIBS, updated every hour. |
 | api | Con una API pública y descargas en CSV, en español e inglés. | With a public API and CSV downloads, in Spanish and English. |
-| judges | Y para el jurado, todo en una página. Impacto: un calendario de fuego que cualquier agencia del Caribe puede usar hoy. Validez: cada número con su prueba. | And for the judges, all on one page. Impact: a fire calendar any Caribbean agency can use today. Validity: every number with its test. |
-| judges | Relevancia: tres fuentes de la NASA haciendo trabajo real, FIRMS, POWER y GIBS. Creatividad: pronóstico, alertas, e inteligencia artificial que explica sin decidir. Cada punto del reto, con su enlace. | Relevance: three NASA sources doing real work, FIRMS, POWER and GIBS. Creativity: forecast, alerts, and AI that explains without deciding. Every line of the challenge, with its link. |
+| home | Tres preguntas que nos hizo el evaluador, y sus respuestas en la página de inicio. | Three questions the assessor asked us, answered on the start page. |
+| pipeline | ¿Cómo logramos un 89 por ciento menos de error? Tres pasos y una prueba: una cuadrícula de un kilómetro, un conteo por sensor, una razón mensual MODIS entre VIIRS, probada en mil trescientos cincuenta y dos días reservados. | How do we get 89% less error? Three steps and a test: a 1 km grid, one count per sensor, a monthly MODIS ÷ VIIRS ratio, proven on 1,352 held-out days. |
+| evidence | ¿Comparado con qué? Siempre con una línea base con nombre: la fusión ingenua, la misma semana de los otros veintiséis años, la climatología y la persistencia. | Compared with what? Always against a named baseline: the naive merge, the same week in the other 26 years, climatology and persistence. |
+| decisions | ¿Quién lo usa y qué decide? El lunes, la unidad de incendios forestales fija el nivel de alerta y mueve brigadas si la perspectiva supera dos veces lo normal. El COE despacha a la zona marcada en veinticuatro horas. Y en temporada, se suspenden permisos de quema cuando la semana va por encima de lo normal. | Who uses it, and what do they decide? On Monday the forest-fire unit sets the readiness level and moves brigades if the outlook is above twice normal. The COE dispatches to the flagged zone within 24 hours. In season, burn permits are suspended when the week runs above normal. |
+| judges | Y el impacto se mide por decisiones: días de anticipación, alertas enviadas y horas hasta el despacho. | And impact is measured by decisions: days of lead time, alerts sent and hours to dispatch. |
 | card:outro | Queremos que cualquier agencia del Caribe pueda usarlo, empezando por la nuestra. Pruébenlo en continuum-spaceapps.isotherm.app. | We want any agency in the Caribbean to use it, starting with ours. Try it at continuum-spaceapps.isotherm.app. |
 
 Closing card (last 5 s): "Equipo Continuum · Elminson y Miguel · Santo Domingo · Datos: NASA FIRMS, NASA GIBS · Narración: voz generada por IA".
