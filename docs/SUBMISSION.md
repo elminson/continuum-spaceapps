@@ -18,7 +18,7 @@ Slides (7): https://github.com/elminson/continuum-spaceapps/blob/main/docs/prese
 
 ## Link to Final Project
 
-https://continuum-spaceapps.isotherm.app (no login needed)
+https://continuum-spaceapps.isotherm.app (no login needed; the start page states the question, who uses the tool and the answers to the usual questions; the live map and numbers are at /resume)
 For judges, every ask of the challenge and each criterion mapped to its proof: https://continuum-spaceapps.isotherm.app/judges
 Code: https://github.com/elminson/continuum-spaceapps
 
