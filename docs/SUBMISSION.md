@@ -31,10 +31,12 @@ Code: https://github.com/elminson/continuum-spaceapps
 - any date range compared with the same dates in every other year (value, typical value, times normal, rank);
 - unusual weeks: each week against the same week in every other year, with a map of the 1 km cells that burned and NASA's satellite image of that day;
 - a short fire bulletin in plain language (English and Spanish), written by an AI model from the computed facts and checked number by number;
+- fire alerts by email for any drawn zone: a daily check of the last complete week against the same week in every other year, one email per flagged week, a sample and a test alert on demand (SMS coming soon);
+- downloads: every map as a PNG and as a CSV of the burning 1 km cells, every calendar as a PNG;
 - a test of the end of MODIS (below);
 - CSV downloads and a public JSON API.
 
-The Explore page analyses any box inside the four areas instantly, with ready-made places such as the Dominican Republic, Haiti, Santo Domingo, Santiago and Puerto Rico. Everything works without an account; signing in only saves boxes. The interface is in English and Spanish, and new NASA data arrives every hour.
+The Explore page analyses any box inside the areas instantly (drag to draw), lets anyone request a zone outside them (loaded from the NASA FIRMS archive with `fire:area` and `fire:import`), with ready-made places such as the Dominican Republic, Haiti, Santo Domingo, Santiago and Puerto Rico. Everything works without an account; signing in only saves boxes. The interface is in English and Spanish, and new NASA data arrives every hour.
 
 **Questions it answers** (each shown live on the home page, with a link to the proof):
 - Was this week unusual? Dominican Republic, week of 27 April 2015: 11.5 times the same week in a normal year.
@@ -71,7 +73,7 @@ A sensor's own observations are always used when it flew; converted values are m
 
 **What we hope to achieve.** A free, open fire calendar that any agency in the Caribbean and Latin America can point at its own territory, starting with the Dominican Republic and Haiti, and that keeps working on VIIRS alone after MODIS ends.
 
-**Tools.** PHP 8.4, Laravel 12, Inertia with Vue 3 and TypeScript, Tailwind CSS, PostgreSQL, Apache ECharts, MapLibre GL JS, PHPUnit (46 automated tests). Hosted on one Linux server; GitHub → Spinnr deploys; the scheduler pulls NASA FIRMS every hour.
+**Tools.** PHP 8.4, Laravel 12, Inertia with Vue 3 and TypeScript, Tailwind CSS, PostgreSQL, Apache ECharts, MapLibre GL JS, PHPUnit (52 automated tests). Hosted on one Linux server; GitHub → Spinnr deploys; the scheduler pulls NASA FIRMS every hour.
 
 **Factors considered.** Accessibility: no login, English and Spanish, works on phones. Cost: one small server and only free, open data. Honesty: every number has its test, its limits are on the Method page, and estimated values are marked.
 
