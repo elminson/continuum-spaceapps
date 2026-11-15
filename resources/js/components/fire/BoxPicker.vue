@@ -3,7 +3,7 @@ import { COLORS, t } from '@/lib/i18n';
 import { maplibregl, nasaMap } from '@/lib/map';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
-type Place = { slug: string; name: string; bbox: number[] };
+type Place = { slug: string; name: string; bbox: number[]; group?: string };
 
 const props = defineProps<{ areas: Place[]; places: Place[]; boxes: Place[]; modelValue: number[] | null }>();
 const emit = defineEmits<{ 'update:modelValue': [bbox: number[] | null] }>();
@@ -111,7 +111,10 @@ onBeforeUnmount(() => map?.remove());
             >
                 <option value="">{{ t('Start from…') }}</option>
                 <optgroup :label="t('Ready to open')">
-                    <option v-for="p in places" :key="p.slug" :value="`place:${p.slug}`">{{ p.name }}</option>
+                    <option v-for="p in places.filter((x) => x.group !== 'province')" :key="p.slug" :value="`place:${p.slug}`">{{ p.name }}</option>
+                </optgroup>
+                <optgroup :label="t('Provinces of the Dominican Republic')">
+                    <option v-for="p in places.filter((x) => x.group === 'province')" :key="p.slug" :value="`place:${p.slug}`">{{ p.name }}</option>
                 </optgroup>
                 <optgroup v-if="boxes.length" :label="t('My boxes')">
                     <option v-for="b in boxes" :key="b.slug" :value="`box:${b.slug}`">{{ b.name }}</option>

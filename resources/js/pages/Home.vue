@@ -77,7 +77,10 @@ const viirs = computed(() => props.status.instruments.find((i) => i.instrument =
                     class="mb-3 w-full rounded-md border border-neutral-700 bg-neutral-800 px-2 py-1.5 text-base font-semibold text-white"
                     :aria-label="t('Place')"
                 >
-                    <option v-for="p in places" :key="p.slug" :value="p">{{ p.name }}</option>
+                    <option v-for="p in places.filter((x) => x.group !== 'province')" :key="p.slug" :value="p">{{ p.name }}</option>
+                    <optgroup :label="t('Provinces of the Dominican Republic')">
+                        <option v-for="p in places.filter((x) => x.group === 'province')" :key="p.slug" :value="p">{{ p.name }}</option>
+                    </optgroup>
                 </select>
             </template>
         </WeekMap>

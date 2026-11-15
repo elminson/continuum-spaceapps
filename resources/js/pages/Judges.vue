@@ -35,6 +35,31 @@ const resources = [
     { href: '/media', label: 'Media: videos, slides, code and submission', icon: Film },
 ];
 
+/** The shortest path through the proof, for a judge with two minutes. */
+const quick = computed(() => [
+    {
+        href: topWeek.value,
+        label: 'The most unusual week',
+        see: 'Dominican Republic, 27 April 2015: 11.5 times a normal week, every burning 1 km cell over NASA’s image of that day.',
+    },
+    { href: '/questions#how', label: 'Why 89% less error', see: 'One cell through the four steps, then the held-out test against the naive merge.' },
+    {
+        href: '/explore?place=dr-santiago',
+        label: 'Pick a province',
+        see: 'Santiago province gets its own ratio, test and calendar in a second; try any of the 32.',
+    },
+    {
+        href: `${area.value}#outlook`,
+        label: 'Monday’s outlook',
+        see: 'Expected fire for the coming week as ×normal, with its range and its skill score.',
+    },
+    {
+        href: '/alerts/subscribe',
+        label: 'Send yourself a sample alert',
+        see: 'The email a provincial emergency office would receive, with the map of the cells.',
+    },
+]);
+
 /** Each line of the challenge brief, what Continuum does about it, and where to see it. */
 const asks = computed(() => [
     {
@@ -261,6 +286,18 @@ const rules = computed(() => [
                 </a>
             </li>
         </ul>
+
+        <section class="mt-10 rounded-md border p-5">
+            <h2 class="text-xl font-semibold tracking-tight">{{ t('Two minutes, five clicks') }}</h2>
+            <p class="mt-1 text-sm text-muted-foreground">{{ t('The shortest path through the proof. Each step opens a live page.') }}</p>
+            <ol class="mt-4 grid gap-3 md:grid-cols-5">
+                <li v-for="(s, i) in quick" :key="s.href" class="flex flex-col rounded-md bg-muted/40 p-3 text-sm">
+                    <span class="text-xs font-medium text-orange-600">{{ i + 1 }}</span>
+                    <Link :href="s.href" class="mt-1 font-medium underline-offset-4 hover:underline">{{ t(s.label) }}</Link>
+                    <span class="mt-1 text-muted-foreground">{{ t(s.see) }}</span>
+                </li>
+            </ol>
+        </section>
 
         <section class="mt-12">
             <h2 class="text-xl font-semibold tracking-tight">{{ t('What the challenge asks') }}</h2>

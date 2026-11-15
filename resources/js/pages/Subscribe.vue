@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BoxPicker from '@/components/fire/BoxPicker.vue';
+import ReportFire from '@/components/fire/ReportFire.vue';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { dateTime, t } from '@/lib/i18n';
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
@@ -62,6 +63,8 @@ const steps = [
                 )
             }}
         </p>
+
+        <ReportFire class="mt-4" />
 
         <p
             v-if="status"

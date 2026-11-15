@@ -6,6 +6,7 @@ import ForecastCard, { type ForecastData } from '@/components/fire/ForecastCard.
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
 import OutlookButton from '@/components/fire/OutlookButton.vue';
 import Pager from '@/components/fire/Pager.vue';
+import ReportFire from '@/components/fire/ReportFire.vue';
 import RetirementPanel from '@/components/fire/RetirementPanel.vue';
 import SeasonStrip, { type Season } from '@/components/fire/SeasonStrip.vue';
 import TimesNormal from '@/components/fire/TimesNormal.vue';
@@ -87,6 +88,8 @@ const shown = computed(() => sorted.value.slice((page.value - 1) * PER_PAGE, pag
                 <a :href="`/api/areas/${area.slug}/monthly.csv?scale=${scale}`" class="rounded-md border px-2 py-1 hover:bg-muted">CSV</a>
             </div>
         </header>
+
+        <ReportFire v-if="area.slug === 'dominican-republic' || area.slug === 'hispaniola'" class="mt-6" />
 
         <section id="map" class="mt-5 scroll-mt-4">
             <WeekMap

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ReportFire from '@/components/fire/ReportFire.vue';
 import WeekMap from '@/components/fire/WeekMap.vue';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { number, t } from '@/lib/i18n';
@@ -95,5 +96,7 @@ const videos = [
                 ><PlayCircle class="size-4" />{{ t(label) }}</a
             >
         </nav>
+
+        <ReportFire class="mt-6" />
     </SiteLayout>
 </template>

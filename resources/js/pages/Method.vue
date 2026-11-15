@@ -397,6 +397,13 @@ const resources = computed(() => [
                         <li>{{ t('Near-real-time detections from the hourly feeds are kept as they arrive.') }}</li>
                         <li>{{ t('Rectangular areas only.') }}</li>
                         <li>{{ t('Terra passes at 10:30, the others near 13:30: Terra samples a different time of day.') }}</li>
+                        <li>
+                            {{
+                                t(
+                                    'Fixed heat sources (industrial plants, flares) are not removed. Because every week is scored against the same week in other years, a source that burns every week is part of “normal” and never triggers an alert, but it does count in totals.',
+                                )
+                            }}
+                        </li>
                     </ul>
                     <p class="mt-4 text-sm text-muted-foreground">
                         {{
