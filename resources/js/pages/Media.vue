@@ -22,9 +22,24 @@ const videos = [
 ];
 
 const links = [
-    { href: 'https://github.com/elminson/continuum-spaceapps', label: 'Code on GitHub', note: 'Laravel, Vue and the whole method; every commit from the event.', icon: Code },
-    { href: 'https://www.spaceappschallenge.org/2026/find-a-team/continuum1/', label: 'NASA Space Apps project page', note: 'The official team page and submission.', icon: Award },
-    { href: 'https://github.com/elminson/continuum-spaceapps/blob/main/docs/SUBMISSION.md', label: 'Submission text', note: 'Summary, description, use of AI and data sources, as submitted.', icon: FileText },
+    {
+        href: 'https://github.com/elminson/continuum-spaceapps',
+        label: 'Code on GitHub',
+        note: 'Laravel, Vue and the whole method; every commit from the event.',
+        icon: Code,
+    },
+    {
+        href: 'https://www.spaceappschallenge.org/2026/find-a-team/continuum1/',
+        label: 'NASA Space Apps project page',
+        note: 'The official team page and submission.',
+        icon: Award,
+    },
+    {
+        href: 'https://github.com/elminson/continuum-spaceapps/blob/main/docs/SUBMISSION.md',
+        label: 'Submission text',
+        note: 'Summary, description, use of AI and data sources, as submitted.',
+        icon: FileText,
+    },
     { href: '/judges', label: 'For judges', note: 'Each line of the challenge and each criterion mapped to its proof.', icon: Award },
 ];
 </script>
@@ -34,7 +49,11 @@ const links = [
     <SiteLayout>
         <h1 class="text-3xl font-semibold tracking-tight">{{ t('Media') }}</h1>
         <p class="mt-2 max-w-3xl text-muted-foreground">
-            {{ t('The videos, the slides, the code and the submission in one place. Narration is an AI-generated voice (ElevenLabs); every image is a real screen of this app.') }}
+            {{
+                t(
+                    'The videos, the slides, the code and the submission in one place. Narration is an AI-generated voice (ElevenLabs); every image is a real screen of this app.',
+                )
+            }}
         </p>
 
         <section class="mt-8 grid gap-6 lg:grid-cols-2">
@@ -46,7 +65,12 @@ const links = [
                     <h2 class="font-semibold">{{ t(v.title) }}</h2>
                     <p class="mt-1 text-sm text-muted-foreground">{{ t(v.note) }}</p>
                     <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-                        <a :href="v.youtube" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 underline-offset-4 hover:underline">
+                        <a
+                            :href="v.youtube"
+                            target="_blank"
+                            rel="noopener"
+                            class="inline-flex items-center gap-1.5 underline-offset-4 hover:underline"
+                        >
                             <PlayCircle class="size-4" />{{ t('Watch on YouTube') }}
                         </a>
                         <a :href="v.src" download class="inline-flex items-center gap-1.5 text-muted-foreground underline-offset-4 hover:underline">
@@ -64,8 +88,15 @@ const links = [
                 </a>
                 <div class="p-5">
                     <h2 class="font-semibold">{{ t('7-slide deck (PDF)') }}</h2>
-                    <p class="mt-1 text-sm text-muted-foreground">{{ t('The problem, the three steps, the proof, the uses and the end of MODIS, in seven slides.') }}</p>
-                    <a href="/slides/continuum-slides.pdf" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-1.5 text-sm underline-offset-4 hover:underline">
+                    <p class="mt-1 text-sm text-muted-foreground">
+                        {{ t('The problem, the three steps, the proof, the uses and the end of MODIS, in seven slides.') }}
+                    </p>
+                    <a
+                        href="/slides/continuum-slides.pdf"
+                        target="_blank"
+                        rel="noopener"
+                        class="mt-3 inline-flex items-center gap-1.5 text-sm underline-offset-4 hover:underline"
+                    >
                         <FileText class="size-4" />{{ t('Open the 7-slide deck') }}
                     </a>
                 </div>
@@ -77,8 +108,18 @@ const links = [
                 </a>
                 <div class="p-5">
                     <h2 class="font-semibold">{{ t('Sharing card') }}</h2>
-                    <p class="mt-1 text-sm text-muted-foreground">{{ t('The image shown when a link to this site is shared: the Dominican Republic, week of 27 April 2015, 11.5 times a normal week.') }}</p>
-                    <a href="/og.png" download="continuum.png" class="mt-3 inline-flex items-center gap-1.5 text-sm underline-offset-4 hover:underline">
+                    <p class="mt-1 text-sm text-muted-foreground">
+                        {{
+                            t(
+                                'The image shown when a link to this site is shared: the Dominican Republic, week of 27 April 2015, 11.5 times a normal week.',
+                            )
+                        }}
+                    </p>
+                    <a
+                        href="/og.png"
+                        download="continuum.png"
+                        class="mt-3 inline-flex items-center gap-1.5 text-sm underline-offset-4 hover:underline"
+                    >
                         <Image class="size-4" />{{ t('Download PNG') }}
                     </a>
                 </div>
