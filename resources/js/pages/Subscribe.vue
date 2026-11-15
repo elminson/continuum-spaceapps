@@ -52,7 +52,7 @@ const steps = [
         <p class="mt-1 max-w-3xl text-sm text-muted-foreground">
             {{
                 t(
-                    'Draw the zone you care about. When one of its weeks is unusual against 26 years of the same week, you get one email, and you can test it right away.',
+                    'Draw the zone you care about. When one of its weeks is unusual against 26 years of the same week, you get one email, and you can test it right away. No account needed; each alert has its own page to switch email or phone on and off, and signed-in users see all theirs here.',
                 )
             }}
         </p>

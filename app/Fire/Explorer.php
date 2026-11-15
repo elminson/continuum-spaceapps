@@ -113,6 +113,6 @@ class Explorer
 
         $inside = Area::all()->contains(fn (Area $a) => $west >= $a->west && $east <= $a->east && $south >= $a->south && $north <= $a->north);
 
-        return $inside ? null : 'Draw the box inside one of the four areas.';
+        return $inside ? null : 'Draw the box inside one of the dashed areas.';
     }
 }

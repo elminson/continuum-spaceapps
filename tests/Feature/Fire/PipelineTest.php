@@ -131,7 +131,7 @@ class PipelineTest extends TestCase
         $this->assertEquals(1, $result['fit']['validation']['improvement']);
         $this->assertCount(24, $result['monthly']);
         $this->assertNull(Explorer::reject([-71.0, 18.0, -70.5, 18.5]));
-        $this->assertSame('Draw the box inside one of the four areas.', Explorer::reject([-72.0, 18.0, -70.5, 18.5]));
+        $this->assertSame('Draw the box inside one of the dashed areas.', Explorer::reject([-72.0, 18.0, -70.5, 18.5]));
     }
 
     public function test_imports_firms_csv_rows_inside_an_area_once(): void

@@ -88,7 +88,6 @@
     "Too little fire in this box to fit the two sensors. Try a larger box.": "Hay muy poco fuego en este recuadro para ajustar los dos sensores. Prueba uno más grande.",
     "The box is empty.": "El recuadro está vacío.",
     "Keep the box under 8° on each side.": "Mantén el recuadro por debajo de 8° por lado.",
-    "Draw the box inside one of the four areas.": "Dibuja el recuadro dentro de una de las cuatro áreas.",
     "bbox=west,south,east,north": "bbox=oeste,sur,este,norte",
     "Ready to open": "Listos para abrir",
     "Or start a box in": "O empieza un recuadro en",
@@ -558,5 +557,18 @@
     "Fire alerts by email for any drawn zone: every day the last complete week is scored against the same week in every other year, one email per flagged week, a test alert on demand, and SMS coming soon. The decision rule and the scheduled jobs are written on the page.": "Alertas de fuego por correo para cualquier zona dibujada: cada día la última semana completa se evalúa frente a la misma semana de todos los demás años, un correo por semana marcada, una alerta de prueba a demanda y SMS próximamente. La regla de decisión y las tareas programadas están escritas en la página.",
     "Test alert queued. This server has no mailer yet, so it is written to the mail log instead of sent.": "Alerta de prueba encolada. Este servidor aún no tiene servicio de correo, así que se escribe en el registro de correo en vez de enviarse.",
     "Test alert queued for :email. It arrives within a minute.": "Alerta de prueba encolada para :email. Llega en menos de un minuto.",
-    "Alerts stopped.": "Alertas detenidas."
+    "Alerts stopped.": "Alertas detenidas.",
+    "Draw the box inside one of the dashed areas.": "Dibuja el recuadro dentro de una de las áreas punteadas.",
+    "This box is already covered: analyze it instead.": "Este recuadro ya está cubierto: analízalo directamente.",
+    "Zone requested. NASA prepares its archive in :nasa, loading and harmonizing it here takes about :m minutes, and you get an email at :email when it is ready.": "Zona solicitada. La NASA prepara su archivo en :nasa, cargarlo y armonizarlo aquí toma unos :m minutos, y recibes un correo en :email cuando esté lista.",
+    "minutes to an hour": "entre minutos y una hora",
+    "Email alerts": "Alertas por correo",
+    "Phone alerts · coming soon": "Alertas al teléfono · próximamente",
+    "Draw the zone you care about. When one of its weeks is unusual against 26 years of the same week, you get one email, and you can test it right away. No account needed; each alert has its own page to switch email or phone on and off, and signed-in users see all theirs here.": "Dibuja la zona que te importa. Cuando una de sus semanas sea inusual frente a 26 años de la misma semana, recibes un correo, y puedes probarlo ahora mismo. No hace falta cuenta; cada alerta tiene su propia página para activar o desactivar correo y teléfono, y quien inicia sesión ve aquí todas las suyas.",
+    "This zone is not loaded yet.": "Esta zona aún no está cargada.",
+    "Continuum holds the NASA FIRMS archive only for the dashed areas, so boxes inside them answer instantly. Any other zone can be loaded: NASA prepares its archive in minutes to an hour, then importing and harmonizing it here takes from 10 minutes to a few hours depending on size. Leave an email and we tell you when it is ready.": "Continuum guarda el archivo de NASA FIRMS solo para las áreas punteadas, así que los recuadros dentro de ellas responden al instante. Cualquier otra zona se puede cargar: la NASA prepara su archivo entre minutos y una hora, y luego importarlo y armonizarlo aquí toma de 10 minutos a unas horas según el tamaño. Deja un correo y te avisamos cuando esté lista.",
+    "Request this zone": "Solicitar esta zona",
+    "Get an email when a week in this box is unusual": "Recibe un correo cuando una semana de este recuadro sea inusual",
+    "No account needed. Phone alerts are coming soon.": "Sin cuenta. Las alertas al teléfono llegan próximamente.",
+    "Alert me": "Avisarme"
 }

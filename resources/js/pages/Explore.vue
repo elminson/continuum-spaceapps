@@ -10,7 +10,7 @@ import type { AlertRow, Fit, Month } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { COLORS, date, number, percent, r, t } from '@/lib/i18n';
 import { addFireCells, loadFireCells, maplibregl, nasaMap } from '@/lib/map';
-import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
 type Place = { slug: string; name: string; bbox: number[]; id?: number };
@@ -24,6 +24,21 @@ const props = defineProps<{
 const page = usePage();
 const user = computed(() => (page.props.auth as { user: unknown } | undefined)?.user ?? null);
 const saveName = ref('');
+const flash = computed(() => (page.props.flash as { status?: string } | undefined)?.status);
+const outside = computed(() => error.value !== null && error.value === t('Draw the box inside one of the dashed areas.'));
+const zone = useForm({ name: '', email: '', bbox: [] as number[] });
+const alertForm = useForm({ name: '', email: '', phone: '', bbox: [] as number[] });
+
+function requestZone() {
+    zone.bbox = box.value ?? [];
+    zone.post('/zones', { preserveScroll: true, onSuccess: () => zone.reset('name', 'email') });
+}
+
+function subscribe() {
+    alertForm.bbox = box.value ?? [];
+    if (!alertForm.name) alertForm.name = currentBox.value?.name ?? (box.value ?? []).map((v) => v.toFixed(2)).join(', ');
+    alertForm.post('/subscriptions');
+}
 
 function save() {
     if (!box.value || !saveName.value.trim()) return;
@@ -275,6 +290,38 @@ onBeforeUnmount(() => map?.remove());
             <Link v-else-if="!user" href="/login" class="ml-auto text-muted-foreground hover:text-foreground">{{ t('Sign in to save boxes') }}</Link>
         </div>
 
+        <p
+            v-if="flash"
+            class="mt-4 rounded-md border border-orange-300/60 bg-orange-50/60 px-3 py-2 text-sm dark:border-orange-900 dark:bg-orange-950/20"
+        >
+            {{ flash }}
+        </p>
+
+        <form v-if="outside && box" class="mt-4 rounded-md border p-4 text-sm" @submit.prevent="requestZone">
+            <p class="font-medium">{{ t('This zone is not loaded yet.') }}</p>
+            <p class="mt-1 text-muted-foreground">
+                {{
+                    t(
+                        'Continuum holds the NASA FIRMS archive only for the dashed areas, so boxes inside them answer instantly. Any other zone can be loaded: NASA prepares its archive in minutes to an hour, then importing and harmonizing it here takes from 10 minutes to a few hours depending on size. Leave an email and we tell you when it is ready.',
+                    )
+                }}
+            </p>
+            <div class="mt-3 flex flex-wrap gap-2">
+                <input
+                    v-model="zone.name"
+                    required
+                    maxlength="80"
+                    :placeholder="t('Zone name')"
+                    class="rounded-md border bg-background px-2 py-1.5"
+                />
+                <input v-model="zone.email" type="email" required :placeholder="t('Email')" class="rounded-md border bg-background px-2 py-1.5" />
+                <button class="rounded-md bg-foreground px-3 py-1.5 text-background disabled:opacity-40" :disabled="zone.processing">
+                    {{ t('Request this zone') }}
+                </button>
+            </div>
+            <p v-if="zone.errors.bbox || zone.errors.email" class="mt-2 text-red-600">{{ zone.errors.bbox ?? zone.errors.email }}</p>
+        </form>
+
         <p v-if="result && !result.available" class="mt-6 text-sm text-muted-foreground">
             {{ t('Too little fire in this box to fit the two sensors. Try a larger box.') }}
         </p>
@@ -298,6 +345,36 @@ onBeforeUnmount(() => map?.remove());
                 />
                 <Kpi :label="t('Correlation on held-out days')" :value="r(result.fit.validation.correlation)" />
             </div>
+
+            <form class="mt-4 flex flex-wrap items-end gap-2 rounded-md border p-4 text-sm" @submit.prevent="subscribe">
+                <div class="mr-auto">
+                    <p class="font-medium">{{ t('Get an email when a week in this box is unusual') }}</p>
+                    <p class="text-muted-foreground">
+                        {{ t('No account needed. Phone alerts are coming soon.') }}
+                        <Link href="/alerts/subscribe#how" class="underline-offset-4 hover:underline">{{ t('How an alert is decided') }} →</Link>
+                    </p>
+                </div>
+                <input
+                    v-model="alertForm.email"
+                    type="email"
+                    required
+                    :placeholder="t('Email')"
+                    class="rounded-md border bg-background px-2 py-1.5"
+                />
+                <input
+                    v-model="alertForm.phone"
+                    type="tel"
+                    maxlength="30"
+                    :placeholder="t('Phone · coming soon')"
+                    class="w-40 rounded-md border bg-background px-2 py-1.5"
+                />
+                <button class="rounded-md bg-foreground px-3 py-1.5 text-background disabled:opacity-40" :disabled="alertForm.processing">
+                    {{ t('Alert me') }}
+                </button>
+                <p v-if="alertForm.errors.email || alertForm.errors.bbox" class="w-full text-red-600">
+                    {{ alertForm.errors.email ?? alertForm.errors.bbox }}
+                </p>
+            </form>
 
             <section class="mt-8">
                 <h2 class="text-lg font-semibold">{{ t('Fire calendar') }}</h2>

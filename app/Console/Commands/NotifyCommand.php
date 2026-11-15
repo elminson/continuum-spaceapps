@@ -17,7 +17,7 @@ class NotifyCommand extends Command
     {
         $queued = 0;
 
-        AlertSubscription::query()->orderBy('id')->each(function (AlertSubscription $s) use ($alerts, &$queued) {
+        AlertSubscription::query()->where('email_enabled', true)->orderBy('id')->each(function (AlertSubscription $s) use ($alerts, &$queued) {
             $alert = $alerts->current($s);
 
             if ($alert === null || $s->last_alert_week?->toDateString() === $alert['week_start']) {

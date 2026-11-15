@@ -13,7 +13,7 @@ class AlertSubscription extends Model
 
     protected function casts(): array
     {
-        return ['last_alert_week' => 'date', 'last_sent_at' => 'datetime', 'west' => 'float', 'south' => 'float', 'east' => 'float', 'north' => 'float'];
+        return ['last_alert_week' => 'date', 'email_enabled' => 'bool', 'phone_enabled' => 'bool', 'last_sent_at' => 'datetime', 'west' => 'float', 'south' => 'float', 'east' => 'float', 'north' => 'float'];
     }
 
     protected static function booted(): void
@@ -41,6 +41,8 @@ class AlertSubscription extends Model
             'email' => $this->email,
             'phone' => $this->phone,
             'locale' => $this->locale,
+            'email_enabled' => (bool) $this->email_enabled,
+            'phone_enabled' => (bool) $this->phone_enabled,
             'bbox' => $this->bbox(),
             'last_alert_week' => $this->last_alert_week?->toDateString(),
             'last_sent_at' => $this->last_sent_at?->toIso8601String(),

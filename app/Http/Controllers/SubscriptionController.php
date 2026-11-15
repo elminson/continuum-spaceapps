@@ -86,6 +86,14 @@ class SubscriptionController extends Controller
             : __('Test alert queued for :email. It arrives within a minute.', ['email' => $s->email]));
     }
 
+    public function update(Request $request, string $token): RedirectResponse
+    {
+        $data = $request->validate(['email_enabled' => ['sometimes', 'boolean'], 'phone_enabled' => ['sometimes', 'boolean'], 'phone' => ['sometimes', 'nullable', 'string', 'max:30']]);
+        AlertSubscription::query()->where('token', $token)->firstOrFail()->update($data);
+
+        return back();
+    }
+
     public function destroy(string $token): RedirectResponse
     {
         AlertSubscription::query()->where('token', $token)->delete();

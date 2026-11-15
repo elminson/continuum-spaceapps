@@ -6,6 +6,8 @@ import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 type Subscription = {
+    email_enabled: boolean;
+    phone_enabled: boolean;
     token: string;
     name: string;
     email: string;
@@ -33,6 +35,10 @@ function sendTest() {
     router.post(`/subscriptions/${props.subscription.token}/test`, {}, { preserveScroll: true, onFinish: () => (sending.value = false) });
 }
 
+function toggle(field: 'email_enabled' | 'phone_enabled', value: boolean) {
+    router.patch(`/subscriptions/${props.subscription.token}`, { [field]: value }, { preserveScroll: true });
+}
+
 function stop() {
     if (confirm(t('Stop alerts for this zone?'))) router.delete(`/subscriptions/${props.subscription.token}`);
 }
@@ -58,6 +64,22 @@ const mapHref = computed(() => `/explore?bbox=${props.subscription.bbox.join(','
         >
             {{ status }}
         </p>
+
+        <div class="mt-5 flex flex-wrap gap-6 text-sm">
+            <label class="flex cursor-pointer items-center gap-2">
+                <input
+                    type="checkbox"
+                    class="size-4 accent-orange-600"
+                    :checked="subscription.email_enabled"
+                    @change="toggle('email_enabled', ($event.target as HTMLInputElement).checked)"
+                />
+                {{ t('Email alerts') }}
+            </label>
+            <label class="flex items-center gap-2 text-muted-foreground">
+                <input type="checkbox" class="size-4" disabled :checked="subscription.phone_enabled" />
+                {{ t('Phone alerts · coming soon') }}
+            </label>
+        </div>
 
         <dl class="mt-6 grid gap-6 sm:grid-cols-3">
             <div>

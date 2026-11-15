@@ -3,6 +3,7 @@
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SavedBoxController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\ZoneRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -19,7 +20,9 @@ Route::get('alerts/subscribe', [SubscriptionController::class, 'create'])->name(
 Route::post('subscriptions', [SubscriptionController::class, 'store'])->middleware('throttle:10,1')->name('subscriptions.store');
 Route::get('subscriptions/{token}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
 Route::post('subscriptions/{token}/test', [SubscriptionController::class, 'test'])->middleware('throttle:5,1')->name('subscriptions.test');
+Route::patch('subscriptions/{token}', [SubscriptionController::class, 'update'])->name('subscriptions.update');
 Route::delete('subscriptions/{token}', [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
+Route::post('zones', [ZoneRequestController::class, 'store'])->middleware('throttle:10,1')->name('zones.store');
 
 Route::middleware('auth')->group(function () {
     Route::post('boxes', [SavedBoxController::class, 'store'])->name('boxes.store');

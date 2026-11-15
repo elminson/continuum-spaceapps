@@ -50,6 +50,26 @@ export function addFireCells(map: maplibregl.Map): void {
             'circle-stroke-color': '#111827',
         },
     });
+
+    const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: true, maxWidth: '240px' });
+    map.on('mouseenter', 'cells', () => (map.getCanvas().style.cursor = 'pointer'));
+    map.on('mouseleave', 'cells', () => (map.getCanvas().style.cursor = ''));
+    map.on('click', 'cells', (e) => {
+        const f = e.features?.[0];
+        if (!f) return;
+        const p = f.properties as { sensors: string; detections: number; frp: number; day: number };
+        const [lon, lat] = (f.geometry as GeoJSON.Point).coordinates;
+        const sensors = p.sensors
+            .split(',')
+            .map((x) => x.toUpperCase())
+            .join(' + ');
+        popup
+            .setLngLat([lon, lat])
+            .setHTML(
+                `<div style="font:13px/1.4 Instrument Sans,system-ui,sans-serif;color:#17191c"><b>${sensors}</b><br>${p.detections} ${p.detections === 1 ? 'detection' : 'detections'} · ${p.frp} MW<br>1 km cell · ${lat.toFixed(3)}, ${lon.toFixed(3)}<br><span style="color:#6b7078">day ${p.day + 1} of the period</span></div>`,
+            )
+            .addTo(map);
+    });
 }
 
 export type Period = { week: string } | { days: number };

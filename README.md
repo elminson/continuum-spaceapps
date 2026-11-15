@@ -45,6 +45,19 @@ npm run build && php artisan serve
 
 The scheduler runs `fire:ingest` every hour (`php artisan schedule:run` from cron). Tests: `php artisan test` (PostgreSQL).
 
+## Add a zone
+
+The database holds the NASA FIRMS archive for the areas listed on the site. Any other zone takes three commands and one download:
+
+```bash
+php artisan fire:area jamaica "Jamaica" -78.4 17.7 -76.2 18.6 --name-es=Jamaica
+# request the archive for that box at https://firms.modaps.eosdis.nasa.gov/download/
+# (MODIS C6.1 from 2000-11-01; VIIRS S-NPP, NOAA-20 and NOAA-21 from 2012-01-20); NASA emails the CSV files
+php artisan fire:import ~/Downloads/fire_archive_*.csv --area=jamaica   # streams the files, then builds and warms the area
+```
+
+NASA prepares the archive in minutes to an hour; importing and harmonizing a country-sized zone takes from 10 minutes to a few hours here. Visitors who draw outside the loaded areas can request a zone from the Explore page; `zone_requests` lists them.
+
 ## API
 
 | Endpoint | Returns |
