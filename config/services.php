@@ -37,9 +37,13 @@ return [
 
     // Self-hosted model that writes the plain-language fire bulletin (Ollama API).
     'bulletin' => [
+        // Who writes the bulletins: 'anthropic' when an API key is set, else the self-hosted model; each falls back to the other.
+        'provider' => env('BULLETIN_PROVIDER', env('ANTHROPIC_API_KEY') ? 'anthropic' : 'ollama'),
         'url' => env('OLLAMA_URL'),
         'key' => env('OLLAMA_API_KEY'),
         'model' => env('BULLETIN_MODEL', 'gemma4:26b-a4b'),
+        'anthropic_key' => env('ANTHROPIC_API_KEY'),
+        'anthropic_model' => env('ANTHROPIC_MODEL', 'claude-opus-5-5'),
         'timeout' => (int) env('BULLETIN_TIMEOUT', 20),
     ],
 

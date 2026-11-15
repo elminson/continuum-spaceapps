@@ -146,7 +146,7 @@ const architecture = [
         title: 'Harmonize',
         items: [
             ['Fit and test', 'Monthly ratio, bootstrap interval, held-out score'],
-            ['Gemma 4', 'Self-hosted open model that writes the bulletin from computed facts'],
+            ['Claude · Gemma 4', 'Writes the bulletin and the situation reading from computed facts, numbers checked'],
         ],
     },
     {
@@ -380,8 +380,10 @@ const running = [
                         </li>
                         <li class="flex gap-2">
                             <Bot class="mt-0.5 size-4 shrink-0 text-orange-600" /><span
-                                ><b class="font-medium">{{ t('Open weights, our hardware') }}.</b>
-                                <span class="text-muted-foreground">{{ t('Gemma 4 on a self-hosted Ollama server.') }}</span></span
+                                ><b class="font-medium">{{ t('Two writers, one rule') }}.</b>
+                                <span class="text-muted-foreground">{{
+                                    t('Claude (Anthropic API) or Gemma 4 on our own Ollama server; each is the fallback for the other.')
+                                }}</span></span
                             >
                         </li>
                         <li class="flex gap-2">

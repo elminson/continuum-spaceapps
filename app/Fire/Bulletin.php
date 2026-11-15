@@ -2,6 +2,7 @@
 
 namespace App\Fire;
 
+use Anthropic\Client;
 use App\Models\Alert;
 use App\Models\Area;
 use Carbon\CarbonImmutable;
@@ -32,8 +33,8 @@ class Bulletin
         $facts = $this->facts($area, $week, $locale);
         $written = $this->write($facts, $locale);
 
-        if ($written !== null && self::onlyKnownNumbers($written, $facts)) {
-            $result = ['text' => $written, 'source' => 'ai', 'model' => config('services.bulletin.model'), 'facts' => $facts];
+        if ($written !== null && self::onlyKnownNumbers($written['text'], $facts)) {
+            $result = ['text' => $written['text'], 'source' => 'ai', 'model' => $written['model'], 'facts' => $facts];
             Cache::put($key, $result, now()->addDay());
 
             return $result;
@@ -146,7 +147,8 @@ class Bulletin
         return $names[$top->r][$top->c];
     }
 
-    private function write(array $facts, string $locale): ?string
+    /** @return array{text: string, model: string}|null */
+    private function write(array $facts, string $locale): ?array
     {
         $system = 'You write a short fire bulletin for a fire agency, in '.$facts['language'].'. Write two or three plain sentences. '
             .'Use only the facts given, and copy numbers exactly as written in the facts. Do not add any other number, date, percentage or claim. '
@@ -157,11 +159,76 @@ class Bulletin
     }
 
     /**
-     * One call to the self-hosted model: a system prompt and the facts as JSON. Null on any failure or an over-long answer.
+     * One call to the writing model: a system prompt and the facts as JSON.
+     * Claude (Anthropic API) or the self-hosted open model, whichever is configured first; the other is the fallback.
+     * Null on any failure or an over-long answer.
      *
      * @param  array<string, mixed>  $facts
+     * @return array{text: string, model: string}|null
      */
-    public static function ask(string $system, array $facts, int $maxLength = 700): ?string
+    public static function ask(string $system, array $facts, int $maxLength = 700): ?array
+    {
+        $order = config('services.bulletin.provider') === 'anthropic' ? ['anthropic', 'ollama'] : ['ollama', 'anthropic'];
+
+        foreach ($order as $provider) {
+            $answer = $provider === 'anthropic' ? self::askClaude($system, $facts) : self::askOllama($system, $facts);
+
+            if ($answer !== null && $answer['text'] !== '' && mb_strlen($answer['text']) <= $maxLength) {
+                return $answer;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $facts
+     * @return array{text: string, model: string}|null
+     */
+    private static function askClaude(string $system, array $facts): ?array
+    {
+        $key = config('services.bulletin.anthropic_key');
+
+        if (! $key) {
+            return null;
+        }
+
+        $model = (string) config('services.bulletin.anthropic_model');
+
+        try {
+            $client = new Client(apiKey: $key, requestOptions: ['timeout' => (float) config('services.bulletin.timeout'), 'maxRetries' => 1]);
+            $message = $client->messages->create(
+                model: $model,
+                maxTokens: 600,
+                system: $system,
+                outputConfig: ['effort' => 'low'],
+                messages: [['role' => 'user', 'content' => json_encode($facts, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)]],
+            );
+        } catch (Throwable $e) {
+            report($e);
+
+            return null;
+        }
+
+        if ($message->stopReason === 'refusal') {
+            return null;
+        }
+
+        $text = '';
+        foreach ($message->content as $block) {
+            if ($block->type === 'text') {
+                $text .= $block->text;
+            }
+        }
+
+        return ['text' => trim($text), 'model' => $model];
+    }
+
+    /**
+     * @param  array<string, mixed>  $facts
+     * @return array{text: string, model: string}|null
+     */
+    private static function askOllama(string $system, array $facts): ?array
     {
         $url = config('services.bulletin.url');
 
@@ -169,11 +236,13 @@ class Bulletin
             return null;
         }
 
+        $model = (string) config('services.bulletin.model');
+
         try {
             $response = Http::timeout(config('services.bulletin.timeout'))
                 ->withToken((string) config('services.bulletin.key'))
                 ->post(rtrim($url, '/').'/api/chat', [
-                    'model' => config('services.bulletin.model'),
+                    'model' => $model,
                     'stream' => false,
                     // Gemma 4 thinks before answering by default; the facts are already the reasoning, so answer directly.
                     'think' => false,
@@ -189,9 +258,7 @@ class Bulletin
             return null;
         }
 
-        $text = trim((string) ($response['message']['content'] ?? ''));
-
-        return $text !== '' && mb_strlen($text) <= $maxLength ? $text : null;
+        return ['text' => trim((string) ($response['message']['content'] ?? '')), 'model' => $model];
     }
 
     /** Every number written must be one of the facts' numbers (ignoring thousands separators and decimal style). */

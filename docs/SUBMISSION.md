@@ -86,7 +86,7 @@ Yes. Tools and purpose:
 - **Claude Code (Anthropic)**, a coding assistant: helped write, test and review the Laravel and Vue code, and draft the README, method text, Spanish translations and this submission. Commits it helped write carry a `Co-Authored-By: Claude` line in the public git history.
 - **Microsoft Edge neural text-to-speech voices**: the narration of the demo videos. This is stated on screen, in the video descriptions and in the file metadata.
 
-- **Gemma 4 (Google, open model, self-hosted with Ollama)**, inside the app: writes the short plain-language **fire bulletin** on each area page (English and Spanish) from facts the code computes (times normal, rank among the same week in other years, where in the area, the fire season). Every number in its text is checked against those facts; if any number does not match, the app shows a fixed template instead. The bulletin is labelled as AI-written. https://ai.google.dev/gemma · https://ollama.com
+- **Claude (Anthropic API, model claude-opus-5-5) and Gemma 4 (Google, open model, self-hosted with Ollama)**, inside the app: one of them writes the short plain-language **fire bulletin** on each area page and the **situation reading** on the Unusual periods page (English and Spanish) from facts the code computes (times normal, rank among the same week in other years, where in the area, the fire season); the other is the fallback. Every number in the text is checked against those facts; if any number does not match, the app shows a fixed template instead. Each text is labelled with the model that wrote it. The AI never decides what is unusual: the statistics do. https://www.anthropic.com/api · https://ai.google.dev/gemma · https://ollama.com
 
 No AI was used to generate data, numbers or images. Every chart and map shows NASA data processed by the app's own code. No NASA logos or branding were generated or modified.
 
@@ -100,6 +100,7 @@ No AI was used to generate data, numbers or images. Every chart and map shows NA
 ## References
 
 - Claude Code (Anthropic): https://www.anthropic.com/claude-code
+- Claude API (Anthropic): https://www.anthropic.com/api
 - Gemma 4 (Google, open model): https://ai.google.dev/gemma · Ollama: https://ollama.com
 - Microsoft Edge text-to-speech voices: https://learn.microsoft.com/azure/ai-services/speech-service/language-support
 - Laravel (MIT): https://laravel.com

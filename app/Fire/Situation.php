@@ -29,8 +29,8 @@ class Situation
         $facts = $this->facts($locale);
         $written = Bulletin::ask(self::prompt($facts), $facts, 900);
 
-        if ($written !== null && Bulletin::onlyKnownNumbers($written, $facts)) {
-            $result = ['text' => $written, 'source' => 'ai', 'model' => config('services.bulletin.model'), 'facts' => $facts];
+        if ($written !== null && Bulletin::onlyKnownNumbers($written['text'], $facts)) {
+            $result = ['text' => $written['text'], 'source' => 'ai', 'model' => $written['model'], 'facts' => $facts];
             Cache::put($key, $result, now()->addHours(6));
 
             return $result;
