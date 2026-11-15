@@ -23,6 +23,7 @@ const resources = [
     { href: '/slides/continuum-slides.pdf', label: '7-slide deck (PDF)', icon: FileText },
     { href: 'https://github.com/elminson/continuum-spaceapps', label: 'Code on GitHub', icon: Github },
     { href: 'https://www.spaceappschallenge.org/2026/find-a-team/continuum1/', label: 'NASA team page', icon: ArrowUpRight },
+    { href: '/questions', label: 'Questions and a worked example', icon: ArrowUpRight },
 ];
 
 /** Each line of the challenge brief, what Continuum does about it, and where to see it. */

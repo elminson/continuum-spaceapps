@@ -11,6 +11,7 @@ use App\Fire\FirmsFeed;
 use App\Fire\Insights;
 use App\Fire\Sensors;
 use App\Fire\Situation;
+use App\Fire\WorkedExample;
 use App\Http\Controllers\Api\AreaApiController;
 use App\Http\Middleware\SetLocale;
 use App\Models\Alert;
@@ -227,6 +228,16 @@ class PageController extends Controller
                 ];
             })->all(),
             'writers' => ['primary' => $names[$provider], 'fallback' => $names[$provider === 'anthropic' ? 'ollama' : 'anthropic']],
+        ]);
+    }
+
+    public function questions(WorkedExample $example): Response
+    {
+        $focus = Area::query()->where('slug', Area::FOCUS)->first();
+
+        return Inertia::render('Questions', [
+            'example' => $focus ? $example->for($focus) : null,
+            'focusSlug' => $focus?->slug ?? 'dominican-republic',
         ]);
     }
 

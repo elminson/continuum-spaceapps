@@ -76,6 +76,11 @@ class FirmsFeed
         return ['read' => $read, 'kept' => count($rows), 'inserted' => $inserted, 'from' => $dates ? min($dates) : null, 'to' => $dates ? max($dates) : null];
     }
 
+    public static function satelliteName(string $code): string
+    {
+        return ['T' => 'Terra', 'A' => 'Aqua', 'N' => 'Suomi NPP', 'N20' => 'NOAA-20', 'N21' => 'NOAA-21'][$code] ?? $code;
+    }
+
     public static function satellite(string $value): string
     {
         return match ($value) {

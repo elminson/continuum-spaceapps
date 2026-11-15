@@ -12,6 +12,7 @@ import {
     Cpu,
     Database,
     ExternalLink,
+    HelpCircle,
     LayoutGrid,
     LogIn,
     LogOut,
@@ -43,6 +44,7 @@ const nav = [
     { href: '/data', label: 'Ingestion', icon: Database },
     { href: '/method', label: 'Method', icon: BookOpen },
     { href: '/how-it-works', label: 'How it works', icon: Cpu },
+    { href: '/questions', label: 'Questions', icon: HelpCircle },
     { href: '/api-docs', label: 'API', icon: Code },
     { href: '/judges', label: 'For judges', icon: Award },
 ];
