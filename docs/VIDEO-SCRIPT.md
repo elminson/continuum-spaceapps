@@ -5,11 +5,11 @@ Two videos, both recorded from the live site https://continuum-spaceapps.isother
 - **Local (Santiago form), up to 4:30**, due Sunday 15 November, 3:00 p.m. Spanish narration with English subtitles (subtitles keep it usable for the global judges too).
 - **Global demo, up to 30 seconds**, for the NASA project page. English narration and captions.
 
-Both use an AI voice. Say so on screen ("Narración: voz generada por IA / AI-generated voice"), in the YouTube description and in the file metadata. No faces of minors. No NASA logos.
+Both use an AI voice (Spanish: ElevenLabs; English: Microsoft Edge neural voice). Say so on screen ("Narración: voz generada por IA / AI-generated voice"), in the YouTube description and in the file metadata. No faces of minors. No NASA logos.
 
 ## Local video (up to 4:30, Spanish)
 
-Recorded 15 November 2026 from the live site; each row is one narrated line and the screen shown. `card:` rows are designed cards instead of page screenshots: the three steps and the test reveal one by one, the worked cell (28 April 2015: MODIS 9, VIIRS 121, naive merge off by 112, Continuum 15 off by 6) builds row by row, and the closing block answers the two questions we are always asked (compared with what; who uses it and what they decide) with the three immediate decisions and how impact is measured. Total 4:09.
+Recorded 15 November 2026 from the live site; each row is one narrated line and the screen shown. `card:` rows are designed cards instead of page screenshots: the three steps and the test reveal one by one, the worked cell (28 April 2015: MODIS 9, VIIRS 121, naive merge off by 112, Continuum 15 off by 6) builds row by row, and the closing block answers the two questions we are always asked (compared with what; who uses it and what they decide) with the three immediate decisions and how impact is measured. Total 4:16.
 
 | Screen | Narration (ES) | Subtitle (EN) |
 | --- | --- | --- |
@@ -90,7 +90,7 @@ Data: NASA FIRMS, NASA POWER, NASA GIBS.
 Narration: AI-generated voice (Microsoft neural text-to-speech). All screens are real recordings of the app. Built with Claude Code as a coding assistant.
 ```
 
-### Spanish explanation (4:09, English subtitles)
+### Spanish explanation (4:16, English subtitles)
 
 Title:
 
@@ -110,7 +110,7 @@ Para jueces: https://continuum-spaceapps.isotherm.app/judges
 Código: https://github.com/elminson/continuum-spaceapps
 Datos: NASA FIRMS, NASA POWER, NASA GIBS.
 
-Narración: voz generada por IA (voz neural de Microsoft, es-DO). Todas las pantallas son grabaciones reales de la app. Hecho con Claude Code como asistente de programación.
+Narración: voz generada por IA (ElevenLabs). Todas las pantallas son grabaciones reales de la app. Hecho con Claude Code como asistente de programación.
 ```
 
 Tags (both): wildfire, NASA FIRMS, MODIS, VIIRS, Space Apps 2026, Dominican Republic, República Dominicana, incendios forestales, harmonization, early warning
