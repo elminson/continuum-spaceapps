@@ -411,12 +411,12 @@ const resources = computed(() => [
                     id="forecast"
                     class="scroll-mt-6 rounded-md border border-orange-300/60 bg-orange-50/60 p-5 dark:border-orange-900 dark:bg-orange-950/20"
                 >
-                    <p class="text-sm font-medium text-orange-700 dark:text-orange-400">{{ t('Next step') }}</p>
+                    <p class="text-sm font-medium text-orange-700 dark:text-orange-400">{{ t('Built during the event') }}</p>
                     <h2 class="mt-1 text-xl font-semibold tracking-tight">8 · {{ t('Forecasting the next week, with NASA data only') }}</h2>
                     <p class="mt-3 text-sm text-muted-foreground">
                         {{
                             t(
-                                'The challenge asks to anticipate critical periods. Fire counts alone cannot do it, because they do not contain the reason for next week\u2019s fire; the drivers do, and NASA publishes all of them for free. The harmonized record built here is the missing piece: a consistent weekly target since 2000 to train and test against.',
+                                'The challenge asks to anticipate critical periods. Fire counts alone cannot do it, because they do not contain the reason for next week’s fire; the drivers do, and NASA publishes them for free. The harmonized record built here is the missing piece: a consistent weekly target since 2000 to train and test against.',
                             )
                         }}
                     </p>
@@ -432,7 +432,7 @@ const resources = computed(() => [
                             <p class="text-muted-foreground">
                                 {{
                                     t(
-                                        'NASA POWER daily weather (temperature, humidity, wind, rain since 1981); GPM IMERG rainfall; SMAP soil moisture; MODIS/VIIRS vegetation indices for fuel amount and dryness.',
+                                        'Today: NASA POWER daily weather at each area’s centre (temperature, humidity, wind, rain), 7- and 28-day windows. Next: GPM IMERG rainfall, SMAP soil moisture and MODIS/VIIRS vegetation indices for fuel amount and dryness.',
                                     )
                                 }}
                             </p>
@@ -442,7 +442,7 @@ const resources = computed(() => [
                             <p class="text-muted-foreground">
                                 {{
                                     t(
-                                        'Per area: the last 1–4 weeks of fire, the same-week median of other years, 2–4 weeks of weather and rain deficit, the month. Gradient boosting, with ridge regression as the simple reference.',
+                                        'Per area, ridge regression on 14 features: the last 1–4 weeks of fire, the same-week median of other years, the weather windows and the time of year. Gradient boosting is the next step, to be adopted only if it beats this model on the same test.',
                                     )
                                 }}
                             </p>
@@ -452,7 +452,7 @@ const resources = computed(() => [
                             <p class="text-muted-foreground">
                                 {{
                                     t(
-                                        'Rolling-origin test 2013 → 2026 against the climatology-plus-persistence baseline: error and correlation, published next to the forecast like the −89% test is today.',
+                                        'Rolling origin: for each year 2013 → 2026 the model is trained on the years before and tested on that year, against two baselines, the same-week climatology and persistence. Error and correlation are published next to every forecast, like the −89% test.',
                                     )
                                 }}
                             </p>
@@ -503,7 +503,7 @@ const resources = computed(() => [
                     <p class="mt-4 text-sm">
                         {{
                             t(
-                                'Output on each area page: “Next week: expected ×1.8 of normal (range ×1.2–2.6)”, with its skill score, feeding the same email alerts. Statistics and the model decide; AI explains, as everywhere else on this site.',
+                                'On each area page: “Next week outlook: ×N of normal (range)”, with its skill score; the range comes from the validation residuals. Statistics and the model decide; AI explains, as everywhere else on this site.',
                             )
                         }}
                     </p>
