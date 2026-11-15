@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Fire;
 
+use App\Fire\CompareDates;
 use App\Fire\Explorer;
 use App\Fire\FirmsFeed;
 use App\Fire\Harmonizer;
@@ -166,5 +167,24 @@ class PipelineTest extends TestCase
         $this->assertStringContainsString('503', (string) IngestRun::query()->where('feed', 'noaa20')->value('error'));
 
         $this->get('/data?status=failed')->assertInertia(fn ($page) => $page->component('Data')->where('total', 1)->where('runs.0.feed', 'noaa20'));
+    }
+
+    public function test_comparing_a_period_that_runs_past_the_last_ingested_day_uses_the_days_that_exist(): void
+    {
+        $daily = [];
+        foreach (['2024', '2025', '2026'] as $year) {
+            for ($d = 1; $d <= 10; $d++) {
+                $daily[] = ['date' => sprintf('%s-03-%02d', $year, $d), 'value' => $year === '2026' ? 4.0 : 1.0];
+            }
+        }
+        // 2026 stops on March 10; the user asks through March 14.
+        $result = CompareDates::run($daily, '2026-03-01', '2026-03-14');
+
+        $this->assertSame('2026-03-10', $result['through']);
+        $this->assertSame(10, $result['days']);
+        $this->assertSame(40.0, $result['value']);
+        $this->assertSame(10.0, $result['typical']);
+        $this->assertSame(4.0, $result['times']);
+        $this->assertSame(1, $result['rank']);
     }
 }

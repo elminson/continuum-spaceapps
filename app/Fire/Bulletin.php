@@ -99,6 +99,8 @@ class Bulletin
             $cmp = $this->insights->compare($area, $from->toDateString(), $to->toDateString());
             $facts['last_30_days'] = [
                 'window_days' => 30,
+                'days_with_data' => $cmp['days'],
+                'data_through' => $cmp['through'] ? CarbonImmutable::parse($cmp['through'])->locale($locale)->isoFormat($locale === 'es' ? 'D [de] MMMM' : 'MMMM D') : null,
                 'burning_cell_days' => (int) round($cmp['value'] ?? 0),
                 'typical_for_these_dates' => (int) round($cmp['typical']),
                 'times_normal' => $cmp['times'],

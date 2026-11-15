@@ -20,12 +20,25 @@ class CompareDates
     {
         $start = CarbonImmutable::parse($from);
         $end = CarbonImmutable::parse($to);
-        $length = (int) $start->diffInDays($end) + 1;
         $values = [];
+        $available = null;
 
         foreach ($daily as $day) {
             $values[$day['date']] = $day['value'];
+            if ($day['value'] !== null) {
+                $available = $day['date'];
+            }
         }
+
+        // Days not yet ingested (today, or the last day or two) would make the current window
+        // incomplete and the comparison impossible; compare the days that exist, in every year.
+        $truncated = false;
+        if ($available !== null && $end->toDateString() > $available && $start->toDateString() <= $available) {
+            $end = CarbonImmutable::parse($available);
+            $truncated = true;
+        }
+
+        $length = (int) $start->diffInDays($end) + 1;
 
         $years = [];
         $first = (int) substr((string) array_key_first($values), 0, 4);
@@ -62,6 +75,7 @@ class CompareDates
             'from' => $start->toDateString(),
             'to' => $end->toDateString(),
             'days' => $length,
+            'through' => $truncated ? $end->toDateString() : null,
             'value' => $selected['value'] ?? null,
             'typical' => round($typical, 1),
             'times' => $selected && $typical > 0 ? round($selected['value'] / $typical, 1) : null,
