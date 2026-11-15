@@ -204,6 +204,30 @@ class PageController extends Controller
         ]);
     }
 
+    public function ai(Situation $situation, Bulletin $bulletin): Response
+    {
+        $locale = app()->getLocale();
+        $provider = config('services.bulletin.provider') === 'anthropic' ? 'anthropic' : 'ollama';
+        $names = ['anthropic' => 'Claude ('.config('services.bulletin.anthropic_model').')', 'ollama' => 'Gemma 4 ('.config('services.bulletin.model').', self-hosted)'];
+
+        return Inertia::render('Ai', [
+            'situation' => $situation->ready($locale),
+            'areas' => Area::query()->ordered()->get()->map(function (Area $area) use ($bulletin, $locale) {
+                $top = $area->alerts()->orderByDesc('score')->first();
+
+                return [
+                    'slug' => $area->slug,
+                    'name' => $area->label(),
+                    'top_week' => $top?->week_start->toDateString(),
+                    'top_times' => $top && $top->typical > 0 ? round($top->observed / $top->typical, 1) : null,
+                    'top' => $top ? $bulletin->ready($area, $top->week_start->toDateString(), $locale) : null,
+                    'latest' => $bulletin->ready($area, null, $locale),
+                ];
+            })->all(),
+            'writers' => ['primary' => $names[$provider], 'fallback' => $names[$provider === 'anthropic' ? 'ollama' : 'anthropic']],
+        ]);
+    }
+
     public function apiDocs(): Response
     {
         return Inertia::render('ApiDocs');

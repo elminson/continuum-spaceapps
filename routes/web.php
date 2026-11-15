@@ -16,6 +16,7 @@ Route::get('data', [PageController::class, 'data'])->name('data');
 Route::get('how-it-works', [PageController::class, 'howItWorks'])->name('how-it-works');
 Route::get('api-docs', [PageController::class, 'apiDocs'])->name('api-docs');
 Route::get('judges', [PageController::class, 'judges'])->name('judges');
+Route::get('ai', [PageController::class, 'ai'])->name('ai');
 Route::get('alerts/subscribe', [SubscriptionController::class, 'create'])->name('subscriptions.create');
 Route::post('alerts/sample', [SubscriptionController::class, 'sample'])->middleware('throttle:10,1')->name('subscriptions.sample');
 Route::post('subscriptions', [SubscriptionController::class, 'store'])->middleware('throttle:10,1')->name('subscriptions.store');

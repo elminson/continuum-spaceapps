@@ -32,14 +32,15 @@ class WarmCommand extends Command
             });
         }
 
-        // Bulletins for the focus area: its strongest week and the last 30 days, in both languages.
-        $focus = Area::query()->where('slug', Area::FOCUS)->first();
-        if ($focus) {
-            $this->components->task('Bulletins', function () use ($bulletin, $focus) {
-                $top = $focus->alerts()->orderByDesc('score')->first()?->week_start?->toDateString();
+        // Bulletins for every area: its strongest week and the last 30 days, in both languages.
+        foreach (Area::query()->ordered()->get() as $area) {
+            $this->components->task("Bulletins · {$area->name}", function () use ($bulletin, $area) {
+                $top = $area->alerts()->orderByDesc('score')->first()?->week_start?->toDateString();
                 foreach (['en', 'es'] as $locale) {
-                    $bulletin->for($focus, $top, $locale);
-                    $bulletin->for($focus, null, $locale);
+                    if ($top) {
+                        $bulletin->for($area, $top, $locale);
+                    }
+                    $bulletin->for($area, null, $locale);
                 }
             });
         }

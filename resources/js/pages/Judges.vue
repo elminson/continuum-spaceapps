@@ -180,7 +180,10 @@ const criteria = computed(() => [
         does: t(
             'Cell-days instead of pixel counts, a monthly ratio with a bootstrap interval, a held-out test against the naive merge, weeks scored against the same week in other years, a MODIS retirement simulation, and AI that explains without deciding: anomalies are detected by robust statistics, then a bulletin per area and a situation reading across areas are written from those numbers only, each figure checked.',
         ),
-        links: [['/how-it-works', t('How it works')]],
+        links: [
+            ['/ai', t('AI analysis')],
+            ['/how-it-works', t('How it works')],
+        ],
     },
     {
         name: 'Validity',

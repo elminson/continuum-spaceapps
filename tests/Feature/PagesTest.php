@@ -58,7 +58,7 @@ class PagesTest extends TestCase
 
     public function test_menu_pages_render_without_login(): void
     {
-        foreach (['/areas' => 'Areas', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/judges' => 'Judges', '/login' => 'auth/Login'] as $url => $component) {
+        foreach (['/areas' => 'Areas', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/judges' => 'Judges', '/ai' => 'Ai', '/login' => 'auth/Login'] as $url => $component) {
             $this->get($url)->assertOk()->assertInertia(fn (Assert $page) => $page->component($component));
         }
 

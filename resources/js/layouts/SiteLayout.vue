@@ -19,6 +19,7 @@ import {
     Monitor,
     Moon,
     Rocket,
+    Sparkles,
     Sun,
 } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -38,6 +39,7 @@ const nav = [
     { href: '/explore', label: 'Explore', icon: Compass },
     { href: '/alerts', label: 'Unusual periods', icon: BellRing },
     { href: '/alerts/subscribe', label: 'Fire alerts', icon: BellPlus },
+    { href: '/ai', label: 'AI analysis', icon: Sparkles },
     { href: '/data', label: 'Ingestion', icon: Database },
     { href: '/method', label: 'Method', icon: BookOpen },
     { href: '/how-it-works', label: 'How it works', icon: Cpu },

@@ -612,5 +612,19 @@
     "Claude · Gemma 4": "Claude · Gemma 4",
     "Writes the bulletin and the situation reading from computed facts, numbers checked": "Redacta el boletín y la lectura de situación a partir de datos calculados, con los números verificados",
     "Claude or a self-hosted open model turns the computed facts into a two-line bulletin in Spanish or English. Any number it writes that is not a fact sends it back to a template.": "Claude o un modelo abierto alojado por nosotros convierte los datos calculados en un boletín de dos líneas en español o inglés. Cualquier número que escriba y no sea un dato lo devuelve a una plantilla.",
-    "The statistics decide whether a week is unusual. The model (Claude, or Gemma 4 on our own server) only turns those facts into two plain sentences, and its text is checked number by number before anyone sees it.": "La estadística decide si una semana es inusual. El modelo (Claude, o Gemma 4 en nuestro propio servidor) solo convierte esos datos en dos frases sencillas, y su texto se verifica número por número antes de que alguien lo vea."
+    "The statistics decide whether a week is unusual. The model (Claude, or Gemma 4 on our own server) only turns those facts into two plain sentences, and its text is checked number by number before anyone sees it.": "La estadística decide si una semana es inusual. El modelo (Claude, o Gemma 4 en nuestro propio servidor) solo convierte esos datos en dos frases sencillas, y su texto se verifica número por número antes de que alguien lo vea.",
+    "AI analysis": "Análisis con IA",
+    "Everything the AI writes on this site, in one place: the reading across areas and the bulletin of each area, each from checked numbers and labelled with the model that wrote it.": "Todo lo que la IA escribe en este sitio, en un solo lugar: la lectura entre áreas y el boletín de cada área, cada uno a partir de números verificados y etiquetado con el modelo que lo escribió.",
+    "Bulletins by area": "Boletines por área",
+    "Open the area": "Abrir el área",
+    "Written by AI (:model)": "Escrito por IA (:model)",
+    "Fixed template": "Plantilla fija",
+    "How the AI is used": "Cómo se usa la IA",
+    "Which week is unusual, how unusual, and its rank among 26 years come from the median and MAD of the same week in every other year. The model never flags or changes a number.": "Qué semana es inusual, cuánto, y su puesto entre 26 años salen de la mediana y la MAD de la misma semana en todos los demás años. El modelo nunca marca ni cambia un número.",
+    "The model only writes": "El modelo solo redacta",
+    "It receives the computed facts as JSON and returns two to five plain sentences in English or Spanish. Nothing else goes in: no raw data, no web, no memory.": "Recibe los datos calculados como JSON y devuelve de dos a cinco frases sencillas en español o inglés. No entra nada más: ni datos crudos, ni web, ni memoria.",
+    "Every number is checked": "Cada número se verifica",
+    "Each figure in the text must be one of the facts, written exactly. One unknown number and a fixed template answers instead, labelled as such.": "Cada cifra del texto debe ser uno de los datos, escrita tal cual. Con un solo número desconocido responde una plantilla fija, etiquetada como tal.",
+    "Claude through the Anthropic API, or Gemma 4 on our own server; each is the fallback for the other, and every text says which one wrote it.": "Claude a través de la API de Anthropic, o Gemma 4 en nuestro propio servidor; cada uno es el respaldo del otro, y cada texto dice cuál lo escribió.",
+    "Writers right now: :primary, with :fallback as fallback. The decision rule and the facts the model receives are shown on How it works.": "Redactores ahora mismo: :primary, con :fallback como respaldo. La regla de decisión y los datos que recibe el modelo se muestran en Cómo funciona."
 }
