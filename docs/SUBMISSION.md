@@ -33,7 +33,9 @@ Code: https://github.com/elminson/continuum-spaceapps
 - a short fire bulletin in plain language (English and Spanish), written by an AI model from the computed facts and checked number by number;
 - fire alerts by email for any drawn zone: a daily check of the last complete week against the same week in every other year, one email per flagged week, a sample and a test alert on demand (SMS coming soon);
 - downloads: every map as a PNG and as a CSV of the burning 1 km cells, every calendar as a PNG;
+- a one-week **forecast** per area: ridge regression on this harmonized record and NASA POWER weather (temperature, humidity, rain, wind), validated year by year 2013→2026 on 722 held-out weeks per area: 19–31% less error than the same-week climatology, 6–22% less than persistence, r 0.71–0.89; shown with its skill on every area page;
 - a test of the end of MODIS (below);
+- an **AI analysis** page gathering the situation reading across areas and every area's bulletins, each written by Claude (Anthropic API) or Gemma 4 (self-hosted) from computed facts, number-checked and labelled;
 - CSV downloads and a public JSON API.
 
 The Explore page analyses any box inside the areas instantly (drag to draw), lets anyone request a zone outside them (loaded from the NASA FIRMS archive with `fire:area` and `fire:import`), with ready-made places such as the Dominican Republic, Haiti, Santo Domingo, Santiago and Puerto Rico. Everything works without an account; signing in only saves boxes. The interface is in English and Spanish, and new NASA data arrives every hour.
@@ -45,6 +47,7 @@ The Explore page analyses any box inside the areas instantly (drag to draw), let
 - Where did it burn? Every burning 1 km cell over NASA's satellite image of that day.
 - Can I trust the numbers? −89% error vs a naive merge on 1,352 held-out days.
 - What happens when MODIS shuts down? Rebuilt from VIIRS alone, the monthly record keeps its shape.
+- What does next week look like? A validated one-week outlook per area (×normal with a range and its skill score).
 - Can our own system use it? Open JSON API and CSV.
 
 **How it relates to NASA FIRMS.** FIRMS tells you where fire is; Continuum tells you whether it is unusual. It is built on FIRMS: it turns the pixels of two different sensors into one comparable 26-year record, which FIRMS does not provide.
@@ -67,13 +70,15 @@ The ratio is fitted on three of every four overlap days and tested on the fourth
 
 A sensor's own observations are always used when it flew; converted values are marked as estimated, with their interval. Unusual weeks use the median and median absolute deviation of the same week in every other year, so one extreme year cannot hide another.
 
+**Next week.** For each area a ridge regression predicts the coming week's burning cell-days from the last weeks of fire, the same-week climatology and NASA POWER weather (7- and 28-day temperature, humidity, rain and wind). It is validated the only honest way for a forecast, rolling origin: trained on the years before each year 2013→2026 and tested on that year, against two baselines. Results on 722 held-out weeks per area: Dominican Republic −19% error vs climatology (r 0.71), Hispaniola −20% (r 0.73), Cuba −25% (r 0.89), Gran Chaco −30% (r 0.82), Cerrado −31% (r 0.87); and −6% to −22% vs persistence. The page shows the outlook as "×N of normal" with a range and these scores next to it.
+
 **When MODIS retires.** NASA plans to stop Aqua MODIS around August–September 2026 and Terra MODIS around January 2027. Continuum simulates it: pick the year MODIS "stops", fit the ratio only on earlier days, rebuild every later month from VIIRS alone and compare with the real MODIS record. With MODIS switched off on 1 January 2024: daily error 81–89% below a naive switch, monthly correlation 0.93–0.996, and totals within −0.4% to +25% depending on the area.
 
 **Benefits.** Fire managers can compare years across the 2012 sensor change, so a busy season reads as a busy season, not as a new satellite. Responders get early warning: the week of 17 August 2026 in Cuba was 24.5 times a normal week, and 10–31 August 2026 was the highest of 26 years for those dates. Land managers get each area's fire season (Dominican Republic: March–April, peak in March), and scientists get validated numbers with uncertainty and open data.
 
 **What we hope to achieve.** A free, open fire calendar that any agency in the Caribbean and Latin America can point at its own territory, starting with the Dominican Republic and Haiti, and that keeps working on VIIRS alone after MODIS ends.
 
-**Tools.** PHP 8.4, Laravel 12, Inertia with Vue 3 and TypeScript, Tailwind CSS, PostgreSQL, Apache ECharts, MapLibre GL JS, PHPUnit (52 automated tests). Hosted on one Linux server; GitHub → Spinnr deploys; the scheduler pulls NASA FIRMS every hour.
+**Tools.** PHP 8.4, Laravel 12, Inertia with Vue 3 and TypeScript, Tailwind CSS, PostgreSQL, Apache ECharts, MapLibre GL JS, PHPUnit (58 automated tests). Hosted on one Linux server; GitHub → Spinnr deploys; the scheduler pulls NASA FIRMS every hour.
 
 **Factors considered.** Accessibility: no login, English and Spanish, works on phones. Cost: one small server and only free, open data. Honesty: every number has its test, its limits are on the Method page, and estimated values are marked.
 
@@ -95,6 +100,7 @@ No AI was used to generate data, numbers or images. Every chart and map shows NA
 - NASA FIRMS (Fire Information for Resource Management System) active fire data, the core of the project: MODIS Collection 6.1 (Terra, Aqua, 1 km) and VIIRS 375 m (Suomi NPP, NOAA-20, NOAA-21), standard and near-real-time. https://firms.modaps.eosdis.nasa.gov
 - NASA FIRMS near-real-time global 24-hour CSV feeds, pulled every hour. https://firms.modaps.eosdis.nasa.gov/active_fire/
 - NASA GIBS (Global Imagery Browse Services): Blue Marble shaded relief and MODIS Terra corrected reflectance (true colour) under the fire maps. https://gibs.earthdata.nasa.gov
+- NASA POWER (Prediction Of Worldwide Energy Resources): daily temperature, relative humidity, precipitation and wind at each area's centre since 2000, the drivers of the one-week forecast. https://power.larc.nasa.gov
 - NASA Earthdata, MODIS to VIIRS transition notice (MODIS shutdown dates). https://www.earthdata.nasa.gov/data/alerts-outages/transition-from-modis-viirs
 
 ## References

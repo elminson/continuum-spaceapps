@@ -19,7 +19,10 @@ NASA has watched fires from space with MODIS since 2000 (1 km pixels) and with V
 - **One scale.** Read the whole record on the MODIS or the VIIRS scale; converted values are marked as estimated.
 - **Unusual weeks.** Each week against the same week in every other year (median and MAD).
 - **When MODIS retires.** Pick a year: the ratio is fitted on earlier days only, later months are rebuilt from VIIRS alone and checked against the real MODIS record.
-- English and Spanish, CSV downloads, public JSON API. New NASA FIRMS data every hour.
+- **Next week outlook.** A ridge regression per area on this record and NASA POWER weather (temperature, humidity, rain, wind), validated year by year 2013→2026 on 722 held-out weeks per area (19–31% less error than climatology, r 0.71–0.89); shown with its skill, never without it.
+- **Fire alerts by email.** Draw a zone; every morning its last complete week is scored against the same week in every other year, and one email goes out per flagged week (sample and test alerts on demand; SMS coming soon).
+- **AI that explains, never decides.** A bulletin per area and a situation reading across areas, written by Claude (Anthropic API) or Gemma 4 (self-hosted) from the computed facts only; every number is checked against the facts, or a fixed template is shown. All of it on one page: `/ai`.
+- English and Spanish, CSV and PNG downloads, public JSON API. New NASA FIRMS data every hour; any new zone can be loaded from the FIRMS archive (`fire:area`, `fire:import`).
 
 Areas: **Dominican Republic** (the focus), Hispaniola (Dominican Republic and Haiti), Cuba, Gran Chaco, Cerrado & Amazon arc.
 
@@ -28,7 +31,7 @@ Areas: **Dominican Republic** (the focus), Hispaniola (Dominican Republic and Ha
 - **All code in this repo was written during the event (14–15 November 2026),** starting from the Laravel Vue starter kit (first commit).
 - **An earlier prototype exists** at https://github.com/elminson/continuum (September 2026). This repo is a new build made during Space Apps; no code was copied from it.
 - **Data:** the raw NASA FIRMS detections for the four areas (21.2 million) were downloaded before the event, when we chose the challenge. All processing of that data is done by the code in this repo; new data arrives every hour from the FIRMS feeds.
-- **AI use:** written with Claude Code (Anthropic) as a coding assistant; commits carry a `Co-Authored-By: Claude` line.
+- **AI use:** written with Claude Code (Anthropic) as a coding assistant; commits carry a `Co-Authored-By: Claude` line. Inside the app, Claude (Anthropic API) and Gemma 4 (self-hosted) write the bulletins from checked numbers; see `/ai`.
 
 Submission text: [docs/SUBMISSION.md](docs/SUBMISSION.md). See [CREDITS.md](CREDITS.md) for every dataset, library and AI tool used, and [BACKLOG.md](BACKLOG.md) for what was left out.
 
