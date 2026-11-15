@@ -81,19 +81,17 @@ const LABELS: Record<string, string> = {
                 <template v-if="range"> · {{ t('range ×:a–×:b', { a: number(range[0], 1), b: number(range[1], 1) }) }}</template>
             </span>
         </div>
-        <p v-if="forecast.current" class="mt-2 text-sm">
+        <p v-if="forecast.current" class="mt-2 flex flex-wrap items-baseline gap-x-1.5 text-sm">
             <span class="font-medium">{{ t('This week') }}</span>
-            <span class="text-muted-foreground"> ({{ date(forecast.current.week_start) }}): </span>
+            <span class="text-muted-foreground">({{ date(forecast.current.week_start) }}):</span>
             <span class="tabular-nums">{{
                 forecast.current.times_normal !== null ? `×${number(forecast.current.times_normal, 1)}` : number(forecast.current.expected)
             }}</span>
-            <span class="text-muted-foreground">
-                {{
-                    t('of normal expected; one week ahead the model has :s less error than climatology.', {
-                        s: percent(Math.abs(forecast.current.validation.skill_vs_climatology)),
-                    })
-                }}</span
-            >
+            <span class="text-muted-foreground">{{
+                t('of normal expected; one week ahead the model has :s less error than climatology.', {
+                    s: percent(Math.abs(forecast.current.validation.skill_vs_climatology)),
+                })
+            }}</span>
         </p>
         <p class="mt-1 text-sm text-muted-foreground">
             {{
@@ -163,9 +161,10 @@ const LABELS: Record<string, string> = {
             </template>
             {{
                 t(
-                    'Ridge regression per area on this harmonized record and NASA POWER weather (through :date), validated year by year since :from. Strongest drivers here: :d.',
+                    'Ridge regression per area on this harmonized record and NASA POWER weather (through :date), :h ahead, validated year by year since :from. Strongest drivers here: :d.',
                     {
                         date: forecast.weather_through ? date(forecast.weather_through) : '—',
+                        h: forecast.horizon === 2 ? t('two weeks') : t('one week'),
                         from: String(forecast.validation.from),
                         d: drivers.join(', '),
                     },
