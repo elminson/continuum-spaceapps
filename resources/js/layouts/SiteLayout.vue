@@ -4,6 +4,7 @@ import { locale, t } from '@/lib/i18n';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
     Award,
+    BellPlus,
     BellRing,
     BookOpen,
     Code,
@@ -36,6 +37,7 @@ const nav = [
     { href: '/areas', label: 'Areas of interest', icon: MapPin },
     { href: '/explore', label: 'Explore', icon: Compass },
     { href: '/alerts', label: 'Unusual periods', icon: BellRing },
+    { href: '/alerts/subscribe', label: 'Fire alerts', icon: BellPlus },
     { href: '/data', label: 'Ingestion', icon: Database },
     { href: '/method', label: 'Method', icon: BookOpen },
     { href: '/how-it-works', label: 'How it works', icon: Cpu },

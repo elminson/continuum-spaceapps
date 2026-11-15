@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SavedBoxController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -14,6 +15,11 @@ Route::get('data', [PageController::class, 'data'])->name('data');
 Route::get('how-it-works', [PageController::class, 'howItWorks'])->name('how-it-works');
 Route::get('api-docs', [PageController::class, 'apiDocs'])->name('api-docs');
 Route::get('judges', [PageController::class, 'judges'])->name('judges');
+Route::get('alerts/subscribe', [SubscriptionController::class, 'create'])->name('subscriptions.create');
+Route::post('subscriptions', [SubscriptionController::class, 'store'])->middleware('throttle:10,1')->name('subscriptions.store');
+Route::get('subscriptions/{token}', [SubscriptionController::class, 'show'])->name('subscriptions.show');
+Route::post('subscriptions/{token}/test', [SubscriptionController::class, 'test'])->middleware('throttle:5,1')->name('subscriptions.test');
+Route::delete('subscriptions/{token}', [SubscriptionController::class, 'destroy'])->name('subscriptions.destroy');
 
 Route::middleware('auth')->group(function () {
     Route::post('boxes', [SavedBoxController::class, 'store'])->name('boxes.store');

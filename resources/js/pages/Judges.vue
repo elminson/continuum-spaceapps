@@ -122,6 +122,17 @@ const asks = computed(() => [
         ],
     },
     {
+        ask: 'Enable early warning for emergency responders.',
+        does: t(
+            'Fire alerts by email for any drawn zone: every day the last complete week is scored against the same week in every other year, one email per flagged week, a test alert on demand, and SMS coming soon. The decision rule and the scheduled jobs are written on the page.',
+        ),
+        proof: '',
+        links: [
+            ['/alerts/subscribe', t('Fire alerts')],
+            ['/alerts/subscribe#how', t('How an alert is decided')],
+        ],
+    },
+    {
         ask: 'MODIS is approaching the end of its operational life.',
         does: t('A retirement test: switch MODIS off in a chosen year, rebuild the later record from VIIRS alone and score it against the real one.'),
         proof: '',

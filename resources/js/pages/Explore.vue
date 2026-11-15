@@ -15,7 +15,12 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
 type Place = { slug: string; name: string; bbox: number[]; id?: number };
 
-const props = defineProps<{ areas: Place[]; places: Place[]; boxes: Place[]; open?: { place: string | null; week: string | null } }>();
+const props = defineProps<{
+    areas: Place[];
+    places: Place[];
+    boxes: Place[];
+    open?: { place: string | null; week: string | null; bbox: number[] | null };
+}>();
 const page = usePage();
 const user = computed(() => (page.props.auth as { user: unknown } | undefined)?.user ?? null);
 const saveName = ref('');
@@ -156,6 +161,7 @@ onMounted(() => {
 
         const start = props.places.find((p) => p.slug === props.open?.place);
         if (start) go(start, props.open?.week);
+        else if (props.open?.bbox) go({ slug: 'open', name: '', bbox: props.open.bbox }, props.open?.week);
     });
 
     const point = (e: maplibregl.MapMouseEvent | maplibregl.MapTouchEvent): [number, number] => [e.lngLat.lng, e.lngLat.lat];

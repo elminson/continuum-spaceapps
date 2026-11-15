@@ -10,6 +10,7 @@ use App\Fire\Explorer;
 use App\Fire\FirmsFeed;
 use App\Fire\Insights;
 use App\Fire\Sensors;
+use App\Http\Controllers\Api\AreaApiController;
 use App\Http\Middleware\SetLocale;
 use App\Models\Alert;
 use App\Models\Area;
@@ -228,7 +229,7 @@ class PageController extends Controller
         return Inertia::render('Explore', [
             'areas' => Area::query()->ordered()->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'bbox' => [$a->west, $a->south, $a->east, $a->north]])->all(),
             'places' => Explorer::places(),
-            'open' => ['place' => $request->query('place'), 'week' => $request->query('week')],
+            'open' => ['place' => $request->query('place'), 'week' => $request->query('week'), 'bbox' => AreaApiController::bbox($request)],
             'boxes' => $request->user()?->savedBoxes()->latest()->get()->map(fn (SavedBox $b) => $b->toPlace())->all() ?? [],
         ]);
     }
