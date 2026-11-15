@@ -43,7 +43,7 @@ const VIDEOS = {
         youtube: 'https://youtu.be/2g1FSY0PNK8',
         src: '/videos/continuum-local-es.mp4',
         poster: '/videos/continuum-local-es.jpg',
-        label: '4:23 explanation (Spanish, English subtitles)',
+        label: '4:09 explanation (Spanish, English subtitles)',
         audience: 'for the Santiago judges',
     },
     en: {
