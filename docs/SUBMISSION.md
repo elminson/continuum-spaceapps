@@ -15,7 +15,7 @@ Continuum answers one question for fire and land managers: was this fire unusual
 ## Link to Project Demo
 
 https://youtu.be/LJ6uETwGb_0 (30 seconds, English) — re-recorded on 15 November with the forecast, alerts and AI scenes; replace with the new upload link when available
-Explanation in Spanish with English subtitles (3:50): https://youtu.be/Sbg-dRMqPS8 — re-recorded on 15 November; replace with the new upload link when available
+Explanation in Spanish with English subtitles (4:23): https://youtu.be/2g1FSY0PNK8
 Slides (7): https://github.com/elminson/continuum-spaceapps/blob/main/docs/presentation/continuum-slides.pdf
 
 ## Link to Final Project

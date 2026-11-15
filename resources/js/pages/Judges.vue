@@ -27,7 +27,7 @@ const years = computed(() => Math.floor(props.status.record_days / 365.25));
 
 const resources = [
     { href: 'https://youtu.be/LJ6uETwGb_0', label: '30-second demo (English)', icon: PlayCircle },
-    { href: 'https://youtu.be/Sbg-dRMqPS8', label: 'Full explanation (Spanish, English subtitles, 2:50)', icon: PlayCircle },
+    { href: 'https://youtu.be/2g1FSY0PNK8', label: 'Full explanation (Spanish, English subtitles, 4:23)', icon: PlayCircle },
     { href: '/slides/continuum-slides.pdf', label: '7-slide deck (PDF)', icon: FileText },
     { href: 'https://github.com/elminson/continuum-spaceapps', label: 'Code on GitHub', icon: Github },
     { href: 'https://www.spaceappschallenge.org/2026/find-a-team/continuum1/', label: 'NASA team page', icon: ArrowUpRight },
@@ -221,7 +221,7 @@ const criteria = computed(() => [
         name: 'Presentation',
         asks: 'Clear challenge, solution and significance; a well-structured demo.',
         does: t(
-            'A 30-second demo, a 7-slide deck, a 2:50 explanation in Spanish with English subtitles, and a site that answers its own questions on the home page.',
+            'A 30-second demo, a 7-slide deck, a 4:23 explanation in Spanish with English subtitles, and a site that answers its own questions on the home page.',
         ),
         links: [['/method', t('Videos and slides')]],
     },
