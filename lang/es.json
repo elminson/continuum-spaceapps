@@ -709,5 +709,5 @@
     "Daily temperature, humidity, rain and wind at each area’s centre since 2000: the drivers behind the next-week forecast": "Temperatura, humedad, lluvia y viento diarios en el centro de cada área desde 2000: los factores detrás del pronóstico de la próxima semana",
     "Three NASA sources, each doing real work: FIRMS (MODIS C6.1 and VIIRS 375 m) for every detection, refreshed hourly; POWER for the daily weather that drives the next-week forecast; GIBS for the imagery under every map. The table above walks through each line of the challenge brief.": "Tres fuentes de la NASA, cada una con trabajo real: FIRMS (MODIS C6.1 y VIIRS 375 m) para cada detección, actualizado cada hora; POWER para el clima diario que impulsa el pronóstico de la próxima semana; GIBS para las imágenes bajo cada mapa. La tabla de arriba recorre cada línea del texto del reto.",
     "of normal": "de lo normal",
-    "forecast and weather": "pronóstico y clima"
+    "burning cell-days": "celdas-día con fuego"
 }
