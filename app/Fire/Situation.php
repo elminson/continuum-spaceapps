@@ -32,26 +32,33 @@ class Situation
         if ($written !== null && Bulletin::onlyKnownNumbers($written['text'], $facts)) {
             $result = ['text' => $written['text'], 'source' => 'ai', 'model' => $written['model'], 'facts' => $facts];
             Cache::put($key, $result, now()->addHours(6));
+            Cache::put("situation:{$locale}:last", $result, now()->addDays(2));
 
             return $result;
         }
 
         $result = ['text' => self::template($facts, $locale), 'source' => 'template', 'model' => null, 'facts' => $facts];
         Cache::put($key, $result, now()->addMinutes(10));
+        Cache::put("situation:{$locale}:last", $result, now()->addDays(2));
 
         return $result;
     }
 
-    /** The cached reading, or the template, without waiting on the model. */
+    /**
+     * The cached reading, or the last one written for any state of the record, without waiting on the model
+     * or recomputing the facts; the template only when nothing was ever written.
+     */
     public function ready(string $locale): array
     {
-        if ($cached = Cache::get($this->key($locale))) {
+        if ($cached = Cache::get($this->key($locale)) ?? Cache::get("situation:{$locale}:last")) {
             return $cached;
         }
 
         $facts = $this->facts($locale);
+        $result = ['text' => self::template($facts, $locale), 'source' => 'template', 'model' => null, 'facts' => $facts];
+        Cache::put("situation:{$locale}:last", $result, now()->addDays(2));
 
-        return ['text' => self::template($facts, $locale), 'source' => 'template', 'model' => null, 'facts' => $facts];
+        return $result;
     }
 
     /** @return array<string, mixed> */

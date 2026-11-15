@@ -36,6 +36,7 @@ class Bulletin
         if ($written !== null && self::onlyKnownNumbers($written['text'], $facts)) {
             $result = ['text' => $written['text'], 'source' => 'ai', 'model' => $written['model'], 'facts' => $facts];
             Cache::put($key, $result, now()->addDay());
+            Cache::put("bulletin:{$area->id}:".($week ?? 'latest').":{$locale}:last", $result, now()->addDays(2));
 
             return $result;
         }
@@ -55,14 +56,17 @@ class Bulletin
     public function ready(Area $area, ?string $week, string $locale): array
     {
         $key = "bulletin:{$area->id}:".($week ?? 'latest').":{$locale}:".($area->processed_at?->timestamp ?? 0);
+        $last = "bulletin:{$area->id}:".($week ?? 'latest').":{$locale}:last";
 
-        if ($cached = Cache::get($key)) {
+        if ($cached = Cache::get($key) ?? Cache::get($last)) {
             return $cached;
         }
 
         $facts = $this->facts($area, $week, $locale);
+        $result = ['text' => self::template($facts, $locale), 'source' => 'template', 'model' => null, 'facts' => $facts];
+        Cache::put($last, $result, now()->addDays(2));
 
-        return ['text' => self::template($facts, $locale), 'source' => 'template', 'model' => null, 'facts' => $facts];
+        return $result;
     }
 
     /** @return array<string, mixed> */
