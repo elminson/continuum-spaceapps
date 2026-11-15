@@ -175,7 +175,9 @@ class Bulletin
                 ->post(rtrim($url, '/').'/api/chat', [
                     'model' => config('services.bulletin.model'),
                     'stream' => false,
-                    'options' => ['temperature' => 0.2],
+                    // Gemma 4 thinks before answering by default; the facts are already the reasoning, so answer directly.
+                    'think' => false,
+                    'options' => ['temperature' => 0.2, 'num_predict' => 320],
                     'messages' => [
                         ['role' => 'system', 'content' => $system],
                         ['role' => 'user', 'content' => json_encode($facts, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)],
