@@ -3,7 +3,7 @@ import type { AlertRow, Fit, Status } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
 import { date, dateRange, number, percent, r, t } from '@/lib/i18n';
 import { Head, Link } from '@inertiajs/vue3';
-import { ArrowUpRight, Check, FileText, Github, PlayCircle } from 'lucide-vue-next';
+import { ArrowUpRight, Check, FileText, Film, Github, PlayCircle } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -32,6 +32,7 @@ const resources = [
     { href: 'https://github.com/elminson/continuum-spaceapps', label: 'Code on GitHub', icon: Github },
     { href: 'https://www.spaceappschallenge.org/2026/find-a-team/continuum1/', label: 'NASA team page', icon: ArrowUpRight },
     { href: '/questions', label: 'Questions and a worked example', icon: ArrowUpRight },
+    { href: '/media', label: 'Media: videos, slides, code and submission', icon: Film },
 ];
 
 /** Each line of the challenge brief, what Continuum does about it, and where to see it. */
