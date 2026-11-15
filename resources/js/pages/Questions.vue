@@ -122,26 +122,16 @@ const questions: { id?: string; q: string; a: string; links: [string, string][] 
 </script>
 
 <template>
-    <Head :title="t('Was this fire unusual?')" />
+    <Head :title="t('Questions')" />
     <SiteLayout>
-        <h1 class="text-3xl font-semibold tracking-tight">{{ t('Was this fire unusual?') }}</h1>
-        <p class="mt-2 max-w-3xl text-muted-foreground">
-            {{
-                t(
-                    'Continuum puts 26 years of NASA fire detections from two sensors on one 1 km grid and one scale, so anyone responsible for a territory can ask: is this week unusual, compared with the same week in every other year, and what does next week look like?',
-                )
-            }}
-        </p>
-        <p class="mt-3 text-sm">
-            <Link href="/resume" class="rounded-md bg-foreground px-3 py-2 text-background">{{ t('See the live map and numbers') }} →</Link>
+        <h1 class="text-2xl font-semibold tracking-tight">{{ t('Questions') }}</h1>
+        <p class="mt-1 max-w-3xl text-sm text-muted-foreground">
+            {{ t('What people ask when they first open Continuum, with the numbers to check each answer.') }}
         </p>
 
         <UseCases id="who" class="mt-12 scroll-mt-6" />
 
-        <h2 class="mt-14 text-2xl font-semibold tracking-tight">{{ t('Questions') }}</h2>
-        <p class="mt-1 max-w-3xl text-sm text-muted-foreground">
-            {{ t('What people ask when they first open Continuum, with the numbers to check each answer.') }}
-        </p>
+        <h2 class="mt-14 text-xl font-semibold tracking-tight">{{ t('The answers') }}</h2>
 
         <section v-if="example" class="mt-8 rounded-md border border-orange-300/60 bg-orange-50/60 p-5 dark:border-orange-900 dark:bg-orange-950/20">
             <p class="text-sm font-medium text-orange-700 dark:text-orange-400">{{ t('One cell, four steps') }}</p>
