@@ -40,7 +40,7 @@ const toc = [
 
 const VIDEOS = {
     es: {
-        youtube: 'https://youtu.be/2g1FSY0PNK8',
+        youtube: 'https://youtu.be/D-HypfIguYk',
         src: '/videos/continuum-local-es.mp4',
         poster: '/videos/continuum-local-es.jpg',
         label: '4:16 explanation (Spanish, English subtitles)',
