@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Fire\Explorer;
+use App\Jobs\WarmBox;
 use App\Models\SavedBox;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,6 +29,7 @@ class SavedBoxController extends Controller
 
         [$west, $south, $east, $north] = $bbox;
         $request->user()->savedBoxes()->create(['name' => $data['name']] + compact('west', 'south', 'east', 'north'));
+        WarmBox::dispatch([$west, $south, $east, $north]);
 
         return back();
     }

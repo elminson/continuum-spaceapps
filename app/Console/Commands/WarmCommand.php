@@ -8,7 +8,9 @@ use App\Fire\Explorer;
 use App\Fire\Insights;
 use App\Fire\Sensors;
 use App\Fire\Situation;
+use App\Models\AlertSubscription;
 use App\Models\Area;
+use App\Models\SavedBox;
 use Illuminate\Console\Command;
 
 class WarmCommand extends Command
@@ -51,6 +53,18 @@ class WarmCommand extends Command
         foreach (Explorer::PLACES as $slug => [$name, $nameEs, $bbox]) {
             $this->components->task($name, fn () => $explorer->analyze($bbox));
         }
+
+        // Boxes people saved or subscribed to: warm them so their owners never wait for the fit.
+        $boxes = SavedBox::query()->get()->map(fn ($b) => [$b->west, $b->south, $b->east, $b->north])
+            ->merge(AlertSubscription::query()->get()->map(fn ($s) => $s->bbox()))
+            ->map(fn ($b) => array_map(fn ($v) => round((float) $v, 2), $b))
+            ->unique(fn ($b) => implode(',', $b))
+            ->filter(fn ($b) => Explorer::reject($b) === null);
+        $this->components->task("User boxes ({$boxes->count()})", function () use ($boxes, $explorer) {
+            foreach ($boxes as $bbox) {
+                $explorer->analyze($bbox);
+            }
+        });
 
         return self::SUCCESS;
     }

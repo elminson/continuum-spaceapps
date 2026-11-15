@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Fire\Explorer;
 use App\Fire\FireAlert;
 use App\Jobs\SendFireAlert;
+use App\Jobs\WarmBox;
 use App\Models\Alert;
 use App\Models\AlertSubscription;
 use App\Models\Area;
@@ -53,6 +54,8 @@ class SubscriptionController extends Controller
             'locale' => app()->getLocale(),
             'west' => $bbox[0], 'south' => $bbox[1], 'east' => $bbox[2], 'north' => $bbox[3],
         ]);
+
+        WarmBox::dispatch($bbox);
 
         return redirect()->route('subscriptions.show', $s->token);
     }

@@ -104,8 +104,11 @@ function draw() {
     source?.setData({ type: 'FeatureCollection', features: box.value ? [rect(box.value)] : [] });
 }
 
+let request = 0;
+
 async function analyze(openWeek?: string | null) {
-    if (!box.value) return;
+    if (!box.value || loading.value) return;
+    const mine = ++request;
     loading.value = true;
     error.value = null;
     week.value = null;
@@ -113,6 +116,7 @@ async function analyze(openWeek?: string | null) {
     (map?.getSource('cells') as maplibregl.GeoJSONSource | undefined)?.setData({ type: 'FeatureCollection', features: [] });
     const response = await fetch(`/api/explore?bbox=${box.value.map((v) => v.toFixed(2)).join(',')}`);
     const body = await response.json();
+    if (mine !== request) return;
     loading.value = false;
 
     if (!response.ok) {
@@ -235,7 +239,8 @@ onBeforeUnmount(() => map?.remove());
 
         <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
             <select
-                class="rounded-md border bg-background px-2 py-1.5"
+                class="rounded-md border bg-background px-2 py-1.5 disabled:opacity-50"
+                :disabled="loading"
                 :aria-label="t('Start from')"
                 @change="startFrom(($event.target as HTMLSelectElement).value)"
             >
@@ -252,8 +257,9 @@ onBeforeUnmount(() => map?.remove());
             </select>
             <span class="text-muted-foreground">{{ t('or') }}</span>
             <button
-                class="rounded-md px-3 py-1.5"
+                class="rounded-md px-3 py-1.5 disabled:opacity-50"
                 :class="drawing ? 'bg-orange-600 text-white' : 'bg-foreground text-background'"
+                :disabled="loading"
                 @click="drawing ? stopDrawing() : startDrawing()"
             >
                 {{ drawing ? t('Cancel') : t('Draw a box') }}
@@ -264,7 +270,11 @@ onBeforeUnmount(() => map?.remove());
             </button>
         </div>
 
-        <div v-if="loading" class="mt-3"><Loading :label="t('Fitting MODIS and VIIRS for this box over 26 years…')" /></div>
+        <div v-if="loading" class="mt-3">
+            <Loading
+                :label="t('Fitting MODIS and VIIRS for this box over 26 years… the first time takes a few seconds; after that it is instant.')"
+            />
+        </div>
         <div v-else-if="result?.available" class="mt-3 flex flex-wrap gap-4 text-xs text-muted-foreground">
             <Loading v-if="loadingCells" :label="t('Loading fires…')" />
             <span v-else>
