@@ -1,5 +1,7 @@
 # Continuum
 
+[![tests](https://github.com/elminson/continuum-spaceapps/actions/workflows/tests.yml/badge.svg)](https://github.com/elminson/continuum-spaceapps/actions/workflows/tests.yml) [![linter](https://github.com/elminson/continuum-spaceapps/actions/workflows/lint.yml/badge.svg)](https://github.com/elminson/continuum-spaceapps/actions/workflows/lint.yml)
+
 **One fire calendar from 26 years of NASA satellites.** NASA Space Apps Challenge 2026 · *Harmonization of MODIS and VIIRS Hot Spots* · Team Continuum (Elminson & Miguel, Santo Domingo, Dominican Republic).
 
 Live: https://continuum-spaceapps.isotherm.app (start page: the question, who it is for, the answers; live overview at /resume) · Code: https://github.com/elminson/continuum-spaceapps · For judges: https://continuum-spaceapps.isotherm.app/judges
