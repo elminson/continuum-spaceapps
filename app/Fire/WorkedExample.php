@@ -22,7 +22,7 @@ class WorkedExample
     /** @return array<string, mixed>|null */
     public function for(Area $area): ?array
     {
-        return Cache::remember("example:{$area->id}:".($area->processed_at?->timestamp ?? 0), now()->addDay(), function () use ($area) {
+        $example = Cache::remember("example:{$area->id}:".($area->processed_at?->timestamp ?? 0), now()->addDay(), function () use ($area) {
             [$lat, $lon] = self::CELL;
             $detections = DB::select('select instrument, satellite, acquired_at, latitude, longitude, frp from detections where acq_date = ? and floor(latitude*100) = ? and floor(longitude*100) = ? order by acquired_at', [self::DAY, $lat, $lon]);
 
@@ -44,7 +44,6 @@ class WorkedExample
             }
 
             return [
-                'area' => $area->label(),
                 'day' => self::DAY,
                 'cell' => ['lat' => $lat / 100, 'lon' => $lon / 100],
                 'detections' => array_map(fn ($d) => ['instrument' => $d->instrument, 'satellite' => FirmsFeed::satelliteName($d->satellite), 'time' => substr($d->acquired_at, 11, 5), 'latitude' => (float) $d->latitude, 'longitude' => (float) $d->longitude, 'frp' => (float) $d->frp], $detections),
@@ -59,5 +58,7 @@ class WorkedExample
                 'validation' => Calibrate::validate($overlap),
             ];
         });
+
+        return $example === null ? null : ['area' => $area->label()] + $example;
     }
 }

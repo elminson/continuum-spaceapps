@@ -204,6 +204,14 @@ class PageController extends Controller
             'status' => $status->summary(),
             'focus' => $focus ? ['slug' => $focus->slug, 'name' => $focus->label(), 'fit' => $insights->fit($focus), 'top' => $top ? Insights::alert($top) : null] : null,
             'counts' => ['areas' => Area::query()->count(), 'alerts' => Alert::query()->count(), 'places' => count(Explorer::PLACES)],
+            'impact' => cache()->remember('judges:impact:'.(Area::query()->max('processed_at') ?? 0), now()->addHour(), fn () => [
+                'focus_weeks' => $focus ? Alert::query()->where('area_id', $focus->id)->selectRaw('severity, count(*) as n')->groupBy('severity')->pluck('n', 'severity')->all() : [],
+                'focus_weeks_5y' => $focus ? Alert::query()->where('area_id', $focus->id)->where('week_start', '>=', now()->subYears(5))->count() : 0,
+                'all_weeks' => Alert::query()->count(),
+                'subscriptions' => AlertSubscription::query()->count(),
+                'km2' => (int) Area::query()->get()->sum(fn (Area $a) => ($a->east - $a->west) * 111 * cos(deg2rad(($a->north + $a->south) / 2)) * ($a->north - $a->south) * 111),
+                'record_years' => 26,
+            ]),
         ]);
     }
 

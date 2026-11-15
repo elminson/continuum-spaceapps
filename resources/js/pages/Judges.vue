@@ -10,6 +10,14 @@ const props = defineProps<{
     status: Status;
     focus: { slug: string; name: string; fit: Fit | null; top: AlertRow | null } | null;
     counts: { areas: number; alerts: number; places: number };
+    impact: {
+        focus_weeks: Record<string, number>;
+        focus_weeks_5y: number;
+        all_weeks: number;
+        subscriptions: number;
+        km2: number;
+        record_years: number;
+    };
 }>();
 
 const fit = computed(() => props.focus?.fit ?? null);
@@ -273,6 +281,90 @@ const rules = computed(() => [
                     </div>
                 </li>
             </ol>
+        </section>
+
+        <section class="mt-12">
+            <h2 class="text-xl font-semibold tracking-tight">{{ t('Impact that can be measured: the decisions this information enables') }}</h2>
+            <p class="mt-1 max-w-3xl text-sm text-muted-foreground">
+                {{
+                    t(
+                        'The challenge is met; what remains is impact. Each decision below names who takes it, with what number, and how its effect will be counted.',
+                    )
+                }}
+            </p>
+            <div class="mt-5 overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="text-left text-muted-foreground">
+                        <tr>
+                            <th class="py-2 font-normal">{{ t('Decision') }}</th>
+                            <th class="font-normal">{{ t('Who') }}</th>
+                            <th class="font-normal">{{ t('With what') }}</th>
+                            <th class="font-normal">{{ t('Measured by') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-top">
+                        <tr class="border-t">
+                            <td class="py-3 pr-4 font-medium">{{ t('Set the readiness level of the week') }}</td>
+                            <td class="pr-4">{{ t('Forest-fire unit, Ministry of Environment') }}</td>
+                            <td class="pr-4 text-muted-foreground">
+                                {{ t('Next-week outlook (×N with range and skill) and the bulletin, every Monday') }}
+                            </td>
+                            <td class="text-muted-foreground">
+                                {{
+                                    t(
+                                        'Lead time: 7 days before the week; outlook skill −19% error vs climatology for the Dominican Republic, tracked every year',
+                                    )
+                                }}
+                            </td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="py-3 pr-4 font-medium">{{ t('Pre-position brigades where the week turned unusual') }}</td>
+                            <td class="pr-4">{{ t('Provincial COE, municipal brigades') }}</td>
+                            <td class="pr-4 text-muted-foreground">
+                                {{ t('Email alert within a day of NASA data, with the map of the burning cells') }}
+                            </td>
+                            <td class="tabular-nums text-muted-foreground">
+                                {{
+                                    t(
+                                        ':n unusual weeks flagged in the Dominican Republic since 2000 (:e extreme), :r in the last five years; alerts sent and response time, counted from the first subscription (:s today)',
+                                        {
+                                            n: number(Object.values(impact.focus_weeks).reduce((a, b) => a + b, 0)),
+                                            e: number(impact.focus_weeks.extreme ?? 0),
+                                            r: number(impact.focus_weeks_5y),
+                                            s: number(impact.subscriptions),
+                                        },
+                                    )
+                                }}
+                            </td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="py-3 pr-4 font-medium">{{ t('Time burn restrictions and public warnings to the season') }}</td>
+                            <td class="pr-4">{{ t('Ministry of Environment, municipalities') }}</td>
+                            <td class="pr-4 text-muted-foreground">{{ t('The fire season of each area and "in season now"') }}</td>
+                            <td class="text-muted-foreground">
+                                {{
+                                    t(
+                                        'Share of the year’s fire inside the declared window (Dominican Republic: March–April, 44%), re-measured each year',
+                                    )
+                                }}
+                            </td>
+                        </tr>
+                        <tr class="border-t">
+                            <td class="py-3 pr-4 font-medium">{{ t('Justify budgets and reports with a baseline') }}</td>
+                            <td class="pr-4">{{ t('Planners, researchers, press') }}</td>
+                            <td class="pr-4 text-muted-foreground">{{ t('Compare any dates with 26 years; CSV and API') }}</td>
+                            <td class="tabular-nums text-muted-foreground">
+                                {{
+                                    t(':k km² covered in five areas, :w unusual weeks on record, zero cost: free NASA data, one small server', {
+                                        k: number(impact.km2),
+                                        w: number(impact.all_weeks),
+                                    })
+                                }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
         <section class="mt-12">
