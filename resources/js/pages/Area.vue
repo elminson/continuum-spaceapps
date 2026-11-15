@@ -69,7 +69,7 @@ const shown = computed(() => sorted.value.slice((page.value - 1) * PER_PAGE, pag
     <SiteLayout>
         <header class="flex flex-wrap items-end justify-between gap-4">
             <div>
-                <Link href="/" class="text-sm text-muted-foreground hover:text-foreground">← {{ t('Areas') }}</Link>
+                <Link href="/resume" class="text-sm text-muted-foreground hover:text-foreground">← {{ t('Overview') }}</Link>
                 <h1 class="mt-1 text-2xl font-semibold tracking-tight">{{ area.name }}</h1>
             </div>
             <div class="flex flex-wrap items-center gap-2 text-sm">

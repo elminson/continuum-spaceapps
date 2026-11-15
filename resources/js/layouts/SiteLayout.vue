@@ -35,7 +35,8 @@ const themes = [
 const user = computed(() => (page.props.auth as { user: { name: string } | null } | undefined)?.user ?? null);
 
 const nav = [
-    { href: '/', label: 'Overview', icon: LayoutGrid },
+    { href: '/', label: 'Start', icon: HelpCircle },
+    { href: '/resume', label: 'Overview', icon: LayoutGrid },
     { href: '/areas', label: 'Areas of interest', icon: MapPin },
     { href: '/explore', label: 'Explore', icon: Compass },
     { href: '/alerts', label: 'Unusual periods', icon: BellRing },
@@ -44,7 +45,6 @@ const nav = [
     { href: '/data', label: 'Ingestion', icon: Database },
     { href: '/method', label: 'Method', icon: BookOpen },
     { href: '/how-it-works', label: 'How it works', icon: Cpu },
-    { href: '/questions', label: 'Questions', icon: HelpCircle },
     { href: '/api-docs', label: 'API', icon: Code },
     { href: '/judges', label: 'For judges', icon: Award },
 ];

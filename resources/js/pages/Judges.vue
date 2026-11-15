@@ -180,7 +180,7 @@ const criteria = computed(() => [
             'One priority job for one named user: the forest-fire unit of the Ministry of Environment opens the Dominican Republic page on Monday and sets the readiness of the week from the outlook, the bulletin and 26 years of the same week; provincial COEs get an email when their territory turns unusual. Built first for the Dominican Republic and Haiti, proven on Cuba, the Gran Chaco and the Cerrado, free for any agency.',
         ),
         links: [
-            ['/', t('Overview')],
+            ['/resume', t('Overview')],
             ['/areas', t('Areas')],
         ],
     },

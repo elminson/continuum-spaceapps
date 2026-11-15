@@ -29,7 +29,7 @@ class PagesTest extends TestCase
 
     public function test_home_lists_the_areas_and_the_most_unusual_weeks(): void
     {
-        $this->get('/')->assertOk()->assertInertia(fn (Assert $page) => $page
+        $this->get('/resume')->assertOk()->assertInertia(fn (Assert $page) => $page
             ->component('Home')
             ->where('areas.0.slug', 'cuba')
             ->where('areas.0.improvement', 0.86)
@@ -51,18 +51,19 @@ class PagesTest extends TestCase
         $this->get('/method')->assertOk()->assertInertia(fn (Assert $page) => $page->component('Method'));
 
         $this->get('/locale/es')->assertRedirect()->assertCookie('locale', 'es', false);
-        $this->withUnencryptedCookie('locale', 'es')->get('/')->assertInertia(fn (Assert $page) => $page
+        $this->withUnencryptedCookie('locale', 'es')->get('/resume')->assertInertia(fn (Assert $page) => $page
             ->where('locale', 'es')
             ->where('translations.Areas', 'Áreas'));
     }
 
     public function test_menu_pages_render_without_login(): void
     {
-        foreach (['/areas' => 'Areas', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/judges' => 'Judges', '/ai' => 'Ai', '/questions' => 'Questions', '/login' => 'auth/Login'] as $url => $component) {
+        foreach (['/areas' => 'Areas', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/judges' => 'Judges', '/ai' => 'Ai', '/' => 'Questions', '/resume' => 'Home', '/login' => 'auth/Login'] as $url => $component) {
             $this->get($url)->assertOk()->assertInertia(fn (Assert $page) => $page->component($component));
         }
 
-        $this->get('/')->assertInertia(fn (Assert $page) => $page->where('places.0.slug', 'dominican-republic')->has('status.detections')->has('answers'));
+        $this->get('/resume')->assertInertia(fn (Assert $page) => $page->where('places.0.slug', 'dominican-republic')->has('status.detections')->has('answers'));
+        $this->get('/questions')->assertRedirect('/');
     }
 
     public function test_signed_in_users_save_and_delete_their_boxes(): void

@@ -804,5 +804,8 @@
     "Justify budgets and reports with a baseline": "Justificar presupuestos e informes con una línea base",
     "Planners, researchers, press": "Planificadores, investigadores, prensa",
     "Compare any dates with 26 years; CSV and API": "Comparar cualquier fecha con 26 años; CSV y API",
-    ":k km² covered in five areas, :w unusual weeks on record, zero cost: free NASA data, one small server": ":k km² cubiertos en cinco áreas, :w semanas inusuales registradas, costo cero: datos gratuitos de la NASA, un servidor pequeño"
+    ":k km² covered in five areas, :w unusual weeks on record, zero cost: free NASA data, one small server": ":k km² cubiertos en cinco áreas, :w semanas inusuales registradas, costo cero: datos gratuitos de la NASA, un servidor pequeño",
+    "Start": "Inicio",
+    "Continuum puts 26 years of NASA fire detections from two sensors on one 1 km grid and one scale, so anyone responsible for a territory can ask: is this week unusual, compared with the same week in every other year, and what does next week look like?": "Continuum pone 26 años de detecciones de fuego de la NASA, de dos sensores, en una cuadrícula de 1 km y una sola escala, para que quien responde por un territorio pueda preguntar: ¿es inusual esta semana, comparada con la misma semana de todos los demás años, y cómo viene la próxima?",
+    "See the live map and numbers": "Ver el mapa y los números en vivo"
 }
