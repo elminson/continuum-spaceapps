@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { date, number, t } from '@/lib/i18n';
-import { addFireCells, loadFireCells, maplibregl, nasaMap, setDailyImagery, setFireDay, type Period } from '@/lib/map';
+import { addFireCells, downloadMapImage, loadFireCells, maplibregl, nasaMap, setDailyImagery, setFireDay, type Period } from '@/lib/map';
 import { Pause, Play } from 'lucide-vue-next';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import FireLegend from './FireLegend.vue';
@@ -31,6 +31,15 @@ const csvHref = computed(
     () =>
         `/api/week?bbox=${props.bbox.map((v) => v.toFixed(2)).join(',')}&${'week' in period.value ? `week=${period.value.week}` : `days=${period.value.days}`}&format=csv`,
 );
+function downloadImage() {
+    if (!map) return;
+    const name = 'week' in period.value ? period.value.week : `last-${period.value.days}-days`;
+    downloadMapImage(
+        map,
+        [dayLabel.value ?? label.value, t(':n cells with fire', { n: number(cells.value) }), 'Continuum · NASA FIRMS (MODIS, VIIRS) · NASA GIBS'],
+        `continuum-fires-${name}.png`,
+    );
+}
 const label = computed(() => (props.week ? t('Week of :date', { date: date(props.week) }) : t('Last :n days', { n: props.days ?? 30 })));
 
 async function load() {
@@ -142,7 +151,10 @@ onBeforeUnmount(() => {
                 </div>
                 <div class="mt-1 flex items-baseline justify-between gap-3 text-sm text-neutral-300">
                     <span>{{ t(':n cells with fire', { n: number(cells) }) }}</span>
-                    <a v-if="cells" :href="csvHref" class="text-xs underline-offset-4 hover:underline">{{ t('Download CSV') }}</a>
+                    <span v-if="cells" class="flex gap-3 text-xs">
+                        <a :href="csvHref" class="underline-offset-4 hover:underline">{{ t('Download CSV') }}</a>
+                        <button class="underline-offset-4 hover:underline" @click="downloadImage">{{ t('Download image') }}</button>
+                    </span>
                 </div>
             </template>
             <label class="mt-3 flex cursor-pointer items-center gap-2 border-t border-neutral-700 pt-3 text-xs text-neutral-300">

@@ -91,7 +91,7 @@ const asks = computed(() => [
     {
         ask: 'Download analytics and visualizations; a downloadable CSV of the hotspots detected during a search.',
         does: t(
-            'A CSV of the 1 km cells with fire for any box and week (the Download CSV link on every map), monthly CSVs per area, and a public JSON API for every number.',
+            'Every map downloads as a PNG with its caption and as a CSV of the 1 km cells with fire; every fire calendar downloads as a PNG; monthly CSVs per area; and a public JSON API for every number.',
         ),
         proof: '',
         links: [['/api-docs', t('API and downloads')]],

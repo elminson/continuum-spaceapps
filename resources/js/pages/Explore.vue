@@ -36,7 +36,8 @@ function forget(b: Place) {
 type Result = { available: boolean; bbox: number[]; fit?: Fit; monthly?: Month[]; alerts?: AlertRow[] };
 
 const el = ref<HTMLDivElement | null>(null);
-const corners = ref<[number, number][]>([]);
+const drawing = ref(false);
+let dragStart: [number, number] | null = null;
 const box = ref<number[] | null>(null);
 const result = ref<Result | null>(null);
 const error = ref<string | null>(null);
@@ -157,16 +158,48 @@ onMounted(() => {
         if (start) go(start, props.open?.week);
     });
 
-    map.on('click', (e) => {
-        corners.value = corners.value.length === 1 ? [...corners.value, [e.lngLat.lng, e.lngLat.lat]] : [[e.lngLat.lng, e.lngLat.lat]];
-
-        if (corners.value.length === 2) {
-            const [[x1, y1], [x2, y2]] = corners.value;
-            box.value = [Math.min(x1, x2), Math.min(y1, y2), Math.max(x1, x2), Math.max(y1, y2)];
-            draw();
-        }
-    });
+    const point = (e: maplibregl.MapMouseEvent | maplibregl.MapTouchEvent): [number, number] => [e.lngLat.lng, e.lngLat.lat];
+    const begin = (e: maplibregl.MapMouseEvent | maplibregl.MapTouchEvent) => {
+        if (!drawing.value) return;
+        e.preventDefault();
+        dragStart = point(e);
+    };
+    const move = (e: maplibregl.MapMouseEvent | maplibregl.MapTouchEvent) => {
+        if (!drawing.value || !dragStart) return;
+        const [x, y] = point(e);
+        box.value = [Math.min(dragStart[0], x), Math.min(dragStart[1], y), Math.max(dragStart[0], x), Math.max(dragStart[1], y)];
+        draw();
+    };
+    const finish = () => {
+        if (!drawing.value || !dragStart) return;
+        dragStart = null;
+        stopDrawing();
+        if (box.value && box.value[2] - box.value[0] > 0.01 && box.value[3] - box.value[1] > 0.01) analyze();
+    };
+    map.on('mousedown', begin);
+    map.on('mousemove', move);
+    map.on('mouseup', finish);
+    map.on('touchstart', begin);
+    map.on('touchmove', move);
+    map.on('touchend', finish);
 });
+
+function startDrawing() {
+    drawing.value = true;
+    currentBox.value = null;
+    result.value = null;
+    error.value = null;
+    box.value = null;
+    draw();
+    map?.dragPan.disable();
+    map!.getCanvas().style.cursor = 'crosshair';
+}
+
+function stopDrawing() {
+    drawing.value = false;
+    map?.dragPan.enable();
+    if (map) map.getCanvas().style.cursor = '';
+}
 
 onBeforeUnmount(() => map?.remove());
 </script>
@@ -196,7 +229,15 @@ onBeforeUnmount(() => map?.remove());
                     <option v-for="a in areas" :key="a.slug" :value="`area:${a.slug}`">{{ a.name }}</option>
                 </optgroup>
             </select>
-            <span class="text-muted-foreground">{{ t('or click two corners on the map') }}</span>
+            <span class="text-muted-foreground">{{ t('or') }}</span>
+            <button
+                class="rounded-md px-3 py-1.5"
+                :class="drawing ? 'bg-orange-600 text-white' : 'bg-foreground text-background'"
+                @click="drawing ? stopDrawing() : startDrawing()"
+            >
+                {{ drawing ? t('Cancel') : t('Draw a box') }}
+            </button>
+            <span v-if="drawing" class="text-orange-700 dark:text-orange-400">{{ t('Drag on the map, inside a dashed area.') }}</span>
             <button v-if="currentBox" class="ml-auto text-muted-foreground hover:text-red-600" @click="forget(currentBox)">
                 {{ t('Delete “:name”', { name: currentBox.name }) }}
             </button>

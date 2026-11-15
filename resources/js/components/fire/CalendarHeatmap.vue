@@ -2,13 +2,23 @@
 import { locale, number, t } from '@/lib/i18n';
 import { isDark } from '@/lib/theme';
 import * as echarts from 'echarts';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import VChart from 'vue-echarts';
 import type { Month } from './types';
 
 void echarts;
 
 const props = defineProps<{ months: Month[] }>();
+const chart = ref<InstanceType<typeof VChart> | null>(null);
+
+function download() {
+    const url = chart.value?.getDataURL({ type: 'png', pixelRatio: 2, backgroundColor: isDark.value ? '#0f1113' : '#ffffff' });
+    if (!url) return;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `continuum-fire-calendar-${years.value[0]}-${years.value[years.value.length - 1]}.png`;
+    a.click();
+}
 
 const monthNames = computed(() =>
     Array.from({ length: 12 }, (_, i) =>
@@ -53,11 +63,19 @@ const option = computed(() => {
 </script>
 
 <template>
-    <VChart
-        :theme="isDark ? 'dark' : undefined"
-        :option="option"
-        autoresize
-        class="w-full"
-        :style="{ height: `${Math.max(300, years.length * 18 + 48)}px` }"
-    />
+    <div>
+        <VChart
+            ref="chart"
+            :theme="isDark ? 'dark' : undefined"
+            :option="option"
+            autoresize
+            class="w-full"
+            :style="{ height: `${Math.max(300, years.length * 18 + 48)}px` }"
+        />
+        <div class="mt-1 text-right">
+            <button class="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline" @click="download">
+                {{ t('Download image') }}
+            </button>
+        </div>
+    </div>
 </template>

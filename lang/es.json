@@ -203,7 +203,6 @@
     "Compared with the same week in other years": "Frente a la misma semana en otros años",
     "Start from": "Empezar desde",
     "Start from…": "Empezar desde…",
-    "or click two corners on the map": "o haz clic en dos esquinas del mapa",
     "Delete “:name”": "Borrar «:name»",
     "Continuum fits and tests its own MODIS/VIIRS ratio for any box inside the dashed areas and builds its 26-year calendar.": "Continuum ajusta y prueba su propia razón MODIS/VIIRS para cualquier recuadro dentro de las áreas punteadas y construye su calendario de 26 años.",
     "Number = flagged weeks · darker = a stronger worst week. Click to filter.": "Número = semanas marcadas · más oscuro = peor semana más fuerte. Haz clic para filtrar.",
@@ -470,7 +469,6 @@
     "Every week scored against the same week in every other year (median and MAD), ranked among years, and flagged when unusual.": "Cada semana evaluada frente a la misma semana de todos los demás años (mediana y MAD), clasificada entre años y marcada cuando es inusual.",
     "Week of :date in :area: ×:t normal": "Semana del :date en :area: ×:t de lo normal",
     "Download analytics and visualizations; a downloadable CSV of the hotspots detected during a search.": "Descargar análisis y visualizaciones; un CSV descargable de los focos detectados en una búsqueda.",
-    "A CSV of the 1 km cells with fire for any box and week (the Download CSV link on every map), monthly CSVs per area, and a public JSON API for every number.": "Un CSV de las celdas de 1 km con fuego para cualquier recuadro y semana (el enlace Descargar CSV en cada mapa), CSV mensuales por área y una API JSON pública para cada número.",
     "API and downloads": "API y descargas",
     "Accessible color ramps to compare months.": "Rampas de color accesibles para comparar meses.",
     "One single-hue sequential ramp (light to dark orange) in both light and dark mode, and the number itself on hover, so the colour never carries the meaning alone.": "Una sola rampa secuencial de un tono (naranja claro a oscuro) en modo claro y oscuro, y el número al pasar el cursor, para que el color nunca lleve el significado solo.",
@@ -509,5 +507,11 @@
     "AI use is declared: Claude Code for coding help, Microsoft Edge voices for the narration, and Gemma 4 inside the app for the bulletin, each with its purpose and a link.": "El uso de IA está declarado: Claude Code como ayuda para programar, voces de Microsoft Edge para la narración y Gemma 4 dentro de la app para el boletín, cada uno con su propósito y su enlace.",
     "No NASA logos or mission identifiers are used.": "No se usan logos de la NASA ni identificadores de misiones.",
     "Full text in the repository: README.md, docs/SUBMISSION.md and CREDITS.md.": "Texto completo en el repositorio: README.md, docs/SUBMISSION.md y CREDITS.md.",
-    "Every number has its test: −:p daily error vs a naive merge on :n held-out days (:r) for the Dominican Republic; estimated values are marked with their interval; 46 automated tests; live and public, no login.": "Cada número tiene su prueba: −:p de error diario frente a una fusión ingenua en :n días reservados (:r) para República Dominicana; los valores estimados se marcan con su intervalo; 46 pruebas automáticas; en vivo y público, sin iniciar sesión."
+    "Every number has its test: −:p daily error vs a naive merge on :n held-out days (:r) for the Dominican Republic; estimated values are marked with their interval; 46 automated tests; live and public, no login.": "Cada número tiene su prueba: −:p de error diario frente a una fusión ingenua en :n días reservados (:r) para República Dominicana; los valores estimados se marcan con su intervalo; 46 pruebas automáticas; en vivo y público, sin iniciar sesión.",
+    "Every map downloads as a PNG with its caption and as a CSV of the 1 km cells with fire; every fire calendar downloads as a PNG; monthly CSVs per area; and a public JSON API for every number.": "Cada mapa se descarga como PNG con su leyenda y como CSV de las celdas de 1 km con fuego; cada calendario de fuego se descarga como PNG; CSV mensuales por área; y una API JSON pública para cada número.",
+    "Download image": "Descargar imagen",
+    "or": "o",
+    "Draw a box": "Dibujar un recuadro",
+    "Cancel": "Cancelar",
+    "Drag on the map, inside a dashed area.": "Arrastra sobre el mapa, dentro de un área punteada."
 }

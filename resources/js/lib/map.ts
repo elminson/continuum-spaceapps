@@ -10,6 +10,7 @@ export function nasaMap(container: HTMLElement, bounds: [number, number, number,
     const map = new maplibregl.Map({
         container,
         bounds,
+        preserveDrawingBuffer: true,
         attributionControl: { compact: true },
         style: {
             version: 8,
@@ -89,3 +90,29 @@ export function setDailyImagery(map: maplibregl.Map, day: string | null): void {
 }
 
 export { maplibregl };
+
+/** Saves the map as a PNG with a caption strip under it. */
+export function downloadMapImage(map: maplibregl.Map, lines: string[], filename: string): void {
+    const source = map.getCanvas();
+    const scale = 2;
+    const pad = 16 * scale;
+    const lineHeight = 22 * scale;
+    const strip = pad * 2 + lineHeight * lines.length;
+    const canvas = document.createElement('canvas');
+    canvas.width = source.width;
+    canvas.height = source.height + strip;
+    const ctx = canvas.getContext('2d')!;
+    ctx.drawImage(source, 0, 0);
+    ctx.fillStyle = '#17191c';
+    ctx.fillRect(0, source.height, canvas.width, strip);
+    ctx.fillStyle = '#f2f1ee';
+    ctx.font = `${15 * scale}px Instrument Sans, system-ui, sans-serif`;
+    lines.forEach((line, i) => {
+        if (i === lines.length - 1) ctx.fillStyle = '#9aa0a8';
+        ctx.fillText(line, pad, source.height + pad + lineHeight * (i + 0.8));
+    });
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = filename;
+    a.click();
+}
