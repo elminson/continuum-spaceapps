@@ -3,6 +3,8 @@ import { date, number, percent, r, t } from '@/lib/i18n';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
+type Window = { temperature: number | null; humidity: number | null; rain: number | null; wind: number | null; days: number };
+
 export type ForecastData = {
     week_start: string;
     expected: number;
@@ -12,6 +14,7 @@ export type ForecastData = {
     times_normal: number | null;
     last_week: { start: string; value: number };
     weather_through: string | null;
+    weather: { last_7_days: Window | null; last_28_days: Window | null } | null;
     validation: {
         weeks: number;
         from: number;
@@ -118,6 +121,24 @@ const LABELS: Record<string, string> = {
                     }}
                 </dd>
             </div>
+        </dl>
+
+        <dl v-if="forecast.weather" class="mt-4 grid gap-x-6 gap-y-2 border-t pt-4 text-sm sm:grid-cols-2">
+            <template
+                v-for="[label, w] in [
+                    [t('Weather, last 7 days'), forecast.weather.last_7_days],
+                    [t('Weather, last 28 days'), forecast.weather.last_28_days],
+                ]"
+                :key="label"
+            >
+                <div v-if="w">
+                    <dt class="text-muted-foreground">{{ label }}</dt>
+                    <dd class="tabular-nums">
+                        {{ number(w.temperature, 1) }} °C · {{ number(w.humidity) }}% {{ t('humidity') }} · {{ number(w.rain) }} mm {{ t('rain') }} ·
+                        {{ number(w.wind, 1) }} m/s {{ t('wind') }}
+                    </dd>
+                </div>
+            </template>
         </dl>
 
         <p class="mt-4 text-xs text-muted-foreground">

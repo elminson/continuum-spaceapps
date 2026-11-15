@@ -50,6 +50,16 @@ class AreaApiController extends Controller
     }
 
     /** Next week's outlook with its validation (computed once a day). */
+    /** Daily weather at the area's centre from NASA POWER: ?days=60 (1–3660). */
+    public function weather(Request $request, Area $area): JsonResponse
+    {
+        $days = min(3660, max(1, $request->integer('days', 60)));
+        $rows = DB::table('weather_days')->where('area_id', $area->id)->orderByDesc('day')->limit($days)->get()
+            ->reverse()->values()->map(fn ($r) => ['day' => $r->day, 'temperature_c' => $r->t2m === null ? null : (float) $r->t2m, 'humidity_percent' => $r->rh2m === null ? null : (float) $r->rh2m, 'rain_mm' => $r->precip === null ? null : (float) $r->precip, 'wind_m_s' => $r->ws2m === null ? null : (float) $r->ws2m]);
+
+        return response()->json(['area' => $area->slug, 'source' => 'NASA POWER daily point, community AG, area centre', 'centre' => ['latitude' => round(($area->south + $area->north) / 2, 3), 'longitude' => round(($area->west + $area->east) / 2, 3)], 'data' => $rows]);
+    }
+
     public function forecast(Area $area, Insights $insights): JsonResponse
     {
         return response()->json(['area' => $area->slug, 'data' => $insights->forecast($area)]);

@@ -128,6 +128,7 @@ class Forecast
             'times_normal' => $c > 0 ? round(expm1($pred) / $c, 1) : null,
             'last_week' => ['start' => $starts[$i], 'value' => round($values[$i], 1)],
             'weather_through' => $weatherThrough,
+            'weather' => $weatherThrough ? ['last_7_days' => $this->plainWindow($weather, CarbonImmutable::parse($weatherThrough), 7), 'last_28_days' => $this->plainWindow($weather, CarbonImmutable::parse($weatherThrough), 28)] : null,
             'validation' => $validation,
             'weights' => $weights,
             'samples' => count($samples),
@@ -156,6 +157,34 @@ class Forecast
      * @param  array<string, array{t2m: ?float, rh2m: ?float, precip: ?float, ws2m: ?float}>  $weather
      * @return array<string, float>|null
      */
+    /**
+     * The weather as people read it: mean temperature, humidity and wind, total rain, over the window ending at $end.
+     *
+     * @param  array<string, array{t2m: ?float, rh2m: ?float, precip: ?float, ws2m: ?float}>  $weather
+     * @return array{temperature: ?float, humidity: ?float, rain: ?float, wind: ?float, days: int}|null
+     */
+    private function plainWindow(array $weather, CarbonImmutable $end, int $days): ?array
+    {
+        $acc = ['t2m' => [], 'rh2m' => [], 'precip' => [], 'ws2m' => []];
+        for ($d = 0; $d < $days; $d++) {
+            $w = $weather[$end->subDays($d)->toDateString()] ?? null;
+            if ($w === null) {
+                continue;
+            }
+            foreach ($acc as $k => $_) {
+                if ($w[$k] !== null) {
+                    $acc[$k][] = $w[$k];
+                }
+            }
+        }
+        if ($acc['t2m'] === []) {
+            return null;
+        }
+        $mean = fn (array $v) => $v === [] ? null : round(array_sum($v) / count($v), 1);
+
+        return ['temperature' => $mean($acc['t2m']), 'humidity' => $mean($acc['rh2m']), 'rain' => $acc['precip'] === [] ? null : round(array_sum($acc['precip']) * $days / count($acc['precip']), 1), 'wind' => $mean($acc['ws2m']), 'days' => count($acc['t2m'])];
+    }
+
     private function weatherFeatures(array $weather, CarbonImmutable $end): ?array
     {
         $take = function (int $days) use ($weather, $end): ?array {
