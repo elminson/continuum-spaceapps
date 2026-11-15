@@ -33,7 +33,7 @@ Code: https://github.com/elminson/continuum-spaceapps
 - a short fire bulletin in plain language (English and Spanish), written by an AI model from the computed facts and checked number by number;
 - fire alerts by email for any drawn zone: a daily check of the last complete week against the same week in every other year, one email per flagged week, a sample and a test alert on demand (SMS coming soon);
 - downloads: every map as a PNG and as a CSV of the burning 1 km cells, every calendar as a PNG;
-- a one-week **forecast** per area: ridge regression on this harmonized record and NASA POWER weather (temperature, humidity, rain, wind), validated year by year 2013→2026 on 722 held-out weeks per area: 19–31% less error than the same-week climatology, 6–22% less than persistence, r 0.71–0.89; shown with its skill on every area page;
+- a one-week **forecast** per area: ridge regression on this harmonized record and NASA POWER weather (temperature, humidity, rain, wind), validated year by year 2013→2026 on 722 held-out weeks per area: one week ahead, 19–31% less error than the same-week climatology, 6–22% less than persistence, r 0.71–0.89 (two weeks ahead, used when the current week has already begun: 13–19% and r 0.67–0.87); shown with its skill on every area page;
 - a test of the end of MODIS (below);
 - an **AI analysis** page gathering the situation reading across areas and every area's bulletins, each written by Claude (Anthropic API) or Gemma 4 (self-hosted) from computed facts, number-checked and labelled;
 - CSV downloads and a public JSON API.

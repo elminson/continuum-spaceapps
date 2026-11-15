@@ -15,6 +15,7 @@ const props = defineProps<{
     forecasts: { slug: string; name: string; forecast: ForecastData | null }[];
 }>();
 
+const oneWeek = (f: ForecastData) => f.current?.validation ?? f.validation;
 const viirs = computed(() => props.status.instruments.find((i) => i.instrument === 'viirs'));
 const modis = computed(() => props.status.instruments.find((i) => i.instrument === 'modis'));
 const weakest = computed(
@@ -459,7 +460,7 @@ const resources = computed(() => [
                         </div>
                     </div>
                     <div v-if="forecasts.some((f) => f.forecast)" class="mt-5 overflow-x-auto">
-                        <div class="text-sm font-medium">{{ t('Results so far (rolling validation, one fold per year)') }}</div>
+                        <div class="text-sm font-medium">{{ t('Results so far: one week ahead, rolling validation, one fold per year') }}</div>
                         <table class="mt-2 w-full text-sm">
                             <thead class="text-left text-muted-foreground">
                                 <tr>
@@ -485,15 +486,15 @@ const resources = computed(() => [
                                             }}
                                         </td>
                                         <td class="text-right font-medium">
-                                            {{ f.forecast.validation.skill_vs_climatology >= 0 ? '−' : '+'
-                                            }}{{ percent(Math.abs(f.forecast.validation.skill_vs_climatology)) }}
+                                            {{ oneWeek(f.forecast).skill_vs_climatology >= 0 ? '−' : '+'
+                                            }}{{ percent(Math.abs(oneWeek(f.forecast).skill_vs_climatology)) }}
                                         </td>
                                         <td class="text-right">
-                                            {{ f.forecast.validation.skill_vs_persistence >= 0 ? '−' : '+'
-                                            }}{{ percent(Math.abs(f.forecast.validation.skill_vs_persistence)) }}
+                                            {{ oneWeek(f.forecast).skill_vs_persistence >= 0 ? '−' : '+'
+                                            }}{{ percent(Math.abs(oneWeek(f.forecast).skill_vs_persistence)) }}
                                         </td>
-                                        <td class="text-right">{{ r(f.forecast.validation.correlation) }}</td>
-                                        <td class="text-right">{{ number(f.forecast.validation.weeks) }}</td>
+                                        <td class="text-right">{{ r(oneWeek(f.forecast).correlation) }}</td>
+                                        <td class="text-right">{{ number(oneWeek(f.forecast).weeks) }}</td>
                                     </template>
                                     <td v-else colspan="5" class="text-right text-muted-foreground">{{ t('not yet computed') }}</td>
                                 </tr>

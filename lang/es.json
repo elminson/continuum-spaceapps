@@ -713,5 +713,6 @@
     "of normal expected; one week ahead the model has :s less error than climatology.": "de lo normal esperado; a una semana el modelo tiene :s menos error que la climatología.",
     "Ridge regression per area on this harmonized record and NASA POWER weather (through :date), :h ahead, validated year by year since :from. Strongest drivers here: :d.": "Regresión ridge por área sobre este registro armonizado y el clima de NASA POWER (hasta el :date), a :h, validada año por año desde :from. Factores más fuertes aquí: :d.",
     "two weeks": "dos semanas",
-    "one week": "una semana"
+    "one week": "una semana",
+    "Results so far: one week ahead, rolling validation, one fold per year": "Resultados hasta ahora: a una semana, validación móvil, un pliegue por año"
 }
