@@ -26,7 +26,7 @@ const topWeek = computed(() => (props.focus?.top ? `${area.value}?week=${props.f
 const years = computed(() => Math.floor(props.status.record_days / 365.25));
 
 const resources = [
-    { href: 'https://youtu.be/ypfUgrSXI0Y', label: '30-second demo (English)', icon: PlayCircle },
+    { href: 'https://youtu.be/ZkYbmGTxsQQ', label: '30-second demo (English)', icon: PlayCircle },
     { href: 'https://youtu.be/D-HypfIguYk', label: 'Full explanation (Spanish, English subtitles, 4:16)', icon: PlayCircle },
     { href: '/slides/continuum-slides.pdf', label: '7-slide deck (PDF)', icon: FileText },
     { href: 'https://github.com/elminson/continuum-spaceapps', label: 'Code on GitHub', icon: Github },

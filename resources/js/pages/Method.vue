@@ -47,7 +47,7 @@ const VIDEOS = {
         audience: 'for the Santiago judges',
     },
     en: {
-        youtube: 'https://youtu.be/ypfUgrSXI0Y',
+        youtube: 'https://youtu.be/ZkYbmGTxsQQ',
         src: '/videos/continuum-demo-en.mp4',
         poster: '/videos/continuum-demo-en.jpg',
         label: '30-second demo (English)',
