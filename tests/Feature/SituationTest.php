@@ -27,14 +27,15 @@ class SituationTest extends TestCase
 
     public function test_the_reading_uses_the_model_only_when_every_number_is_a_fact(): void
     {
-        Http::fake(['https://ollama.test/api/chat' => Http::response(['message' => ['content' => 'Cuba deserves attention: 24.5 times normal two weeks ago, inside its fire season. The other areas are quiet.']])]);
+        Http::fakeSequence('https://ollama.test/api/chat')
+            ->push(['message' => ['content' => 'Cuba deserves attention: 24.5 times normal two weeks ago, inside its fire season. The other areas are quiet.']])
+            ->push(['message' => ['content' => 'Cuba is 123456 times normal.']]);
         $reading = app(Situation::class)->for('en');
         $this->assertSame('ai', $reading['source']);
         $cuba = collect($reading['facts']['areas'])->firstWhere('area', 'Cuba');
         $this->assertSame(24.5, $cuba['unusual_weeks_last_60_days'][0]['times_normal']);
 
         Cache::flush();
-        Http::fake(['https://ollama.test/api/chat' => Http::response(['message' => ['content' => 'Cuba is 123456 times normal.']])]);
         $reading = app(Situation::class)->for('en');
         $this->assertSame('template', $reading['source']);
         $this->assertStringContainsString('Cuba', $reading['text']);
