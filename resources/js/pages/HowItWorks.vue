@@ -132,6 +132,7 @@ const architecture = [
         items: [
             ['NASA FIRMS', 'MODIS C6.1 and VIIRS 375 m fire detections, archive and hourly 24 h feeds'],
             ['NASA GIBS', 'Blue Marble and the MODIS Terra image of the day under every map'],
+            ['NASA POWER', 'Daily temperature, humidity, rain and wind at each area’s centre since 2000: the drivers behind the next-week forecast'],
         ],
     },
     {

@@ -485,7 +485,6 @@
     "Scientifically sound, technically feasible, usable.": "Científicamente sólido, técnicamente viable, usable.",
     "Relevance": "Relevancia",
     "Directly addresses the challenge; NASA data is the core.": "Aborda el reto directamente; los datos de la NASA son el núcleo.",
-    "Every map, chart and number comes from NASA FIRMS (MODIS C6.1 and VIIRS 375 m), refreshed every hour, over NASA GIBS imagery. The table above walks through each line of the challenge brief.": "Cada mapa, gráfico y número viene de NASA FIRMS (MODIS C6.1 y VIIRS 375 m), actualizado cada hora, sobre imágenes de NASA GIBS. La tabla de arriba recorre cada línea del texto del reto.",
     "Presentation": "Presentación",
     "Clear challenge, solution and significance; a well-structured demo.": "Reto, solución e importancia claros; una demo bien estructurada.",
     "A 30-second demo, a 7-slide deck, a 2:50 explanation in Spanish with English subtitles, and a site that answers its own questions on the home page.": "Una demo de 30 segundos, una presentación de 7 diapositivas, una explicación de 2:50 en español con subtítulos en inglés y un sitio que responde sus propias preguntas en la portada.",
@@ -694,5 +693,19 @@
     "Hide": "Ocultar",
     "Try it": "Probar",
     "Returns": "Devuelve",
-    "Data: NASA FIRMS (MODIS C6.1, VIIRS 375 m), NASA POWER weather and NASA GIBS imagery, processed by Continuum. Cite the site and NASA FIRMS when you reuse the numbers.": "Datos: NASA FIRMS (MODIS C6.1, VIIRS 375 m), clima de NASA POWER e imágenes de NASA GIBS, procesados por Continuum. Cita el sitio y NASA FIRMS cuando reutilices los números."
+    "Data: NASA FIRMS (MODIS C6.1, VIIRS 375 m), NASA POWER weather and NASA GIBS imagery, processed by Continuum. Cite the site and NASA FIRMS when you reuse the numbers.": "Datos: NASA FIRMS (MODIS C6.1, VIIRS 375 m), clima de NASA POWER e imágenes de NASA GIBS, procesados por Continuum. Cita el sitio y NASA FIRMS cuando reutilices los números.",
+    "Weather, last 7 days": "Clima, últimos 7 días",
+    "Weather, last 28 days": "Clima, últimos 28 días",
+    "humidity": "de humedad",
+    "rain": "de lluvia",
+    "wind": "de viento",
+    "Daily weather at the area’s centre from NASA POWER, the input of the forecast: air temperature, relative humidity, rain and wind.": "Clima diario en el centro del área según NASA POWER, la entrada del pronóstico: temperatura del aire, humedad relativa, lluvia y viento.",
+    "1–3660, the last N days (default 60)": "1–3660, los últimos N días (por defecto 60)",
+    "Weather (NASA POWER)": "Clima (NASA POWER)",
+    "Daily temperature, humidity, rain and wind at the centre of each area, the input of the next-week forecast; refreshed every morning, NASA publishes with a lag of a few days.": "Temperatura, humedad, lluvia y viento diarios en el centro de cada área, la entrada del pronóstico de la próxima semana; se actualiza cada mañana, la NASA publica con unos días de retraso.",
+    "Days": "Días",
+    "Through": "Hasta",
+    "NASA POWER": "NASA POWER",
+    "Daily temperature, humidity, rain and wind at each area’s centre since 2000: the drivers behind the next-week forecast": "Temperatura, humedad, lluvia y viento diarios en el centro de cada área desde 2000: los factores detrás del pronóstico de la próxima semana",
+    "Three NASA sources, each doing real work: FIRMS (MODIS C6.1 and VIIRS 375 m) for every detection, refreshed hourly; POWER for the daily weather that drives the next-week forecast; GIBS for the imagery under every map. The table above walks through each line of the challenge brief.": "Tres fuentes de la NASA, cada una con trabajo real: FIRMS (MODIS C6.1 y VIIRS 375 m) para cada detección, actualizado cada hora; POWER para el clima diario que impulsa el pronóstico de la próxima semana; GIBS para las imágenes bajo cada mapa. La tabla de arriba recorre cada línea del texto del reto."
 }

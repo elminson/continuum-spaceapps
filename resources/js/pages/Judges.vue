@@ -204,7 +204,7 @@ const criteria = computed(() => [
         name: 'Relevance',
         asks: 'Directly addresses the challenge; NASA data is the core.',
         does: t(
-            'Every map, chart and number comes from NASA FIRMS (MODIS C6.1 and VIIRS 375 m), refreshed every hour, over NASA GIBS imagery. The table above walks through each line of the challenge brief.',
+            'Three NASA sources, each doing real work: FIRMS (MODIS C6.1 and VIIRS 375 m) for every detection, refreshed hourly; POWER for the daily weather that drives the next-week forecast; GIBS for the imagery under every map. The table above walks through each line of the challenge brief.',
         ),
         links: [['/data', t('Ingestion')]],
     },

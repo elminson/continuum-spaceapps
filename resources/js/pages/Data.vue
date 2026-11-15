@@ -24,6 +24,7 @@ const props = defineProps<{
     status: Status;
     freshness: { last_ingest: { at: string } | null; processed_at: string | null };
     feeds: Record<string, string>;
+    weather: { slug: string; name: string; days: number; through: string | null }[];
     filters: { feed: string; status: string };
     totals: { runs: number; failed: number; inserted: number; since: string | null };
     runs: Run[];
@@ -194,8 +195,42 @@ function since(iso: string): string {
         </section>
 
         <section class="mt-10">
+            <h2 class="font-semibold">{{ t('Weather (NASA POWER)') }}</h2>
+            <p class="text-sm text-muted-foreground">
+                {{
+                    t(
+                        'Daily temperature, humidity, rain and wind at the centre of each area, the input of the next-week forecast; refreshed every morning, NASA publishes with a lag of a few days.',
+                    )
+                }}
+            </p>
+            <table class="mt-3 w-full text-sm">
+                <thead class="text-left text-muted-foreground">
+                    <tr>
+                        <th class="py-2 font-normal">{{ t('Area') }}</th>
+                        <th class="text-right font-normal">{{ t('Days') }}</th>
+                        <th class="text-right font-normal">{{ t('Through') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="tabular-nums">
+                    <tr v-for="w in weather" :key="w.slug" class="border-t">
+                        <td class="py-2">{{ w.name }}</td>
+                        <td class="text-right">{{ number(w.days) }}</td>
+                        <td class="text-right">{{ w.through ? date(w.through) : '—' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="mt-10">
             <h2 class="font-semibold">{{ t('Sources') }}</h2>
             <ul class="mt-2 space-y-1 break-all text-xs text-muted-foreground">
+                <li>
+                    NASA POWER:
+                    <a href="https://power.larc.nasa.gov/api/temporal/daily/point" class="underline-offset-4 hover:underline"
+                        >https://power.larc.nasa.gov/api/temporal/daily/point</a
+                    >
+                    (T2M, RH2M, PRECTOTCORR, WS2M)
+                </li>
                 <li v-for="(url, name) in feeds" :key="name">
                     {{ FEEDS[name] ?? name }}: <a :href="url" class="underline-offset-4 hover:underline">{{ url }}</a>
                 </li>
