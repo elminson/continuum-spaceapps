@@ -2,7 +2,7 @@
 
 Paste each block into the matching field of the team page (spaceappschallenge.org → My Team → Project → Edit). Everything is in English, as the judges read in English. Numbers below are live from https://continuum-spaceapps.isotherm.app on 15 November 2026.
 
-> **For the browser assistant filling the form:** each `##` heading below is one field of the NASA project page; paste the text under it verbatim into that field. Two links must be the latest YouTube uploads (see "Link to Project Demo"); if a newer link is given in the chat, use it instead. After every field is filled, click **Submit for Judging** only when the team owner confirms.
+> **For the browser assistant filling the form:** each `##` heading below is one field of the NASA project page; paste the text under it verbatim into that field. After every field is filled, click **Submit for Judging** only when the team owner confirms.
 
 ## Project Name
 
@@ -14,7 +14,7 @@ Continuum answers one question for fire and land managers: was this fire unusual
 
 ## Link to Project Demo
 
-https://youtu.be/LJ6uETwGb_0 (30 seconds, English) — re-recorded on 15 November with the forecast, alerts and AI scenes; replace with the new upload link when available
+https://youtu.be/ypfUgrSXI0Y (30 seconds, English)
 Explanation in Spanish with English subtitles (4:23): https://youtu.be/2g1FSY0PNK8
 Slides (7): https://github.com/elminson/continuum-spaceapps/blob/main/docs/presentation/continuum-slides.pdf
 

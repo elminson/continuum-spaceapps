@@ -4,7 +4,7 @@
 
 Live: https://continuum-spaceapps.isotherm.app (start page: the question, who it is for, the answers; live overview at /resume) · Code: https://github.com/elminson/continuum-spaceapps · For judges: https://continuum-spaceapps.isotherm.app/judges
 
-Videos (YouTube): [30-second demo, English](https://youtu.be/LJ6uETwGb_0) · [4:23 explanation, Spanish with English subtitles](https://youtu.be/2g1FSY0PNK8) · Slides: [7-slide deck (PDF)](docs/presentation/continuum-slides.pdf). Narration is an AI-generated voice.
+Videos (YouTube): [30-second demo, English](https://youtu.be/ypfUgrSXI0Y) · [4:23 explanation, Spanish with English subtitles](https://youtu.be/2g1FSY0PNK8) · Slides: [7-slide deck (PDF)](docs/presentation/continuum-slides.pdf). Narration is an AI-generated voice.
 
 ## The problem
 
