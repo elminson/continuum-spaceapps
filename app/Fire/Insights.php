@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 /** Cached read models for the pages and the API. */
 class Insights
 {
-    public function __construct(private Harmonizer $harmonizer, private RetirementTest $retirement) {}
+    public function __construct(private Harmonizer $harmonizer, private RetirementTest $retirement, private Forecast $forecastModel) {}
 
     /** @return list<array<string, mixed>> */
     public function monthly(Area $area, string $scale): array
@@ -92,6 +92,18 @@ class Insights
             'improvement' => $this->fit($area)['validation']['improvement'] ?? null,
             'latest_alert' => $latestAlert ? self::alert($latestAlert) : null,
         ];
+    }
+
+    /** @return array<string, mixed>|null */
+    public function forecast(Area $area): ?array
+    {
+        return Cache::remember($this->key($area, 'forecast:'.now()->format('Y-m-d')), now()->addDay(), fn () => $this->forecastModel->run($area));
+    }
+
+    /** The cached forecast only; pages never compute it. */
+    public function forecastReady(Area $area): ?array
+    {
+        return Cache::get($this->key($area, 'forecast:'.now()->format('Y-m-d')));
     }
 
     private function key(Area $area, string $what): string

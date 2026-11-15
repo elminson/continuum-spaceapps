@@ -49,6 +49,12 @@ class AreaApiController extends Controller
         }, "continuum-{$area->slug}-{$scale}-monthly.csv", ['Content-Type' => 'text/csv']);
     }
 
+    /** Next week's outlook with its validation (computed once a day). */
+    public function forecast(Area $area, Insights $insights): JsonResponse
+    {
+        return response()->json(['area' => $area->slug, 'data' => $insights->forecast($area)]);
+    }
+
     public function season(Area $area, Insights $insights): JsonResponse
     {
         return response()->json(['area' => $area->slug, 'data' => $insights->season($area)]);

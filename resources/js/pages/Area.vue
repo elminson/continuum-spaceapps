@@ -2,6 +2,7 @@
 import BulletinCard from '@/components/fire/BulletinCard.vue';
 import CalendarHeatmap from '@/components/fire/CalendarHeatmap.vue';
 import ComparePanel from '@/components/fire/ComparePanel.vue';
+import ForecastCard, { type ForecastData } from '@/components/fire/ForecastCard.vue';
 import MonthlyChart from '@/components/fire/MonthlyChart.vue';
 import Pager from '@/components/fire/Pager.vue';
 import RetirementPanel from '@/components/fire/RetirementPanel.vue';
@@ -22,6 +23,7 @@ const props = defineProps<{
     alerts: AlertRow[];
     week?: string | null;
     season: Season | null;
+    forecast: ForecastData | null;
 }>();
 
 const week = ref<string | null>(props.week ?? props.alerts[0]?.week_start ?? null);
@@ -139,6 +141,8 @@ const shown = computed(() => sorted.value.slice((page.value - 1) * PER_PAGE, pag
                 <ComparePanel class="mt-3" :slug="area.slug" />
             </section>
         </div>
+
+        <ForecastCard v-if="forecast" class="mt-10" :forecast="forecast" />
 
         <section class="mt-8">
             <h2 class="text-lg font-semibold">{{ t('Fire calendar') }}</h2>

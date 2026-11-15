@@ -48,6 +48,10 @@ class WarmCommand extends Command
         // Warming runs in the background, so give the model the time a page never would.
         config(['services.bulletin.timeout' => 180]);
 
+        foreach (Area::query()->ordered()->get() as $area) {
+            $this->components->task("Forecast · {$area->name}", fn () => $insights->forecast($area));
+        }
+
         $this->components->task('Situation reading', function () use ($situation) {
             foreach (['en', 'es'] as $locale) {
                 $situation->for($locale);

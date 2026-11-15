@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ForecastData } from '@/components/fire/ForecastCard.vue';
 import FormulaInfo from '@/components/fire/FormulaInfo.vue';
 import type { Fit, Status } from '@/components/fire/types';
 import SiteLayout from '@/layouts/SiteLayout.vue';
@@ -11,6 +12,7 @@ const props = defineProps<{
     status: Status;
     evidence: { slug: string; name: string; fit: Fit | null }[];
     example: { area: string; modis: number; viirs: number; days: number } | null;
+    forecasts: { slug: string; name: string; forecast: ForecastData | null }[];
 }>();
 
 const viirs = computed(() => props.status.instruments.find((i) => i.instrument === 'viirs'));
@@ -455,6 +457,48 @@ const resources = computed(() => [
                                 }}
                             </p>
                         </div>
+                    </div>
+                    <div v-if="forecasts.some((f) => f.forecast)" class="mt-5 overflow-x-auto">
+                        <div class="text-sm font-medium">{{ t('Results so far (rolling validation, one fold per year)') }}</div>
+                        <table class="mt-2 w-full text-sm">
+                            <thead class="text-left text-muted-foreground">
+                                <tr>
+                                    <th class="py-2 font-normal">{{ t('Area') }}</th>
+                                    <th class="text-right font-normal">{{ t('Next week') }}</th>
+                                    <th class="text-right font-normal">{{ t('Error vs climatology') }}</th>
+                                    <th class="text-right font-normal">{{ t('Error vs persistence') }}</th>
+                                    <th class="text-right font-normal">{{ t('Correlation') }}</th>
+                                    <th class="text-right font-normal">{{ t('Weeks tested') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tabular-nums">
+                                <tr v-for="f in forecasts" :key="f.slug" class="border-t">
+                                    <td class="py-2">
+                                        <Link :href="`/areas/${f.slug}#outlook`" class="hover:underline">{{ f.name }}</Link>
+                                    </td>
+                                    <template v-if="f.forecast">
+                                        <td class="text-right">
+                                            {{
+                                                f.forecast.times_normal !== null
+                                                    ? `×${number(f.forecast.times_normal, 1)}`
+                                                    : number(f.forecast.expected)
+                                            }}
+                                        </td>
+                                        <td class="text-right font-medium">
+                                            {{ f.forecast.validation.skill_vs_climatology >= 0 ? '−' : '+'
+                                            }}{{ percent(Math.abs(f.forecast.validation.skill_vs_climatology)) }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ f.forecast.validation.skill_vs_persistence >= 0 ? '−' : '+'
+                                            }}{{ percent(Math.abs(f.forecast.validation.skill_vs_persistence)) }}
+                                        </td>
+                                        <td class="text-right">{{ r(f.forecast.validation.correlation) }}</td>
+                                        <td class="text-right">{{ number(f.forecast.validation.weeks) }}</td>
+                                    </template>
+                                    <td v-else colspan="5" class="text-right text-muted-foreground">{{ t('not yet computed') }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <p class="mt-4 text-sm">
                         {{

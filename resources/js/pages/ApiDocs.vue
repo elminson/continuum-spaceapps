@@ -13,6 +13,7 @@ const endpoints = [
     ],
     ['/api/areas/hispaniola/monthly.csv?scale=viirs', 'The same as CSV, with the method in the header.'],
     ['/api/areas/cuba/alerts', 'Unusual weeks of an area.'],
+    ['/api/areas/dominican-republic/forecast', 'Next week outlook of an area with its year-by-year validation.'],
     ['/api/areas/cuba/retirement?year=2024', 'The MODIS retirement test for a cutoff year.'],
     ['/api/explore?bbox=-72.01,17.47,-68.32,19.93', 'Instant analysis of any box inside the areas (west,south,east,north).'],
     ['/api/week?bbox=-84.6,18.7,-74.2,24.9&week=2026-08-17', 'GeoJSON of the 1 km cells with fire in one week.'],

@@ -15,4 +15,5 @@ Route::middleware('throttle:120,1')->group(function () {
     Route::get('areas/{area}/alerts', [AreaApiController::class, 'alerts']);
     Route::get('areas/{area}/week', [AreaApiController::class, 'week']);
     Route::get('areas/{area}/retirement', [AreaApiController::class, 'retirement']);
+    Route::get('areas/{area}/forecast', [AreaApiController::class, 'forecast']);
 });

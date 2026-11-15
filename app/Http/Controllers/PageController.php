@@ -251,6 +251,7 @@ class PageController extends Controller
             'fit' => $insights->fit($area),
             'alerts' => $insights->alerts($area, 500),
             'season' => $insights->season($area),
+            'forecast' => $insights->forecastReady($area),
             'week' => preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->query('week')) ? $request->query('week') : null,
         ]);
     }
@@ -271,6 +272,7 @@ class PageController extends Controller
             'status' => $status->summary(),
             'evidence' => Area::query()->ordered()->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'fit' => $insights->fit($a)])->all(),
             'example' => $this->ratioExample(),
+            'forecasts' => Area::query()->ordered()->get()->map(fn (Area $a) => ['slug' => $a->slug, 'name' => $a->label(), 'forecast' => $insights->forecastReady($a)])->all(),
         ]);
     }
 

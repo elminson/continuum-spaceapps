@@ -146,14 +146,15 @@ const asks = computed(() => [
     {
         ask: 'Anticipate critical periods.',
         does: t(
-            'Today: the fire season of each area and the weekly anomaly alerts. Next: a one-week forecast per area trained on this harmonized record with NASA POWER weather, GPM rainfall, SMAP soil moisture and MODIS/VIIRS vegetation, validated against a climatology baseline before it is shown. The plan is written out on the Method page.',
+            'The fire season of each area, the weekly anomaly alerts, and a one-week forecast per area: ridge regression on this harmonized record and NASA POWER weather, validated year by year since 2013 against climatology and persistence, shown with its skill on every area page.',
         ),
         proof: '',
         links: [
-            ['/method#forecast', t('Forecasting plan')],
-            [`${area.value}#season`, t('Fire season')],
+            [`${area.value}#outlook`, t('Next week outlook')],
+            ['/method#forecast', t('Forecasting method and results')],
         ],
     },
+
     {
         ask: 'MODIS is approaching the end of its operational life.',
         does: t('A retirement test: switch MODIS off in a chosen year, rebuild the later record from VIIRS alone and score it against the real one.'),
