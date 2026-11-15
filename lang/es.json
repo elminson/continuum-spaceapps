@@ -630,7 +630,6 @@
     "Tested on": "Probado en",
     ":n weeks, :from–:to": ":n semanas, :from–:to",
     "For this area the model is not yet better than the same-week climatology, so read the outlook as the climatology.": "Para esta área el modelo aún no supera la climatología de la misma semana, así que lee la perspectiva como la climatología.",
-    "Ridge regression per area on this harmonized record and NASA POWER weather (through :date), validated year by year since :from. Strongest drivers here: :d.": "Regresión ridge por área sobre este registro armonizado y el clima de NASA POWER (hasta el :date), validada año por año desde :from. Factores más fuertes aquí: :d.",
     "last week’s fire": "el fuego de la semana pasada",
     "fire two weeks ago": "el fuego de hace dos semanas",
     "fire three weeks ago": "el fuego de hace tres semanas",
@@ -709,5 +708,10 @@
     "Daily temperature, humidity, rain and wind at each area’s centre since 2000: the drivers behind the next-week forecast": "Temperatura, humedad, lluvia y viento diarios en el centro de cada área desde 2000: los factores detrás del pronóstico de la próxima semana",
     "Three NASA sources, each doing real work: FIRMS (MODIS C6.1 and VIIRS 375 m) for every detection, refreshed hourly; POWER for the daily weather that drives the next-week forecast; GIBS for the imagery under every map. The table above walks through each line of the challenge brief.": "Tres fuentes de la NASA, cada una con trabajo real: FIRMS (MODIS C6.1 y VIIRS 375 m) para cada detección, actualizado cada hora; POWER para el clima diario que impulsa el pronóstico de la próxima semana; GIBS para las imágenes bajo cada mapa. La tabla de arriba recorre cada línea del texto del reto.",
     "of normal": "de lo normal",
-    "burning cell-days": "celdas-día con fuego"
+    "burning cell-days": "celdas-día con fuego",
+    "This week": "Esta semana",
+    "of normal expected; one week ahead the model has :s less error than climatology.": "de lo normal esperado; a una semana el modelo tiene :s menos error que la climatología.",
+    "Ridge regression per area on this harmonized record and NASA POWER weather (through :date), :h ahead, validated year by year since :from. Strongest drivers here: :d.": "Regresión ridge por área sobre este registro armonizado y el clima de NASA POWER (hasta el :date), a :h, validada año por año desde :from. Factores más fuertes aquí: :d.",
+    "two weeks": "dos semanas",
+    "one week": "una semana"
 }

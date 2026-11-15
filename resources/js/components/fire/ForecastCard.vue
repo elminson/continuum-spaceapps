@@ -14,6 +14,8 @@ export type ForecastData = {
     times_normal: number | null;
     last_week: { start: string; value: number };
     weather_through: string | null;
+    horizon: 1 | 2;
+    current?: ForecastData;
     weather: { last_7_days: Window | null; last_28_days: Window | null } | null;
     validation: {
         weeks: number;
@@ -79,6 +81,20 @@ const LABELS: Record<string, string> = {
                 <template v-if="range"> · {{ t('range ×:a–×:b', { a: number(range[0], 1), b: number(range[1], 1) }) }}</template>
             </span>
         </div>
+        <p v-if="forecast.current" class="mt-2 text-sm">
+            <span class="font-medium">{{ t('This week') }}</span>
+            <span class="text-muted-foreground"> ({{ date(forecast.current.week_start) }}): </span>
+            <span class="tabular-nums">{{
+                forecast.current.times_normal !== null ? `×${number(forecast.current.times_normal, 1)}` : number(forecast.current.expected)
+            }}</span>
+            <span class="text-muted-foreground">
+                {{
+                    t('of normal expected; one week ahead the model has :s less error than climatology.', {
+                        s: percent(Math.abs(forecast.current.validation.skill_vs_climatology)),
+                    })
+                }}</span
+            >
+        </p>
         <p class="mt-1 text-sm text-muted-foreground">
             {{
                 t(':n burning 1 km cell-days expected (:low–:high); typical for this week: :c. Last week: :last.', {

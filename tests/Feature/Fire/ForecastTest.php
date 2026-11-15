@@ -75,9 +75,14 @@ class ForecastTest extends TestCase
         $f = app(Forecast::class)->fromSeries($weeks, $weather, array_key_last($weather));
 
         $this->assertNotNull($f);
-        $this->assertSame($start->addWeeks(20 * 52)->toDateString(), $f['week_start']);
-        $this->assertGreaterThan(0.1, $f['validation']['skill_vs_climatology']);
-        $this->assertGreaterThan(0.5, $f['validation']['correlation']);
+        // The series ends in 2022, so one week ahead is long past: it becomes "this week" and the outlook is two weeks ahead.
+        $this->assertSame($start->addWeeks(20 * 52)->toDateString(), $f['current']['week_start']);
+        $this->assertSame(1, $f['current']['horizon']);
+        $this->assertSame($start->addWeeks(20 * 52 + 1)->toDateString(), $f['week_start']);
+        $this->assertSame(2, $f['horizon']);
+        $this->assertGreaterThan(0.1, $f['current']['validation']['skill_vs_climatology']);
+        $this->assertGreaterThan(0.5, $f['current']['validation']['correlation']);
+        $this->assertGreaterThan(0, $f['validation']['skill_vs_climatology']);
         $this->assertGreaterThanOrEqual($f['expected'], $f['high']);
         $this->assertGreaterThanOrEqual(0, $f['low']);
         $this->assertCount(count(Forecast::FEATURES), $f['weights']);

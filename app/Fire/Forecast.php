@@ -44,20 +44,50 @@ class Forecast
 
         // Weekly weather, keyed by week start, from the 7 days of that week and the 28 days ending with it.
         $byWeek = [];
-        foreach ($starts as $i => $start) {
+        foreach ($starts as $start) {
             $byWeek[$start] = $this->weatherFeatures($weather, CarbonImmutable::parse($start)->addDays(6));
         }
 
+        // One week ahead of the last complete week. When that week has already begun (the record lags a day
+        // or two), it is "this week": the outlook people want is the week after, two steps ahead.
+        $one = $this->horizon($starts, $values, $byWeek, $weather, $weatherThrough, 1);
+
+        if ($one === null || $one['week_start'] > CarbonImmutable::today()->toDateString()) {
+            return $one;
+        }
+
+        $two = $this->horizon($starts, $values, $byWeek, $weather, $weatherThrough, 2);
+
+        if ($two === null) {
+            return $one;
+        }
+
+        $two['current'] = $one;
+
+        return $two;
+    }
+
+    /**
+     * The model $h weeks ahead: samples, rolling validation and the outlook for the week after the last complete one.
+     *
+     * @param  list<string>  $starts
+     * @param  list<float>  $values
+     * @param  array<string, array<string, float>|null>  $byWeek
+     * @param  array<string, array{t2m: ?float, rh2m: ?float, precip: ?float, ws2m: ?float}>  $weather
+     * @return array<string, mixed>|null
+     */
+    private function horizon(array $starts, array $values, array $byWeek, array $weather, ?string $weatherThrough, int $h): ?array
+    {
         $samples = [];
         foreach ($starts as $i => $start) {
-            if ($i < 6 || ! isset($starts[$i + 1]) || $byWeek[$start] === null) {
+            if ($i < 6 || ! isset($starts[$i + $h]) || $byWeek[$start] === null) {
                 continue;
             }
-            $next = CarbonImmutable::parse($starts[$i + 1]);
-            if ((int) CarbonImmutable::parse($start)->diffInDays($next) !== 7) {
+            $next = CarbonImmutable::parse($starts[$i + $h]);
+            if ((int) CarbonImmutable::parse($start)->diffInDays($next) !== 7 * $h) {
                 continue; // a gap in the record
             }
-            $samples[] = ['target_start' => $starts[$i + 1], 'year' => $next->year, 'week' => (int) $next->isoWeek, 'y' => log1p($values[$i + 1]), 'raw' => $values[$i + 1], 'base' => $this->baseFeatures($values, $i, $next), 'weather' => $byWeek[$start], 'persistence' => $values[$i]];
+            $samples[] = ['target_start' => $starts[$i + $h], 'year' => $next->year, 'week' => (int) $next->isoWeek, 'y' => log1p($values[$i + $h]), 'raw' => $values[$i + $h], 'base' => $this->baseFeatures($values, $i, $next), 'weather' => $byWeek[$start], 'persistence' => $values[$i]];
         }
 
         if (count($samples) < 150) {
@@ -110,7 +140,7 @@ class Forecast
         $q = fn (float $p) => $errors[(int) floor($p * (count($errors) - 1))];
 
         $i = count($starts) - 1;
-        $nextStart = CarbonImmutable::parse($starts[$i])->addDays(7);
+        $nextStart = CarbonImmutable::parse($starts[$i])->addDays(7 * $h);
         $latestWeather = $this->weatherFeatures($weather, $nextStart->subDay()) ?? $byWeek[$starts[$i]];
         $outlookRow = $this->row(['base' => $this->baseFeatures($values, $i, $nextStart), 'weather' => $latestWeather, 'week' => (int) $nextStart->isoWeek], $clim);
         $pred = $model->predict($outlookRow);
@@ -120,6 +150,7 @@ class Forecast
         arsort($weights);
 
         return [
+            'horizon' => $h,
             'week_start' => $nextStart->toDateString(),
             'expected' => round(max(0.0, expm1($pred)), 1),
             'low' => round(max(0.0, expm1($pred - $q(0.8))), 1),
