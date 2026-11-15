@@ -31,6 +31,16 @@ const questions: { q: string; a: string; links: [string, string][] }[] = [
         ],
     },
     {
+        q: 'Compared with what?',
+        a: 'Every number on the site names its baseline. The −89% compares our harmonized daily value with the naive merge, which is what you get by taking the VIIRS count as if it were MODIS on the same held-out days. "Times normal" and the ranks compare a week or a date range with the median of the same dates in every other year since 2000 (the spread is the median absolute deviation). The forecast is scored against two baselines: the same-week climatology and persistence, last week repeated. The retirement test compares a record rebuilt from VIIRS alone with the real MODIS record of the same months. In all four cases the comparison is made on data the method did not use to fit itself.',
+        links: [
+            ['/method#validation', 'Method'],
+            ['/alerts', 'Unusual periods'],
+            ['/method#forecast', 'Forecast'],
+            ['/areas/dominican-republic#retire', 'Retirement test'],
+        ],
+    },
+    {
         q: 'What is a cell-day?',
         a: 'One square kilometre where some satellite saw fire on one day. It is the unit of the whole site because it is the only one both sensors can agree on: MODIS puts about 1.1 pixels in a burning cell, VIIRS 2.4.',
         links: [['/method#grid', 'Method, the grid']],
