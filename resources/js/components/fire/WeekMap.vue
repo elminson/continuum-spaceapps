@@ -6,9 +6,13 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import FireLegend from './FireLegend.vue';
 import Loading from './Loading.vue';
 
-const props = withDefaults(defineProps<{ bbox: number[]; week?: string | null; days?: number; times?: number | null; height?: string }>(), {
-    height: 'h-[28rem]',
-});
+const props = withDefaults(
+    defineProps<{ bbox: number[]; week?: string | null; days?: number; times?: number | null; height?: string; chrome?: boolean }>(),
+    {
+        height: 'h-[28rem]',
+        chrome: true,
+    },
+);
 const el = ref<HTMLDivElement | null>(null);
 const cells = ref<number | null>(null);
 const loading = ref(false);
@@ -126,6 +130,7 @@ onBeforeUnmount(() => {
         <div ref="el" class="h-full w-full" />
 
         <button
+            v-if="chrome"
             class="absolute left-3 top-3 inline-flex items-center gap-2 rounded-md bg-neutral-900/90 px-3 py-1.5 text-sm font-medium text-white hover:bg-neutral-800"
             :aria-label="playing ? t('Pause') : t('Play day by day')"
             @click="play"
@@ -134,12 +139,12 @@ onBeforeUnmount(() => {
             {{ playing ? t('Pause') : t('Play day by day') }}
         </button>
 
-        <div class="absolute right-3 top-3 flex flex-col items-end gap-2">
+        <div v-if="chrome" class="absolute right-3 top-3 flex flex-col items-end gap-2">
             <slot name="controls" />
             <div class="rounded-md bg-neutral-900/90 px-2.5 py-1.5 text-xs text-neutral-200"><FireLegend /></div>
         </div>
 
-        <div class="absolute bottom-3 left-3 w-[min(22rem,calc(100%-1.5rem))] rounded-md bg-neutral-900 p-4 text-neutral-100 shadow-lg">
+        <div v-if="chrome" class="absolute bottom-3 left-3 w-[min(22rem,calc(100%-1.5rem))] rounded-md bg-neutral-900 p-4 text-neutral-100 shadow-lg">
             <slot name="panel-top" />
             <Loading v-if="loading" class="text-neutral-300" :label="t('Loading fires…')" />
             <template v-else>

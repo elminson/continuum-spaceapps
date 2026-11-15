@@ -239,6 +239,19 @@ class PageController extends Controller
         ]);
     }
 
+    public function start(): Response
+    {
+        $focus = Area::query()->where('slug', Area::FOCUS)->first();
+        $top = $focus?->alerts()->orderByDesc('score')->first();
+
+        return Inertia::render('Start', [
+            'bbox' => $focus ? [$focus->west, $focus->south, $focus->east, $focus->north] : [-72.01, 17.47, -68.32, 19.93],
+            'week' => $top?->week_start->toDateString(),
+            'times' => $top && $top->typical > 0 ? round($top->observed / $top->typical, 1) : null,
+            'focusName' => $focus?->label() ?? 'Dominican Republic',
+        ]);
+    }
+
     public function questions(WorkedExample $example): Response
     {
         $focus = Area::query()->where('slug', Area::FOCUS)->first();

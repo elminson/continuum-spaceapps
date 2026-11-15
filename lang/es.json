@@ -807,5 +807,15 @@
     ":k km² covered in five areas, :w unusual weeks on record, zero cost: free NASA data, one small server": ":k km² cubiertos en cinco áreas, :w semanas inusuales registradas, costo cero: datos gratuitos de la NASA, un servidor pequeño",
     "Start": "Inicio",
     "Continuum puts 26 years of NASA fire detections from two sensors on one 1 km grid and one scale, so anyone responsible for a territory can ask: is this week unusual, compared with the same week in every other year, and what does next week look like?": "Continuum pone 26 años de detecciones de fuego de la NASA, de dos sensores, en una cuadrícula de 1 km y una sola escala, para que quien responde por un territorio pueda preguntar: ¿es inusual esta semana, comparada con la misma semana de todos los demás años, y cómo viene la próxima?",
-    "See the live map and numbers": "Ver el mapa y los números en vivo"
+    "See the live map and numbers": "Ver el mapa y los números en vivo",
+    ":area · :n times a normal week, April 2015": ":area · :n veces una semana normal, abril de 2015",
+    "26 years of NASA fire detections on one 1 km grid and one scale, so a week can be compared with the same week in every other year.": "26 años de detecciones de fuego de la NASA en una cuadrícula de 1 km y una sola escala, para comparar una semana con la misma semana de todos los demás años.",
+    "Three steps and a test: a 1 km grid, one count per sensor, a monthly MODIS ÷ VIIRS ratio; proven on 1,352 held-out days.": "Tres pasos y una prueba: una cuadrícula de 1 km, un conteo por sensor, una razón mensual MODIS ÷ VIIRS; probada en 1.352 días reservados.",
+    "Always against a named baseline: the naive merge, the same week in the other 26 years, climatology and persistence.": "Siempre frente a una línea base con nombre: la fusión ingenua, la misma semana de los otros 26 años, la climatología y la persistencia.",
+    "Who uses it, and how does it help?": "¿Quién lo usa, y en qué le ayuda?",
+    "On Monday the forest-fire unit sets the week’s readiness from the outlook and the bulletin; COEs get an email when their territory turns unusual.": "El lunes, la unidad de incendios forestales fija el nivel de alerta de la semana con la perspectiva y el boletín; los COE reciben un correo cuando su territorio se vuelve inusual.",
+    "Read the answer": "Leer la respuesta",
+    "Live map and numbers": "Mapa y números en vivo",
+    "Dominican Republic": "República Dominicana",
+    "All questions": "Todas las preguntas"
 }

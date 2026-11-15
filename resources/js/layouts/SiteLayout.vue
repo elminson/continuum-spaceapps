@@ -12,6 +12,7 @@ import {
     Cpu,
     Database,
     ExternalLink,
+    Flame,
     HelpCircle,
     LayoutGrid,
     LogIn,
@@ -35,8 +36,9 @@ const themes = [
 const user = computed(() => (page.props.auth as { user: { name: string } | null } | undefined)?.user ?? null);
 
 const nav = [
-    { href: '/', label: 'Start', icon: HelpCircle },
+    { href: '/', label: 'Start', icon: Flame },
     { href: '/resume', label: 'Overview', icon: LayoutGrid },
+    { href: '/questions', label: 'Questions', icon: HelpCircle },
     { href: '/areas', label: 'Areas of interest', icon: MapPin },
     { href: '/explore', label: 'Explore', icon: Compass },
     { href: '/alerts', label: 'Unusual periods', icon: BellRing },

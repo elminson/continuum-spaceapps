@@ -58,12 +58,12 @@ class PagesTest extends TestCase
 
     public function test_menu_pages_render_without_login(): void
     {
-        foreach (['/areas' => 'Areas', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/judges' => 'Judges', '/ai' => 'Ai', '/' => 'Questions', '/resume' => 'Home', '/login' => 'auth/Login'] as $url => $component) {
+        foreach (['/areas' => 'Areas', '/data' => 'Data', '/how-it-works' => 'HowItWorks', '/api-docs' => 'ApiDocs', '/judges' => 'Judges', '/ai' => 'Ai', '/' => 'Start', '/questions' => 'Questions', '/resume' => 'Home', '/login' => 'auth/Login'] as $url => $component) {
             $this->get($url)->assertOk()->assertInertia(fn (Assert $page) => $page->component($component));
         }
 
         $this->get('/resume')->assertInertia(fn (Assert $page) => $page->where('places.0.slug', 'dominican-republic')->has('status.detections')->has('answers'));
-        $this->get('/questions')->assertRedirect('/');
+        $this->get('/')->assertInertia(fn (Assert $page) => $page->component('Start')->has('bbox')->has('focusName'));
     }
 
     public function test_signed_in_users_save_and_delete_their_boxes(): void

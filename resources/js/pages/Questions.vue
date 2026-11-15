@@ -22,8 +22,9 @@ type Example = {
 
 defineProps<{ example: Example | null; focusSlug: string }>();
 
-const questions: { q: string; a: string; links: [string, string][] }[] = [
+const questions: { id?: string; q: string; a: string; links: [string, string][] }[] = [
     {
+        id: 'how',
         q: 'How do you get 89% less error?',
         a: 'Three steps and a test. (1) Every NASA FIRMS pixel goes into a 0.01° cell (about 1 km), so a fire front counts once even when VIIRS reports it with several 375 m pixels. (2) All satellites of each sensor are merged before counting. (3) The sensitivity gap that remains is measured as a MODIS ÷ VIIRS ratio per calendar month, fitted on the days both sensors flew, and used to convert one scale into the other. The test: the ratio is fitted on three of every four overlap days and scored on the fourth, against a naive merge. The 89% is how much smaller the daily error is on those held-out days, not an accuracy.',
         links: [
@@ -32,6 +33,7 @@ const questions: { q: string; a: string; links: [string, string][] }[] = [
         ],
     },
     {
+        id: 'who-q',
         q: 'Who uses it, and for what?',
         a: 'The priority job is one weekly decision. The forest-fire unit of the Ministry of Environment opens the Dominican Republic page on Monday: the next-week outlook, the bulletin and where last week burned, against 26 years of the same week, and sets the readiness of the week and where brigades go. A provincial COE or a municipal brigade draws its territory once and gets an email when a week there turns unusual. Planners, journalists and researchers compare any dates with every other year and download the cells and the record to document an event with a baseline. The same pages serve Haiti, Cuba and the two South American areas.',
         links: [
@@ -41,6 +43,7 @@ const questions: { q: string; a: string; links: [string, string][] }[] = [
         ],
     },
     {
+        id: 'baseline',
         q: 'Compared with what?',
         a: 'Every number on the site names its baseline. The −89% compares our harmonized daily value with the naive merge, which is what you get by taking the VIIRS count as if it were MODIS on the same held-out days. "Times normal" and the ranks compare a week or a date range with the median of the same dates in every other year since 2000 (the spread is the median absolute deviation). The forecast is scored against two baselines: the same-week climatology and persistence, last week repeated. The retirement test compares a record rebuilt from VIIRS alone with the real MODIS record of the same months. In all four cases the comparison is made on data the method did not use to fit itself.',
         links: [
@@ -133,7 +136,7 @@ const questions: { q: string; a: string; links: [string, string][] }[] = [
             <Link href="/resume" class="rounded-md bg-foreground px-3 py-2 text-background">{{ t('See the live map and numbers') }} →</Link>
         </p>
 
-        <UseCases class="mt-12" />
+        <UseCases id="who" class="mt-12 scroll-mt-6" />
 
         <h2 class="mt-14 text-2xl font-semibold tracking-tight">{{ t('Questions') }}</h2>
         <p class="mt-1 max-w-3xl text-sm text-muted-foreground">
@@ -248,7 +251,7 @@ const questions: { q: string; a: string; links: [string, string][] }[] = [
         </section>
 
         <div class="mt-10 grid gap-5 md:grid-cols-2">
-            <article v-for="item in questions" :key="item.q" class="rounded-md border p-5">
+            <article v-for="item in questions" :id="item.id" :key="item.q" class="scroll-mt-6 rounded-md border p-5">
                 <h2 class="font-semibold">{{ t(item.q) }}</h2>
                 <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{{ t(item.a) }}</p>
                 <p class="mt-3 flex flex-wrap gap-x-4 text-sm">

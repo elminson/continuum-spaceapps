@@ -6,7 +6,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\ZoneRequestController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [PageController::class, 'questions'])->name('questions');
+Route::get('/', [PageController::class, 'start'])->name('start');
 Route::get('resume', [PageController::class, 'home'])->name('home');
 Route::get('areas/{area}', [PageController::class, 'area'])->name('areas.show');
 Route::get('explore', [PageController::class, 'explore'])->name('explore');
@@ -18,7 +18,7 @@ Route::get('how-it-works', [PageController::class, 'howItWorks'])->name('how-it-
 Route::get('api-docs', [PageController::class, 'apiDocs'])->name('api-docs');
 Route::get('judges', [PageController::class, 'judges'])->name('judges');
 Route::get('ai', [PageController::class, 'ai'])->name('ai');
-Route::redirect('questions', '/');
+Route::get('questions', [PageController::class, 'questions'])->name('questions');
 Route::get('alerts/subscribe', [SubscriptionController::class, 'create'])->name('subscriptions.create');
 Route::post('alerts/sample', [SubscriptionController::class, 'sample'])->middleware('throttle:10,1')->name('subscriptions.sample');
 Route::post('subscriptions', [SubscriptionController::class, 'store'])->middleware('throttle:10,1')->name('subscriptions.store');
