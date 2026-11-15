@@ -92,7 +92,7 @@ The percentage is an average: the mean absolute error per day over those held-ou
 Yes. Tools and purpose:
 
 - **Claude Code (Anthropic)**, a coding assistant: helped write, test and review the Laravel and Vue code, and draft the README, method text, Spanish translations and this submission. Commits it helped write carry a `Co-Authored-By: Claude` line in the public git history.
-- **Text-to-speech voices**: the narration of the demo videos. The Spanish explanation uses an ElevenLabs voice; the 30-second English demo uses a Microsoft Edge neural voice. This is stated on screen, in the video descriptions and in the file metadata.
+- **ElevenLabs text-to-speech**: the narration of both demo videos. This is stated on screen, in the video descriptions and in the file metadata.
 
 - **Claude (Anthropic API, model claude-opus-5-5) and Gemma 4 (Google, open model, self-hosted with Ollama)**, inside the app: one of them writes the short plain-language **fire bulletin** on each area page and the **situation reading** on the Unusual periods page (English and Spanish) from facts the code computes (times normal, rank among the same week in other years, where in the area, the fire season); the other is the fallback. Every number in the text is checked against those facts; if any number does not match, the app shows a fixed template instead. Each text is labelled with the model that wrote it. The AI never decides what is unusual: the statistics do. https://www.anthropic.com/api · https://ai.google.dev/gemma · https://ollama.com
 
@@ -112,7 +112,6 @@ No AI was used to generate data, numbers or images. Every chart and map shows NA
 - Claude API (Anthropic): https://www.anthropic.com/api
 - Gemma 4 (Google, open model): https://ai.google.dev/gemma · Ollama: https://ollama.com
 - ElevenLabs text-to-speech: https://elevenlabs.io
-- Microsoft Edge text-to-speech voices: https://learn.microsoft.com/azure/ai-services/speech-service/language-support
 - Laravel (MIT): https://laravel.com
 - Inertia.js (MIT): https://inertiajs.com
 - Vue (MIT): https://vuejs.org

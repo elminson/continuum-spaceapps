@@ -235,7 +235,7 @@ const rules = computed(() => [
         'The raw NASA FIRMS detections for the areas were downloaded before the event, which the Santiago organizers allow, and this is stated here, on the Ingestion page and in the README.',
     ),
     t(
-        'AI use is declared: Claude Code for coding help, ElevenLabs and Microsoft Edge voices for the narration, and Gemma 4 inside the app for the bulletin, each with its purpose and a link.',
+        'AI use is declared: Claude Code for coding help, ElevenLabs voices for the narration, and Gemma 4 inside the app for the bulletin, each with its purpose and a link.',
     ),
     t('No NASA logos or mission identifiers are used.'),
 ]);

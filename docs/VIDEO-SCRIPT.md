@@ -5,7 +5,7 @@ Two videos, both recorded from the live site https://continuum-spaceapps.isother
 - **Local (Santiago form), up to 4:30**, due Sunday 15 November, 3:00 p.m. Spanish narration with English subtitles (subtitles keep it usable for the global judges too).
 - **Global demo, up to 30 seconds**, for the NASA project page. English narration and captions.
 
-Both use an AI voice (Spanish: ElevenLabs; English: Microsoft Edge neural voice). Say so on screen ("Narración: voz generada por IA / AI-generated voice"), in the YouTube description and in the file metadata. No faces of minors. No NASA logos.
+Both use an AI voice (ElevenLabs). Say so on screen ("Narración: voz generada por IA / AI-generated voice"), in the YouTube description and in the file metadata. No faces of minors. No NASA logos.
 
 ## Local video (up to 4:30, Spanish)
 
@@ -87,7 +87,7 @@ For judges: https://continuum-spaceapps.isotherm.app/judges
 Code: https://github.com/elminson/continuum-spaceapps
 Data: NASA FIRMS, NASA POWER, NASA GIBS.
 
-Narration: AI-generated voice (Microsoft neural text-to-speech). All screens are real recordings of the app. Built with Claude Code as a coding assistant.
+Narration: AI-generated voice (ElevenLabs). All screens are real recordings of the app. Built with Claude Code as a coding assistant.
 ```
 
 ### Spanish explanation (4:16, English subtitles)

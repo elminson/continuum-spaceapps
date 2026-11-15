@@ -39,5 +39,5 @@ The raw FIRMS detections for the four areas (21.2 million rows) were downloaded 
 - **Text:** README, method text, translations and submission text drafted with Claude and edited by the team.
 - **In the app:** the fire bulletin is written by Gemma 4 (open model, self-hosted with Ollama) from facts the code computes; every number is checked and a fixed template replaces any text with an unknown number. Labelled as AI-written on the page.
 - **Slides:** the 7-slide deck was generated with Superdesign (https://superdesign.dev) from our outline and real screenshots of the app, then corrected by hand.
-- **Video narration:** AI text-to-speech voices (Spanish explanation: ElevenLabs; English demo: Microsoft Edge neural voice), stated on screen, in the video description and in the file metadata.
+- **Video narration:** AI text-to-speech voice (ElevenLabs), stated on screen, in the video description and in the file metadata.
 - No NASA logos or branding are used or modified in anything generated.
