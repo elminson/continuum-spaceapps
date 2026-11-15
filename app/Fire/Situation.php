@@ -88,6 +88,8 @@ class Situation
             'language' => $locale === 'es' ? 'Spanish' : 'English',
             'today' => CarbonImmutable::today()->locale($locale)->isoFormat($locale === 'es' ? 'D [de] MMMM [de] YYYY' : 'MMMM D, YYYY'),
             'unit' => $locale === 'es' ? 'celdas-día de 1 km con fuego' : 'burning 1 km cell-days',
+            'window_days' => self::WINDOW_DAYS,
+            'years_of_record' => (int) floor(CarbonImmutable::parse('2000-11-01')->diffInDays(CarbonImmutable::today()) / 365.25),
             'how_a_week_is_flagged' => 'at least 3 deviations above the median of the same week in every other year since 2000, and at least twice it',
             'answer_length' => 'three to five sentences, under 90 words',
             'areas' => $areas,
