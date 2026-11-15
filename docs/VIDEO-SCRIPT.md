@@ -66,7 +66,7 @@ Recorded 15 November 2026, 27.8 s. Story: two satellites disagree → one grid, 
 
 ## YouTube title and description
 
-Upload both as **Unlisted** or Public (not Private, or the judges cannot open them). Set the language of the English video to English and of the Spanish one to Spanish; upload `docs/video/*.srt` if you want captions as a track.
+Upload both as **Unlisted** or Public (not Private, or the judges cannot open them). Set the video language to English for the demo and Spanish for the explanation; the subtitles are burned into the picture.
 
 ### English demo (30 s)
 
