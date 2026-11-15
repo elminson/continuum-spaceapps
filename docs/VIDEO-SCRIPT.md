@@ -9,7 +9,7 @@ Both use an AI voice. Say so on screen ("Narración: voz generada por IA / AI-ge
 
 ## Local video (up to 4:30, Spanish)
 
-Recorded 15 November 2026 from the live site; each row is one narrated line and the screen shown (`card:` rows are title cards). New since the first cut: the next-week outlook (Dominican Republic and Cerrado), fire alerts by email, and the AI page.
+Recorded 15 November 2026 from the live site; each row is one narrated line and the screen shown (`card:` rows are title cards). New since the first cut: the next-week outlook (Dominican Republic and Cerrado), fire alerts by email, the AI page, and a closing scene over the judges page naming the five criteria with one proof each.
 
 | Screen | Narration (ES) | Subtitle (EN) |
 | --- | --- | --- |
@@ -42,6 +42,8 @@ Recorded 15 November 2026 from the live site; each row is one narrated line and 
 | retire | Apagamos MODIS en 2024, reconstruimos solo con VIIRS, y comparamos con el registro real. La forma se mantiene, con correlación mensual de cero coma noventa y uno. | We switch MODIS off in 2024, rebuild from VIIRS alone and compare with the real record. It keeps its shape, with monthly correlation 0.91. |
 | data | Todo usa datos abiertos de la NASA, FIRMS y GIBS, actualizados cada hora. | Everything runs on NASA open data, FIRMS and GIBS, updated every hour. |
 | api | Con una API pública y descargas en CSV, en español e inglés. | With a public API and CSV downloads, in Spanish and English. |
+| judges | Y para el jurado, todo en una página. Impacto: un calendario de fuego que cualquier agencia del Caribe puede usar hoy. Validez: cada número con su prueba. | And for the judges, all on one page. Impact: a fire calendar any Caribbean agency can use today. Validity: every number with its test. |
+| judges | Relevancia: tres fuentes de la NASA haciendo trabajo real, FIRMS, POWER y GIBS. Creatividad: pronóstico, alertas, e inteligencia artificial que explica sin decidir. Cada punto del reto, con su enlace. | Relevance: three NASA sources doing real work, FIRMS, POWER and GIBS. Creativity: forecast, alerts, and AI that explains without deciding. Every line of the challenge, with its link. |
 | card:outro | Queremos que cualquier agencia del Caribe pueda usarlo, empezando por la nuestra. Pruébenlo en continuum-spaceapps.isotherm.app. | We want any agency in the Caribbean to use it, starting with ours. Try it at continuum-spaceapps.isotherm.app. |
 
 Closing card (last 5 s): "Equipo Continuum · Elminson y Miguel · Santo Domingo · Datos: NASA FIRMS, NASA GIBS · Narración: voz generada por IA".
